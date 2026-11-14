@@ -5,7 +5,9 @@ const LIGHTEST = 205
  * Greyscale RGBA pixels for an elevation raster: low is dark, high is light,
  * no-data cells are transparent. Display only; not a scientific colour scale.
  */
-export function elevationToRgba(elevation: Float32Array): Uint8ClampedArray {
+export function elevationToRgba(
+  elevation: Float32Array,
+): Uint8ClampedArray<ArrayBuffer> {
   let min = Infinity
   let max = -Infinity
   for (const value of elevation) {

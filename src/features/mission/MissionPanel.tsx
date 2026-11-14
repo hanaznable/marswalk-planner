@@ -1,10 +1,15 @@
 import { useState } from 'react'
-import type { KeyboardEvent } from 'react'
+import type { KeyboardEvent, ReactNode } from 'react'
 import { Icon } from '../../components/ui/Icon'
 import type { MarsRegion } from '../datasets/types'
-import { RoutePlanner } from '../routing/components/RoutePlanner'
 
-export function MissionPanel({ region }: { region: MarsRegion }) {
+export function MissionPanel({
+  region,
+  routePlanner,
+}: {
+  region: MarsRegion
+  routePlanner: ReactNode
+}) {
   const [tab, setTab] = useState<'route' | 'mission'>('route')
 
   function handleTabKeyDown(event: KeyboardEvent<HTMLDivElement>) {
@@ -69,7 +74,7 @@ export function MissionPanel({ region }: { region: MarsRegion }) {
         tabIndex={0}
         hidden={tab !== 'route'}
       >
-        <RoutePlanner />
+        {routePlanner}
       </div>
       <div
         id="mission-panel"
