@@ -2,12 +2,30 @@ import { useState } from 'react'
 import type { KeyboardEvent, ReactNode } from 'react'
 import { Icon } from '../../components/ui/Icon'
 import type { MarsRegion } from '../datasets/types'
+import type { TerrainState } from '../map/useTerrainSource'
+
+function terrainLabel(state: TerrainState): string {
+  switch (state.status) {
+    case 'loading':
+      return `Loading ${state.dataset.title}…`
+    case 'error':
+      return 'Failed to load'
+    case 'none':
+      return 'No package for this region'
+    case 'ready':
+      return state.terrain.manifest.synthetic
+        ? 'Synthetic (not NASA data)'
+        : `${state.terrain.manifest.title} (HiRISE DTM)`
+  }
+}
 
 export function MissionPanel({
   region,
+  terrainState,
   routePlanner,
 }: {
   region: MarsRegion
+  terrainState: TerrainState
   routePlanner: ReactNode
 }) {
   const [tab, setTab] = useState<'route' | 'mission'>('route')
@@ -100,8 +118,12 @@ export function MissionPanel({
             <dd>Not configured</dd>
           </div>
           <div>
-            <dt>Scientific datasets</dt>
-            <dd>Not integrated</dd>
+            <dt>Terrain</dt>
+            <dd>{terrainLabel(terrainState)}</dd>
+          </div>
+          <div>
+            <dt>Science targets</dt>
+            <dd>Not included yet</dd>
           </div>
           <div>
             <dt>Surface conditions</dt>
@@ -109,8 +131,9 @@ export function MissionPanel({
           </div>
         </dl>
         <p className="info-notice">
-          Region selection is for workspace navigation. No mission observations,
-          coordinates, or safety assessments are available.
+          {terrainState.status === 'ready' && !terrainState.terrain.manifest.synthetic
+            ? 'Prototype HiRISE terrain: positions are not verified to absolute accuracy, and routes are not safety assessments. See the data catalog for all limitations.'
+            : 'No mission observations, verified coordinates, or safety assessments are available.'}
         </p>
       </div>
       <div className="mission-bottom">

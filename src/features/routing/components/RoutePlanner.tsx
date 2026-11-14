@@ -125,7 +125,7 @@ export function RoutePlanner({
       </button>
       <p className="availability-note">
         {!raster
-          ? 'Available after map data integration'
+          ? 'Available once terrain is loaded'
           : addMode
             ? 'Click the map to place points. Drag markers to move them.'
             : 'Drag markers on the map to adjust them.'}

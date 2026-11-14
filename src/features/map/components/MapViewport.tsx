@@ -1,10 +1,10 @@
 import type { MapPoint } from '../../datasets/terrainContract'
-import type { TerrainPackage } from '../../datasets/terrainPackage'
 import type { MarsRegion } from '../../datasets/types'
 import type { RouteAlternatives, Waypoint } from '../../routing'
 import { TerrainPlaceholder } from '../../terrain/components/TerrainPlaceholder'
 import { Icon } from '../../../components/ui/Icon'
 import type { ViewMode } from '../types'
+import type { TerrainState } from '../useTerrainSource'
 import { MapCanvas } from './MapCanvas'
 
 interface MapViewportProps {
@@ -14,7 +14,7 @@ interface MapViewportProps {
   showGrid: boolean
   expanded: boolean
   onExpand: () => void
-  terrain: TerrainPackage | null
+  terrainState: TerrainState
   waypoints: readonly Waypoint[]
   addMode: boolean
   notice: string | null
@@ -30,7 +30,7 @@ export function MapViewport({
   showGrid,
   expanded,
   onExpand,
-  terrain,
+  terrainState,
   waypoints,
   addMode,
   notice,
@@ -38,11 +38,23 @@ export function MapViewport({
   onRelocate,
   routes,
 }: MapViewportProps) {
+  const terrain = terrainState.status === 'ready' ? terrainState.terrain : null
+  const title = terrain ? terrain.manifest.title : region.name
+  const previewLabel =
+    terrainState.status === 'ready'
+      ? terrainState.terrain.manifest.synthetic
+        ? 'SYNTHETIC PREVIEW'
+        : 'PROTOTYPE DATA'
+      : terrainState.status === 'loading'
+        ? 'LOADING'
+        : terrainState.status === 'error'
+          ? 'LOAD FAILED'
+          : 'NO TERRAIN'
   return (
     <section
       className="map-viewport"
       id="map-viewport"
-      aria-label={`${region.name} map viewport`}
+      aria-label={`${title} map viewport`}
       tabIndex={-1}
     >
       <div className="viewport-topbar">
@@ -50,11 +62,9 @@ export function MapViewport({
           <Icon name="planet" size={17} />
           <span>MARS</span>
           <span className="breadcrumb-slash">/</span>
-          <strong>{region.name}</strong>
+          <strong>{title}</strong>
         </div>
-        <span className="map-preview-label">
-          {terrain?.manifest.synthetic ? 'SYNTHETIC PREVIEW' : 'DATA PREVIEW'}
-        </span>
+        <span className="map-preview-label">{previewLabel}</span>
       </div>
       <div className="map-stage">
         {viewMode === '2d' ? (
@@ -67,6 +77,8 @@ export function MapViewport({
             onPlace={onPlace}
             onRelocate={onRelocate}
             routes={routes}
+            basemapUrl={terrainState.status === 'ready' ? terrainState.basemapUrl : null}
+            emptyState={<TerrainStatusPanel state={terrainState} regionName={region.name} />}
           />
         ) : (
           <TerrainPlaceholder />
@@ -119,5 +131,41 @@ export function MapViewport({
         </span>
       </div>
     </section>
+  )
+}
+
+function TerrainStatusPanel({ state, regionName }: { state: TerrainState; regionName: string }) {
+  if (state.status === 'ready') return null
+  return (
+    <div className="map-empty-state terrain-status" role={state.status === 'error' ? 'alert' : 'status'}>
+      {state.status === 'loading' && (
+        <>
+          <span className="eyebrow">LOADING TERRAIN</span>
+          <h2>{state.dataset.title}</h2>
+          <p>Downloading the elevation, slope and basemap package…</p>
+        </>
+      )}
+      {state.status === 'error' && (
+        <>
+          <span className="eyebrow">TERRAIN COULD NOT BE LOADED</span>
+          <h2>{state.dataset.title}</h2>
+          <p className="terrain-error">{state.message}</p>
+          <p>No other terrain is shown in its place.</p>
+          <button className="retry-button" onClick={state.retry}>
+            Try again
+          </button>
+        </>
+      )}
+      {state.status === 'none' && (
+        <>
+          <span className="eyebrow">NO TERRAIN PACKAGE</span>
+          <h2>{regionName}</h2>
+          <p>
+            No validated terrain package exists for this region yet, so there is
+            nothing to plan on here.
+          </p>
+        </>
+      )}
+    </div>
   )
 }

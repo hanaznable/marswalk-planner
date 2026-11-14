@@ -15,10 +15,33 @@ const REJECTION_MESSAGES: Record<Extract<PlacementResult, { ok: false }>['reason
   noData: 'No elevation data there. Choose a covered area.',
 }
 
-/** Ordered waypoint list for one terrain package, with placement validation. */
+interface ScopedState {
+  /** Manifest id of the terrain the waypoints were placed on. */
+  readonly terrainId: string | null
+  readonly waypoints: Waypoint[]
+  readonly notice: string | null
+}
+
+/**
+ * Ordered waypoint list for one terrain package, with placement validation.
+ * Waypoints are grid cells of a specific package, so they are dropped when the
+ * terrain changes instead of being reinterpreted on another grid.
+ */
 export function useWaypoints(terrain: TerrainPackage | null) {
-  const [waypoints, setWaypoints] = useState<Waypoint[]>([])
-  const [notice, setNotice] = useState<string | null>(null)
+  const terrainId = terrain?.manifest.id ?? null
+  const [state, setState] = useState<ScopedState>({ terrainId, waypoints: [], notice: null })
+  const current = state.terrainId === terrainId ? state : { terrainId, waypoints: [], notice: null }
+  const { waypoints, notice } = current
+
+  const update = (change: (scoped: ScopedState) => Partial<ScopedState>) =>
+    setState((previous) => {
+      const base =
+        previous.terrainId === terrainId ? previous : { terrainId, waypoints: [], notice: null }
+      return { ...base, ...change(base) }
+    })
+  const setNotice = (message: string | null) => update(() => ({ notice: message }))
+  const setWaypoints = (change: (list: Waypoint[]) => Waypoint[]) =>
+    update((scoped) => ({ waypoints: change(scoped.waypoints) }))
 
   function place(point: MapPoint) {
     if (!terrain) return
@@ -55,6 +78,6 @@ export function useWaypoints(terrain: TerrainPackage | null) {
     remove: (id: string) => setWaypoints((list) => removeWaypoint(list, id)),
     reorder: (id: string, toIndex: number) =>
       setWaypoints((list) => moveWaypoint(list, id, toIndex)),
-    clear: () => setWaypoints([]),
+    clear: () => setWaypoints(() => []),
   }
 }

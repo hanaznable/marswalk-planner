@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import type { ReactNode } from 'react'
 import {
   CRS,
   divIcon,
@@ -34,6 +35,10 @@ interface MapCanvasProps {
   onRelocate: (id: string, point: MapPoint) => boolean
   /** Computed routes to draw; null when fewer than two waypoints. */
   routes: RouteAlternatives | null
+  /** Real orthoimage for the terrain; null draws elevation shading (synthetic only). */
+  basemapUrl: string | null
+  /** Shown instead of the decorative empty state when there is no terrain. */
+  emptyState?: ReactNode
 }
 
 /**
@@ -49,6 +54,8 @@ export function MapCanvas({
   onPlace,
   onRelocate,
   routes,
+  basemapUrl,
+  emptyState,
 }: MapCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<LeafletMap | null>(null)
@@ -57,6 +64,9 @@ export function MapCanvas({
   const routesRef = useRef<LayerGroup | null>(null)
   const [zoom, setZoom] = useState(0)
   const [zoomRange, setZoomRange] = useState({ min: -2, max: 3 })
+  // Keyed by URL so a failure never sticks to a different basemap.
+  const [failedBasemap, setFailedBasemap] = useState<string | null>(null)
+  const basemapFailed = basemapUrl !== null && failedBasemap === basemapUrl
 
   // Latest values for Leaflet event handlers bound once.
   const latest = useRef({ addMode, onPlace, onRelocate, terrain })
@@ -124,28 +134,43 @@ export function MapCanvas({
   useEffect(() => {
     const map = mapRef.current
     if (!map || !terrain) return
-    const { raster } = terrain.manifest
+    const { raster, basemap } = terrain.manifest
     const extent = rasterBounds(raster)
-    const bounds = latLngBounds(
-      [0, 0],
-      [extent.maxY - extent.minY, extent.maxX - extent.minX],
-    )
+    const toBounds = (box: ReturnType<typeof rasterBounds>) =>
+      latLngBounds(
+        toLatLng(raster, { x: box.minX, y: box.minY }),
+        toLatLng(raster, { x: box.maxX, y: box.maxY }),
+      )
+    const bounds = toBounds(extent)
     boundsRef.current = bounds
 
-    const canvas = document.createElement('canvas')
-    canvas.width = raster.width
-    canvas.height = raster.height
-    canvas
-      .getContext('2d')
-      ?.putImageData(
-        new ImageData(elevationToRgba(terrain.elevation), raster.width, raster.height),
-        0,
-        0,
-      )
-    const image = imageOverlay(canvas.toDataURL(), bounds, {
-      className: 'terrain-image',
-      interactive: false,
-    }).addTo(map)
+    let image
+    if (basemapUrl && basemap) {
+      // Real orthoimage on its own footprint (same as the grid, finer pixels).
+      image = imageOverlay(basemapUrl, toBounds(rasterBounds(basemap)), {
+        className: 'terrain-image basemap-image',
+        interactive: false,
+        alt: `HiRISE orthoimage of ${terrain.manifest.title}`,
+      })
+      image.on('error', () => setFailedBasemap(basemapUrl))
+    } else {
+      // Synthetic fixture only: display-only elevation shading.
+      const canvas = document.createElement('canvas')
+      canvas.width = raster.width
+      canvas.height = raster.height
+      canvas
+        .getContext('2d')
+        ?.putImageData(
+          new ImageData(elevationToRgba(terrain.elevation), raster.width, raster.height),
+          0,
+          0,
+        )
+      image = imageOverlay(canvas.toDataURL(), bounds, {
+        className: 'terrain-image',
+        interactive: false,
+      })
+    }
+    image.addTo(map)
     const outline = rectangle(bounds, {
       className: 'terrain-outline',
       fill: false,
@@ -164,8 +189,9 @@ export function MapCanvas({
     return () => {
       image.remove()
       outline.remove()
+      boundsRef.current = null
     }
-  }, [terrain])
+  }, [terrain, basemapUrl])
 
   useEffect(() => {
     if (boundsRef.current) mapRef.current?.fitBounds(boundsRef.current, { animate: false })
@@ -219,11 +245,17 @@ export function MapCanvas({
         }
       />
       {terrain ? (
-        terrain.manifest.synthetic && (
+        terrain.manifest.synthetic ? (
           <div className="synthetic-banner" role="note">
             SYNTHETIC DEVELOPMENT TERRAIN <span>·</span> NOT NASA DATA
           </div>
+        ) : (
+          <div className="synthetic-banner prototype-banner" role="note">
+            HIRISE PROTOTYPE TERRAIN <span>·</span> POSITION NOT VERIFIED
+          </div>
         )
+      ) : emptyState ? (
+        emptyState
       ) : (
         <div className="map-empty-state">
           <div className="orbital-illustration" aria-hidden="true">
@@ -287,6 +319,12 @@ export function MapCanvas({
           <Icon name="target" />
         </button>
       </div>
+      {basemapFailed && (
+        <div className="map-notice warning basemap-error" role="alert">
+          The HiRISE basemap image could not be loaded. Terrain data and routing
+          still work.
+        </div>
+      )}
       {routes && (
         <div className="route-legend" aria-label="Route legend">
           <span>
@@ -301,8 +339,8 @@ export function MapCanvas({
         {terrain
           ? terrain.manifest.synthetic
             ? 'SYNTHETIC GRID · LOCAL METRES'
-            : terrain.manifest.source?.attribution
-          : 'EMPTY VIEWPORT · NO BASEMAP LOADED'}
+            : `HIRISE ${terrain.manifest.source?.productId} · ${terrain.manifest.source?.attribution} · LOCAL METRES`
+          : 'NO TERRAIN LOADED'}
       </div>
     </>
   )
