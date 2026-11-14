@@ -1983,6 +1983,126 @@ dd {
 .report-actions button:hover {
   background: #3a3526;
 }
+/* Saved missions (browser-local library). */
+.mission-library {
+  padding: 24px 18px;
+}
+.mission-library .section-heading h2 {
+  font-size: 13px;
+}
+.mission-save {
+  margin-top: 16px;
+}
+.mission-save label {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.mission-save input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #4b4437;
+  border-radius: 4px;
+  background: #1b1f1d;
+  color: #e0e3e2;
+  font: inherit;
+  font-size: 11px;
+}
+.mission-save input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.mission-status {
+  margin-top: 14px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 10px;
+  line-height: 1.6;
+  color: #d2d7cb;
+}
+.mission-status p {
+  margin: 0;
+}
+.mission-status ul {
+  margin: 4px 0 0;
+  padding-left: 16px;
+}
+.mission-status.warning {
+  border-color: #7a5a35;
+  color: #e9c9a0;
+}
+.mission-status.error {
+  border-color: #8a5440;
+  color: #f0c4b0;
+}
+.mission-empty {
+  margin-top: 18px;
+  font-size: 10px;
+  color: var(--muted);
+}
+.mission-list {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+}
+.mission-item {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.mission-item-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #e0e3e2;
+  overflow-wrap: anywhere;
+}
+.mission-open-tag {
+  font: 7px var(--mono);
+  letter-spacing: 0.7px;
+  padding: 2px 4px;
+  border-radius: 2px;
+  background: #30362a;
+  color: #aab297;
+}
+.mission-item-meta {
+  margin-top: 3px;
+  font-size: 9px;
+  color: var(--muted);
+}
+.mission-item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.mission-item-actions button,
+.mission-import button {
+  padding: 5px 9px;
+  border: 1px solid #4b4437;
+  border-radius: 4px;
+  background: #2c292161;
+  color: #e0e3e2;
+  font-size: 10px;
+}
+.mission-item-actions button:not(:disabled):hover,
+.mission-import button:not(:disabled):hover {
+  background: #3a3526;
+}
+.mission-item-actions button.danger {
+  border-color: #8a5440;
+  color: #f0c4b0;
+}
+.mission-library button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.mission-import {
+  margin-top: 18px;
+}
 .report-backdrop {
   position: fixed;
   inset: 0;

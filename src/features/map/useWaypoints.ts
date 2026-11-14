@@ -101,5 +101,11 @@ export function useWaypoints(terrain: TerrainPackage | null) {
     reorder: (id: string, toIndex: number) =>
       setWaypoints((list) => moveWaypoint(list, id, toIndex)),
     clear: () => update(() => ({ waypoints: [], origins: {} })),
+    /**
+     * Replaces the list with a saved mission's waypoints for the given terrain
+     * id. Callers check compatibility with that terrain first.
+     */
+    restore: (forTerrainId: string, list: Waypoint[], restoredOrigins: Record<string, WaypointOrigin>) =>
+      setState({ terrainId: forTerrainId, waypoints: list, notice: null, origins: restoredOrigins }),
   }
 }

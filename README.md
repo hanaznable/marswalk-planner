@@ -55,6 +55,7 @@ src/
       components/MapCanvas.tsx     Isolated Leaflet renderer and navigation
       types.ts                     View-mode UI contract
     mission/MissionPanel.tsx      Mission details and planning panel tabs
+    missions/                      Named missions: browser-local library, JSON export/import
     routing/                       Pure route algorithms, UI and terrain adapter
     mapLayers/                     Independent display layers, RGB loading and selection provenance
     science/                       Science target selection and waypoint flow
@@ -84,6 +85,10 @@ layer-lab.html                    Independent local layer comparison page
   scale is 1× by default; exaggeration is a labelled display setting. Waypoints
   are edited in 2D. See [src/features/terrain3d/README.md](src/features/terrain3d/README.md).
 - Desktop uses three columns. On narrower screens panels flow below the map.
+- Save named missions in this browser, reopen them, and export or import them
+  as JSON. A mission stores waypoints, science selections and route settings with
+  the terrain package and grid; it opens only on that same grid, and routes are
+  recalculated when it opens.
 - Place, move and order waypoints; compare distance and slope-aware routes and
   include a return leg on the loaded terrain.
 - Toggle elevation, slope, drill proxies, APXS observations, historical traverse
