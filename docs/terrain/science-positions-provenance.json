@@ -1,0 +1,139 @@
+{
+  "kind": "science-position-provenance-not-runtime-contract",
+  "terrainPackageId": "pahrump-hills-v1",
+  "terrain_manifest_sha256": "450ada2dc924b72e6188bedc476c6373f7776544d599c0c6402d8e3e6d05b5c5",
+  "source_frame": {
+    "representation": "Mars longitude/latitude degrees, longitude east-positive, latitude north-positive",
+    "formal_crs_in_source_json": null,
+    "interpretation": "Mars spherical/planetocentric-compatible coordinate interpretation used for the prototype; source JSON does not formally declare a datum or latitude type",
+    "crosscheck": "Source easting/northing numerically match R*radians(lon), R*radians(lat); this does not establish an independently certified datum tie"
+  },
+  "conversion": {
+    "target_crs_wkt": "PROJCS[\"Mars Equirectangular\",GEOGCS[\"Mars\",DATUM[\"Mars sphere\",SPHEROID[\"Mars label sphere\",3396190.0,0]],PRIMEM[\"Reference meridian\",0],UNIT[\"degree\",0.0174532925199433]],PROJECTION[\"Equirectangular\"],PARAMETER[\"standard_parallel_1\",0],PARAMETER[\"central_meridian\",137.39],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1]]",
+    "sphere_radius_m": 3396190.0,
+    "central_meridian_east_deg": 137.39,
+    "standard_parallel_deg": 0,
+    "projected_x": "R * radians(longitude_east_deg - central_meridian_east_deg)",
+    "projected_y": "R * radians(latitude_deg)",
+    "local_map_x": "projected_x - terrain_west_edge",
+    "local_map_y": "projected_y - terrain_south_edge",
+    "grid_col": "floor((projected_x - geoTransform[0]) / geoTransform[1])",
+    "grid_row": "floor((projected_y - geoTransform[3]) / geoTransform[5])",
+    "origin_policy": "Use the package geotransform to map projected positions to cells. Do not add/subtract the raster's 1.5-pixel interpretation difference to rover coordinates.",
+    "source_projected_properties_max_residual_m_for_these_records": 0.0023950720205903053
+  },
+  "position_source": {
+    "local_filename": "MSL_waypoints.json",
+    "source_url": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+    "sha256": "5a32324f4b8ba22ebdfac50a503e195f47ccdc876ad4c15b19e29dc7cef15a09"
+  },
+  "activity_association_source": {
+    "local_filename": "drill-sites-reference.pdf",
+    "source_url": "https://assets.science.nasa.gov/content/dam/science/cds/researchers/nac/pac/2020/06-Meyer-PAC-Mars_Science_8-2020_v9_Tagged.pdf",
+    "sha256": "84e193a48f560ad975a8c6a40d85d9c3949dcc0e6b66f1d76fcc7567fe1d292c"
+  },
+  "activity_context_url": "https://www.jpl.nasa.gov/images/pia21709-key-locations-studied-at-pahrump-hills-on-mars/",
+  "records": [
+    {
+      "name": "Confidence Hills",
+      "suggested_activity_kind": "drill-site",
+      "position_role": "associated-rover-position-proxy-not-exact-drill-hole",
+      "association": {
+        "rmc": "42_1020",
+        "activity_sol": 759,
+        "position_record_sol": 753,
+        "method": "Exact site/drive join, not nearest-date interpolation",
+        "reference_url": "https://assets.science.nasa.gov/content/dam/science/cds/researchers/nac/pac/2020/06-Meyer-PAC-Mars_Science_8-2020_v9_Tagged.pdf",
+        "reference_page": 5
+      },
+      "source_coordinates": {
+        "longitude_east_deg": 137.3774636,
+        "latitude_deg": -4.66269932
+      },
+      "package_source_crs_position_m": {
+        "x": -743.0913180304459,
+        "y": -276380.0918351256
+      },
+      "package_cell": {
+        "row": 95,
+        "col": 98
+      },
+      "local_map_position_m": {
+        "x": 491.6748687326434,
+        "y": 522.7763025233289
+      },
+      "uncertaintyMeters": null,
+      "uncertainty_reason": "No positional uncertainty supplied by the source snapshot; numerical precision is not accuracy",
+      "description_limit": "Drilled sample target associated with this rover pose; no exact hole coordinate or instrument-result inference"
+    },
+    {
+      "name": "Mojave 2",
+      "suggested_activity_kind": "drill-site",
+      "position_role": "associated-rover-position-proxy-not-exact-drill-hole",
+      "association": {
+        "rmc": "45_0",
+        "activity_sol": 882,
+        "position_record_sol": 864,
+        "method": "Exact site/drive join, not nearest-date interpolation",
+        "reference_url": "https://assets.science.nasa.gov/content/dam/science/cds/researchers/nac/pac/2020/06-Meyer-PAC-Mars_Science_8-2020_v9_Tagged.pdf",
+        "reference_page": 5
+      },
+      "source_coordinates": {
+        "longitude_east_deg": 137.3774498,
+        "latitude_deg": -4.66286373
+      },
+      "package_source_crs_position_m": {
+        "x": -743.9093088565608,
+        "y": -276389.8371881454
+      },
+      "package_cell": {
+        "row": 97,
+        "col": 98
+      },
+      "local_map_position_m": {
+        "x": 490.85687790652855,
+        "y": 513.0309495035326
+      },
+      "uncertaintyMeters": null,
+      "uncertainty_reason": "No positional uncertainty supplied by the source snapshot; numerical precision is not accuracy",
+      "description_limit": "Drilled sample target associated with this rover pose; no exact hole coordinate or instrument-result inference"
+    },
+    {
+      "name": "Telegraph Peak",
+      "suggested_activity_kind": "drill-site",
+      "position_role": "associated-rover-position-proxy-not-exact-drill-hole",
+      "association": {
+        "rmc": "45_450",
+        "activity_sol": 908,
+        "position_record_sol": 903,
+        "method": "Exact site/drive join, not nearest-date interpolation",
+        "reference_url": "https://assets.science.nasa.gov/content/dam/science/cds/researchers/nac/pac/2020/06-Meyer-PAC-Mars_Science_8-2020_v9_Tagged.pdf",
+        "reference_page": 5
+      },
+      "source_coordinates": {
+        "longitude_east_deg": 137.3774523,
+        "latitude_deg": -4.66352733
+      },
+      "package_source_crs_position_m": {
+        "x": -743.7611221131266,
+        "y": -276429.17187742185
+      },
+      "package_cell": {
+        "row": 105,
+        "col": 98
+      },
+      "local_map_position_m": {
+        "x": 491.0050646499627,
+        "y": 473.69626022706507
+      },
+      "uncertaintyMeters": null,
+      "uncertainty_reason": "No positional uncertainty supplied by the source snapshot; numerical precision is not accuracy",
+      "description_limit": "Drilled sample target associated with this rover pose; no exact hole coordinate or instrument-result inference"
+    }
+  ],
+  "not_established": [
+    "Exact drill-hole or remote-observation footprint positions",
+    "Source-stated positional uncertainty or certified global/local datum alignment",
+    "Observation-site coordinates for every rover waypoint"
+  ]
+}

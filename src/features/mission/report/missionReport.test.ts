@@ -8,6 +8,7 @@ import type { EvaPlan } from '../../eva/useEvaPlan'
 import { planAlternatives, summarizeRoute, terrainPackageToGrid, type Waypoint } from '../../routing'
 import type { RoutePlan } from '../../routing/useRoutePlan'
 import { buildMissionReport, missionReportFileName, type MissionReportInput } from './missionReport'
+import type { WaypointOrigin } from '../../datasets/waypointOrigin'
 
 // Synthetic fixture: a 3 x 1 strip of 10 m cells, not NASA data. Middle cell is 30 degrees.
 function strip(synthetic: boolean) {
@@ -50,6 +51,31 @@ const assumptions = {
   walkingSpeedKmh: 1.2,
   stopMinutes: 10,
 }
+
+const selectedOrigin: WaypointOrigin = {
+  kind: 'apxs-observation', recordId: 'test-table:row-2', name: 'Synthetic observation fixture',
+  mission: 'Test mission', measurementSol: 5, description: 'Synthetic test metadata, not NASA data.',
+  position: { x: 1005, y: 2005, basis: 'rover-position-proxy', uncertaintyMeters: null },
+  sources: [{ url: 'https://example.org/table.csv', attribution: 'Test source', provides: 'Measurement metadata' }],
+  sourceSha256: 'a'.repeat(64), reviewFlags: ['test quality flag'],
+}
+
+describe('explicit selected-observation provenance', () => {
+  it('exports structured sources, source position, sol and quality flags without parsing labels', () => {
+    const report = buildMissionReport(input({ waypoints: [{ ...start, label: 'Renamed by user' }, end], waypointOrigins: { [start.id]: selectedOrigin } }))
+    expect(report.waypoints[0].provenance).toEqual({ ...selectedOrigin, locationRelation: 'source-cell' })
+    expect(report.waypoints[1].provenance).toBeUndefined()
+    expect(JSON.parse(JSON.stringify(report)).waypoints[0].provenance.sourceSha256).toBe('a'.repeat(64))
+    expect(report.waypoints[0].provenance!.sources).not.toBe(selectedOrigin.sources)
+    expect(report.waypoints[0].provenance!.position).not.toBe(selectedOrigin.position)
+  })
+  it('marks a moved waypoint without relocating its historical source coordinates', () => {
+    const report = buildMissionReport(input({ waypoints: [{ ...start, cell: { row: 0, col: 1 } }, end], waypointOrigins: { [start.id]: selectedOrigin } }))
+    expect(report.waypoints[0].provenance!.locationRelation).toBe('relocated')
+    expect(report.waypoints[0].provenance!.position).toEqual(selectedOrigin.position)
+    expect(report.waypoints[0].sourceCrs).not.toEqual({ x: selectedOrigin.position.x, y: selectedOrigin.position.y })
+  })
+})
 
 function input(overrides: Partial<MissionReportInput> = {}): MissionReportInput {
   const terrain = overrides.terrain ?? strip(false)

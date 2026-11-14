@@ -1,0 +1,105 @@
+{
+  "contractVersion": 1,
+  "id": "pahrump-hills-v1-targets-v1",
+  "terrainPackageId": "pahrump-hills-v1",
+  "terrainManifestSha256": "450ada2dc924b72e6188bedc476c6373f7776544d599c0c6402d8e3e6d05b5c5",
+  "synthetic": false,
+  "targets": [
+    {
+      "id": "curiosity-confidence-hills",
+      "name": "Confidence Hills",
+      "kind": "drill-site",
+      "position": {
+        "x": -743.0913180304459,
+        "y": -276380.0918351256,
+        "uncertaintyMeters": null,
+        "basis": "rover-position-proxy"
+      },
+      "mission": "MSL Curiosity",
+      "activitySol": 759,
+      "positionSol": 753,
+      "description": "Curiosity drilled a sample at Confidence Hills. This marker uses an associated rover position, not the exact drill-hole location.",
+      "sources": [
+        {
+          "url": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+          "attribution": "NASA/JPL-Caltech",
+          "provides": "Rover position and position-record sol"
+        },
+        {
+          "url": "https://assets.science.nasa.gov/content/dam/science/cds/researchers/nac/pac/2020/06-Meyer-PAC-Mars_Science_8-2020_v9_Tagged.pdf",
+          "attribution": "NASA",
+          "provides": "Drill activity sol and site/drive association (slide 5)"
+        },
+        {
+          "url": "https://www.jpl.nasa.gov/images/pia21709-key-locations-studied-at-pahrump-hills-on-mars/",
+          "attribution": "NASA/JPL-Caltech",
+          "provides": "Named Pahrump Hills drill activities; no exact hole coordinates"
+        }
+      ]
+    },
+    {
+      "id": "curiosity-mojave-2",
+      "name": "Mojave 2",
+      "kind": "drill-site",
+      "position": {
+        "x": -743.9093088565608,
+        "y": -276389.8371881454,
+        "uncertaintyMeters": null,
+        "basis": "rover-position-proxy"
+      },
+      "mission": "MSL Curiosity",
+      "activitySol": 882,
+      "positionSol": 864,
+      "description": "Curiosity drilled a sample at Mojave 2. This marker uses an associated rover position, not the exact drill-hole location.",
+      "sources": [
+        {
+          "url": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+          "attribution": "NASA/JPL-Caltech",
+          "provides": "Rover position and position-record sol"
+        },
+        {
+          "url": "https://assets.science.nasa.gov/content/dam/science/cds/researchers/nac/pac/2020/06-Meyer-PAC-Mars_Science_8-2020_v9_Tagged.pdf",
+          "attribution": "NASA",
+          "provides": "Drill activity sol and site/drive association (slide 5)"
+        },
+        {
+          "url": "https://www.jpl.nasa.gov/images/pia21709-key-locations-studied-at-pahrump-hills-on-mars/",
+          "attribution": "NASA/JPL-Caltech",
+          "provides": "Named Pahrump Hills drill activities; no exact hole coordinates"
+        }
+      ]
+    },
+    {
+      "id": "curiosity-telegraph-peak",
+      "name": "Telegraph Peak",
+      "kind": "drill-site",
+      "position": {
+        "x": -743.7611221131266,
+        "y": -276429.17187742185,
+        "uncertaintyMeters": null,
+        "basis": "rover-position-proxy"
+      },
+      "mission": "MSL Curiosity",
+      "activitySol": 908,
+      "positionSol": 903,
+      "description": "Curiosity drilled a sample at Telegraph Peak. This marker uses an associated rover position, not the exact drill-hole location.",
+      "sources": [
+        {
+          "url": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+          "attribution": "NASA/JPL-Caltech",
+          "provides": "Rover position and position-record sol"
+        },
+        {
+          "url": "https://assets.science.nasa.gov/content/dam/science/cds/researchers/nac/pac/2020/06-Meyer-PAC-Mars_Science_8-2020_v9_Tagged.pdf",
+          "attribution": "NASA",
+          "provides": "Drill activity sol and site/drive association (slide 5)"
+        },
+        {
+          "url": "https://www.jpl.nasa.gov/images/pia21709-key-locations-studied-at-pahrump-hills-on-mars/",
+          "attribution": "NASA/JPL-Caltech",
+          "provides": "Named Pahrump Hills drill activities; no exact hole coordinates"
+        }
+      ]
+    }
+  ]
+}

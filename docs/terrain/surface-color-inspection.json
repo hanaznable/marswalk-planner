@@ -1,0 +1,247 @@
+{
+  "status": "diagnostic-only-not-orthorectification-approval",
+  "source": "ESP_039280_1755_MRGB.JP2",
+  "source_sha256": "9e06aef5b32c130ce964a1a066adba5145eedda4cc54552871ed049e22f9b439",
+  "label_sha256": "59099a6a3a96770a9f7390590567a5e339d4763bfa15fecdb37970c13f5610e7",
+  "terrainManifestSha256": "450ada2dc924b72e6188bedc476c6373f7776544d599c0c6402d8e3e6d05b5c5",
+  "source_metadata": {
+    "geoTransform": [
+      -2529347.0,
+      0.5,
+      0,
+      -270139.5,
+      0,
+      -0.5
+    ],
+    "radius_m": 3396190.0,
+    "central_meridian_deg": 180.0,
+    "pixel_interpretation": "PixelIsArea",
+    "metadata_source": "embedded GeoJP2"
+  },
+  "source_origin_in_target_crs": [
+    -3652.1385319209658,
+    -270139.5
+  ],
+  "diagnostic_pixel_size_m": 1,
+  "output_geoTransform": [
+    -1234.7661867630893,
+    1,
+    0,
+    -275902.8681376489,
+    0,
+    -1
+  ],
+  "crop_box_reduced_source_pixels": [
+    2417.372345157876,
+    5763.368137648911,
+    3417.372345157876,
+    6763.368137648911
+  ],
+  "pixel_statistics": {
+    "all_channels_zero_fraction": 0.0,
+    "all_channels_identical_fraction": 0.001123,
+    "channel_spread_above_3_fraction": 0.996723,
+    "interpretation": "Chromatic variation diagnostics only; not a certified color-swath or validity mask"
+  },
+  "registration_patches": [
+    {
+      "patch_centre_col_row": [
+        200,
+        200
+      ],
+      "raw": {
+        "moving_to_reference_shift_col_px": -6,
+        "moving_to_reference_shift_row_px": -8,
+        "zero_shift_correlation": -0.0057157020177883815,
+        "diagnostic_shift_correlation": -0.005266228661716899,
+        "search_boundary_peak": false
+      },
+      "after_global_diagnostic": {
+        "moving_to_reference_shift_col_px": 3,
+        "moving_to_reference_shift_row_px": 0,
+        "zero_shift_correlation": 0.16568826750913895,
+        "diagnostic_shift_correlation": 0.7252439883123791,
+        "search_boundary_peak": false
+      }
+    },
+    {
+      "patch_centre_col_row": [
+        500,
+        200
+      ],
+      "raw": {
+        "moving_to_reference_shift_col_px": 20,
+        "moving_to_reference_shift_row_px": 12,
+        "zero_shift_correlation": 0.007805989107161153,
+        "diagnostic_shift_correlation": 0.004956601972953113,
+        "search_boundary_peak": false
+      },
+      "after_global_diagnostic": {
+        "moving_to_reference_shift_col_px": 2,
+        "moving_to_reference_shift_row_px": -1,
+        "zero_shift_correlation": 0.26926759259946026,
+        "diagnostic_shift_correlation": 0.795494411629301,
+        "search_boundary_peak": false
+      }
+    },
+    {
+      "patch_centre_col_row": [
+        800,
+        200
+      ],
+      "raw": {
+        "moving_to_reference_shift_col_px": 2,
+        "moving_to_reference_shift_row_px": -1,
+        "zero_shift_correlation": 0.00323701861013121,
+        "diagnostic_shift_correlation": 0.022941511253304712,
+        "search_boundary_peak": false
+      },
+      "after_global_diagnostic": {
+        "moving_to_reference_shift_col_px": 1,
+        "moving_to_reference_shift_row_px": -3,
+        "zero_shift_correlation": 0.062141242991569694,
+        "diagnostic_shift_correlation": 0.7749763550536729,
+        "search_boundary_peak": false
+      }
+    },
+    {
+      "patch_centre_col_row": [
+        200,
+        500
+      ],
+      "raw": {
+        "moving_to_reference_shift_col_px": -8,
+        "moving_to_reference_shift_row_px": -2,
+        "zero_shift_correlation": 0.01268572796025049,
+        "diagnostic_shift_correlation": 0.019104330304164543,
+        "search_boundary_peak": false
+      },
+      "after_global_diagnostic": {
+        "moving_to_reference_shift_col_px": 1,
+        "moving_to_reference_shift_row_px": 1,
+        "zero_shift_correlation": 0.6637582920947477,
+        "diagnostic_shift_correlation": 0.8433350073317766,
+        "search_boundary_peak": false
+      }
+    },
+    {
+      "patch_centre_col_row": [
+        500,
+        500
+      ],
+      "raw": {
+        "moving_to_reference_shift_col_px": -6,
+        "moving_to_reference_shift_row_px": 18,
+        "zero_shift_correlation": 0.0017315168089424072,
+        "diagnostic_shift_correlation": 0.011032664764695005,
+        "search_boundary_peak": false
+      },
+      "after_global_diagnostic": {
+        "moving_to_reference_shift_col_px": 0,
+        "moving_to_reference_shift_row_px": 0,
+        "zero_shift_correlation": 0.8727191305600825,
+        "diagnostic_shift_correlation": 0.8727191305600825,
+        "search_boundary_peak": false
+      }
+    },
+    {
+      "patch_centre_col_row": [
+        800,
+        500
+      ],
+      "raw": {
+        "moving_to_reference_shift_col_px": 2,
+        "moving_to_reference_shift_row_px": -3,
+        "zero_shift_correlation": 0.0006608457464835392,
+        "diagnostic_shift_correlation": 0.013989964629883644,
+        "search_boundary_peak": false
+      },
+      "after_global_diagnostic": {
+        "moving_to_reference_shift_col_px": -1,
+        "moving_to_reference_shift_row_px": -2,
+        "zero_shift_correlation": 0.4275518692860169,
+        "diagnostic_shift_correlation": 0.8655223564601281,
+        "search_boundary_peak": false
+      }
+    },
+    {
+      "patch_centre_col_row": [
+        200,
+        800
+      ],
+      "raw": {
+        "moving_to_reference_shift_col_px": -12,
+        "moving_to_reference_shift_row_px": 4,
+        "zero_shift_correlation": -0.0219023213424226,
+        "diagnostic_shift_correlation": 0.00957040635002332,
+        "search_boundary_peak": false
+      },
+      "after_global_diagnostic": {
+        "moving_to_reference_shift_col_px": -1,
+        "moving_to_reference_shift_row_px": 3,
+        "zero_shift_correlation": 0.20411957001034345,
+        "diagnostic_shift_correlation": 0.8537674559975155,
+        "search_boundary_peak": false
+      }
+    },
+    {
+      "patch_centre_col_row": [
+        500,
+        800
+      ],
+      "raw": {
+        "moving_to_reference_shift_col_px": 17,
+        "moving_to_reference_shift_row_px": -16,
+        "zero_shift_correlation": -0.004127269479579376,
+        "diagnostic_shift_correlation": -0.014020957684431005,
+        "search_boundary_peak": false
+      },
+      "after_global_diagnostic": {
+        "moving_to_reference_shift_col_px": -2,
+        "moving_to_reference_shift_row_px": 1,
+        "zero_shift_correlation": 0.5129722012645411,
+        "diagnostic_shift_correlation": 0.8274128945084964,
+        "search_boundary_peak": false
+      }
+    },
+    {
+      "patch_centre_col_row": [
+        800,
+        800
+      ],
+      "raw": {
+        "moving_to_reference_shift_col_px": -17,
+        "moving_to_reference_shift_row_px": 16,
+        "zero_shift_correlation": -0.004107020674561923,
+        "diagnostic_shift_correlation": 0.029485260848505997,
+        "search_boundary_peak": false
+      },
+      "after_global_diagnostic": {
+        "moving_to_reference_shift_col_px": -1,
+        "moving_to_reference_shift_row_px": -1,
+        "zero_shift_correlation": 0.5624582610923576,
+        "diagnostic_shift_correlation": 0.7683490347953202,
+        "search_boundary_peak": false
+      }
+    }
+  ],
+  "global_diagnostic": {
+    "moving_to_reference_shift_col_px": 130,
+    "moving_to_reference_shift_row_px": -185,
+    "zero_shift_correlation": 0.00023770317072796966,
+    "diagnostic_shift_correlation": 0.4492630767577353,
+    "search_boundary_peak": false
+  },
+  "diagnostic_output_sha256": {
+    "rgb-envelope-margin.png": "d803bc1fcc938a39de7ab76a52bc9de8c57a6b6673aad5d23f1fcd7913c2c9ce",
+    "rgb-georeferenced.png": "485873bb2d8dd74459656b8f78c73c7c8970de1e6172cb67be5fb7eace836fe4",
+    "rgb-global-diagnostic.png": "097b4325191f0378d4ba33f647a21ab238995f2aae642a5e4ad4b4cc74bc5e10",
+    "alignment-blend.png": "af5ab11198124b2631e520878916f8d2c0bbf08a9c3c2a44aee258c35dd2f4a3",
+    "gray-rgb-side-by-side.jpg": "4adb5e060fdd88dfd194a558fd7b457dfe9fa15e322fd07e1f3df24b0141f0e5"
+  },
+  "caveats": [
+    "No map asset has been corrected; the translated image is a diagnostic only",
+    "Map-projected MRGB is not the matching DEM orthoimage",
+    "Phase-correlation peaks require inspection and do not certify absolute accuracy"
+  ]
+}

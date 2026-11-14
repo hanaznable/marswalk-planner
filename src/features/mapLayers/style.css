@@ -1,0 +1,22 @@
+.display-legend { margin-top: 10px; padding-top: 5px; border-top: 7px solid transparent; font-size: 10px; line-height: 1.5; border-image: linear-gradient(90deg, #2c4869, #37879b, #b1a671, #e7d4b5) 1; }
+.display-legend-slope { border-image-source: linear-gradient(90deg, #2f7784, #e0b85c, #da653c, #8e2941); }
+.display-opacity { display: flex; flex-direction: column; gap: 4px; font-size: 10px; margin-top: 7px; color: var(--text-muted, #9faeb1); }
+.display-opacity input { width: 100%; accent-color: #c79675; }
+.map-raster-overlay { image-rendering: pixelated; }
+.display-load-error { padding: 12px; font-size: 11px; color: #e8ac91; }
+.display-load-error button { padding: 6px 10px; }
+.map-canvas .leaflet-popup-content { color: #182b31; font: 12px/1.5 system-ui, sans-serif; }
+.map-canvas .leaflet-popup-content ul { padding-left: 17px; }
+.map-canvas .leaflet-popup-content a { color: #23566d; text-decoration: underline; }
+.context-add-waypoint { display: block; margin: 6px 0 12px; padding: 7px 10px; border: 1px solid #718d94; border-radius: 4px; background: #e5edef; color: #183b43; font: inherit; cursor: pointer; }
+.context-add-waypoint:disabled { cursor: default; color: #52656a; background: #eef2f3; }
+.pending-layer-guide { margin: 12px 20px; font-size: 11px; line-height: 1.65; color: #a8b8bd; }
+.pending-layer-guide summary { cursor: pointer; }
+.pending-layer-guide ul { padding-left: 16px; }
+.pending-layer-guide li { margin: 9px 0; }
+.surface-imagery-controls { margin-top: 10px; }
+.surface-imagery-choice { display: flex; gap: 5px; flex-wrap: wrap; }
+.surface-imagery-choice button { padding: 6px 8px; border: 1px solid #435049; border-radius: 3px; color: #b8c6bd; background: #202722; font: inherit; font-size: 10px; cursor: pointer; }
+.surface-imagery-choice button[aria-pressed=true] { color: #f1d0b7; background: #382b23; border-color: #a07558; }
+.surface-imagery-choice button:disabled { opacity: .5; cursor: default; }
+.surface-imagery-controls a { font-size: 9px; color: #b2c8c6; }

@@ -132,5 +132,32 @@ execution must be verified in QGIS; the helper is syntax-checked locally.
 The QGIS area and A/B hillshade review have been performed. The selected working
 convention and unverified accuracy are carried into the real v1 package's
 provenance. Numeric terrain derivatives have now been prepared and checked
-against the existing frontend contract and routing adapter. Next: Developer Y
-can integrate the package loader and basemap into the UI.
+against the existing frontend contract and routing adapter. Developer Y has
+integrated the package loader and basemap into the UI.
+
+## Science target delivery (2026-11-15)
+
+The agreed science contract v1 now has a real collection under
+`public/data/science/pahrump-hills-v1/`, registered in the dataset registry.
+Confidence Hills, Mojave 2 and Telegraph Peak are drill-associated rover-position
+proxies, not exact hole coordinates. The separate provenance records the source
+snapshot hashes, site/drive joins, coordinate conversion and terrain manifest hash.
+The original terrain files and hashes are unchanged.
+
+Rebuild the science files with `python scripts/terrain/export_science_targets.py`.
+This uses the committed reviewed position artifact, accepts explicit review,
+terrain and output paths for other packages, and checks the terrain version,
+recomputed positions and coverage. It does not discover or validate new science
+associations automatically. See the science folder's README for handoff details.
+
+## Local layer comparison
+
+Run `npm run dev` and open `/layer-lab.html` for Developer B's independent
+comparison page. After user review, six selected overlays are also available on
+the main planner, alongside grayscale imagery. Hillshade, roughness, coverage and
+recorded-position display layers have been removed. Enhanced RGB is now an
+optional registered prototype basemap; its partial-color coverage and relative
+alignment are documented in [surface-color-review.md](surface-color-review.md).
+Four further candidates show
+their missing-data/processing status. Display choices do not change route inputs. See
+[Layer Lab instructions](layer-lab.md) for layer definitions and feedback export.

@@ -9,6 +9,7 @@ import {
   type Waypoint,
 } from '../routing'
 import { nextWaypointId, placeWaypoint, type PlacementResult } from './waypointPlacement'
+import type { WaypointOrigin } from '../datasets/waypointOrigin'
 
 const REJECTION_MESSAGES: Record<Extract<PlacementResult, { ok: false }>['reason'], string> = {
   outsideTerrain: 'That point is outside the terrain area.',
@@ -20,6 +21,7 @@ interface ScopedState {
   readonly terrainId: string | null
   readonly waypoints: Waypoint[]
   readonly notice: string | null
+  readonly origins: Record<string, WaypointOrigin>
 }
 
 /**
@@ -30,14 +32,14 @@ interface ScopedState {
  */
 export function useWaypoints(terrain: TerrainPackage | null) {
   const terrainId = terrain?.manifest.id ?? null
-  const [state, setState] = useState<ScopedState>({ terrainId, waypoints: [], notice: null })
-  const current = state.terrainId === terrainId ? state : { terrainId, waypoints: [], notice: null }
-  const { waypoints, notice } = current
+  const [state, setState] = useState<ScopedState>({ terrainId, waypoints: [], notice: null, origins: {} })
+  const current = state.terrainId === terrainId ? state : { terrainId, waypoints: [], notice: null, origins: {} }
+  const { waypoints, notice, origins } = current
 
   const update = (change: (scoped: ScopedState) => Partial<ScopedState>) =>
     setState((previous) => {
       const base =
-        previous.terrainId === terrainId ? previous : { terrainId, waypoints: [], notice: null }
+        previous.terrainId === terrainId ? previous : { terrainId, waypoints: [], notice: null, origins: {} }
       return { ...base, ...change(base) }
     })
   const setNotice = (message: string | null) => update(() => ({ notice: message }))
@@ -62,10 +64,14 @@ export function useWaypoints(terrain: TerrainPackage | null) {
    * Appends a waypoint on a known covered cell (e.g. a science target already
    * placed by splitByCoverage), named after it.
    */
-  function addAtCell(cell: RasterCell, label: string) {
+  function addAtCell(cell: RasterCell, label: string, origin?: WaypointOrigin) {
     if (!terrain) return
     setNotice(null)
-    setWaypoints((list) => insertWaypoint(list, { id: nextWaypointId(list), label, cell }))
+    update((scoped) => {
+      const id = nextWaypointId(scoped.waypoints)
+      return { waypoints: insertWaypoint(scoped.waypoints, { id, label, cell }),
+        origins: origin ? { ...scoped.origins, [id]: origin } : scoped.origins }
+    })
   }
 
   /** Returns false when the new position is rejected, so the marker can snap back. */
@@ -84,12 +90,16 @@ export function useWaypoints(terrain: TerrainPackage | null) {
   return {
     waypoints,
     notice,
+    origins,
     place,
     addAtCell,
     relocate,
-    remove: (id: string) => setWaypoints((list) => removeWaypoint(list, id)),
+    remove: (id: string) => update((scoped) => {
+      const origins = { ...scoped.origins }; delete origins[id]
+      return { waypoints: removeWaypoint(scoped.waypoints, id), origins }
+    }),
     reorder: (id: string, toIndex: number) =>
       setWaypoints((list) => moveWaypoint(list, id, toIndex)),
-    clear: () => setWaypoints(() => []),
+    clear: () => update(() => ({ waypoints: [], origins: {} })),
   }
 }

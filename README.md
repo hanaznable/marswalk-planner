@@ -21,12 +21,13 @@ live replanning, and 3D rendering are outside the initial MVP.
 ## Run locally
 
 ```sh
-npm install
+npm ci
 npm run dev
 ```
 
 Use the local URL printed by Vite. On Windows PowerShell with disabled script
-execution, use `npm.cmd install` and `npm.cmd run dev`.
+execution, use `npm.cmd ci` and `npm.cmd run dev`. The app needs no Python,
+QGIS or raw NASA downloads: processed prototype assets are included.
 
 ```sh
 npm run build   # Type-check and build to dist/
@@ -46,18 +47,24 @@ src/
     layout/                        Header and workspace status bar
     ui/Icon.tsx                    Shared SVG icons; no icon dependency
   features/
-    datasets/                      Region metadata, empty registry, dataset types
+    datasets/                      Region registry, terrain/science contracts and source types
     map/
-      components/LayersPanel.tsx   Layer controls and empty data catalog
+      components/LayersPanel.tsx   Layer controls, sources and dataset status
       components/MapViewport.tsx   View selection and map frame
       components/MapCanvas.tsx     Isolated Leaflet renderer and navigation
       types.ts                     View-mode UI contract
     mission/MissionPanel.tsx      Mission details and planning panel tabs
     routing/                       Pure route algorithms, UI and terrain adapter
+    mapLayers/                     Independent display layers, RGB loading and selection provenance
+    science/                       Science target selection and waypoint flow
     terrain/                       Independent future 3D renderer boundary
-scripts/preprocessing/             Future Python geospatial preparation
+scripts/preprocessing/             Pointer to the implemented terrain pipeline
 scripts/terrain/                   Region configs, source checks and v1 exporter
 public/data/gale/pahrump-hills-v1/  Real terrain package, loaded by the app at startup
+public/data/science/               Sourced drill-associated rover proxies
+public/data/layer-lab/             Version-bound APXS, traverse and mineral context
+public/data/imagery/               Registered enhanced RGB and its provenance
+layer-lab.html                    Independent local layer comparison page
 ```
 
 ## Current behavior
@@ -75,6 +82,15 @@ public/data/gale/pahrump-hills-v1/  Real terrain package, loaded by the app at s
 - Desktop uses three columns. On narrower screens panels flow below the map.
 - Place, move and order waypoints; compare distance and slope-aware routes and
   include a return leg on the loaded terrain.
+- Toggle elevation, slope, drill proxies, APXS observations, historical traverse
+  and a published mineral finding. Select named observations as route waypoints.
+- Switch grayscale/enhanced RGB. The RGB prototype is empirically registered to
+  the ortho and has partial color coverage; its western grayscale strip is preserved.
+- Export JSON or a printable mission report. Explicit APXS/mineral selections
+  retain source records, measurement metadata, flags, source coordinates and
+  proxy-position caveats; moving a waypoint is disclosed separately.
+- Open `/layer-lab.html` to compare display layers. Missing CRISM, thermal,
+  geology and hazard data remain labelled as unavailable.
 
 ## Data honesty and integration
 
@@ -84,7 +100,10 @@ HiRISE basemap, manifest and provenance. See [terrain preparation](scripts/terra
 The app loads it through `src/features/datasets/loadTerrainPackage.ts` and shows
 its attribution and prototype limitations. The real package documents a working
 georeferencing convention and unverified registration accuracy; it is not an
-operationally validated navigation product. Science targets are not included.
+operationally validated navigation product. Separate science/context collections
+provide three drill proxies, 104 APXS records grouped at 30 coordinate pairs,
+historical traverse context and the Buckskin mineral finding. Repeated records
+and source review flags do not automatically imply separate scientific sites.
 
 Leaflet uses `CRS.Simple` for a local metric frame derived from raster bounds.
 The source Mars CRS and projected geotransform remain in the terrain manifest;
@@ -98,6 +117,7 @@ depending on React or Leaflet. Future Three.js / React Three Fiber rendering
 belongs in `features/terrain` and should load on demand. Neither the datasets
 boundary nor route algorithms should import a renderer.
 
-The UI uses optional Google Fonts with local system fallbacks. No dataset
-requests are made. Leaflet and its TypeScript definitions are the only additions
-to the starter dependencies.
+The UI uses optional Google Fonts with local system fallbacks. Dataset requests
+load local static assets. Raw downloads and processing outputs are described in
+[terrain documentation](docs/terrain/README.md). The main app never needs an
+external NASA server to display the committed demo assets.

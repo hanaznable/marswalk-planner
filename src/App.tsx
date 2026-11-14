@@ -20,6 +20,12 @@ import type { PlacedTarget } from './features/datasets/scienceTargets'
 import { ScienceTargetBrowser } from './features/science/components/ScienceTargetBrowser'
 import { waypointAtCell } from './features/science/targetDisplay'
 import { useScienceTargets } from './features/science/useScienceTargets'
+import { useDisplayLayers } from './features/mapLayers/useDisplayLayers'
+import { useSurfaceImagery } from './features/mapLayers/useSurfaceImagery'
+import { placeWaypoint } from './features/map/waypointPlacement'
+import type { MapPoint } from './features/datasets/terrainContract'
+import type { WaypointOrigin } from './features/datasets/waypointOrigin'
+import { useBasemapStatus } from './features/map/useBasemapStatus'
 import './App.css'
 
 const NO_TARGETS: readonly PlacedTarget[] = []
@@ -38,11 +44,22 @@ function App() {
   const dataset = terrainState.status === 'ready' ? terrainState.dataset : null
   const waypoints = useWaypoints(terrain)
   const targets = useScienceTargets(terrain, dataset)
+  const displayLayers = useDisplayLayers(terrain, dataset)
+  const surfaceImagery = useSurfaceImagery(terrain, dataset)
+  const basemap = useBasemapStatus(surfaceImagery.mode === 'rgb' && surfaceImagery.state.status === 'ready'
+    ? surfaceImagery.state.url : terrainState.status === 'ready' ? terrainState.basemapUrl : null)
   const [showTargets, setShowTargets] = useState(true)
   const [selectedTargetId, setSelectedTargetId] = useState<string | null>(null)
   const placedTargets = targets.status === 'ready' ? targets.inside : NO_TARGETS
   const addTargetWaypoint = ({ target, cell }: PlacedTarget) => {
     if (!waypointAtCell(waypoints.waypoints, cell)) waypoints.addAtCell(cell, target.name)
+  }
+  const addContextWaypoint = (point: MapPoint, label: string, origin: WaypointOrigin) => {
+    if (!terrain) return
+    const placement = placeWaypoint(terrain, point)
+    if (placement.ok && !waypointAtCell(waypoints.waypoints, placement.cell)) {
+      waypoints.addAtCell(placement.cell, label, origin)
+    }
   }
   const handleTargetClick = (id: string) => {
     setSelectedTargetId(id)
@@ -75,6 +92,7 @@ function App() {
           terrain,
           dataset,
           waypoints: waypoints.waypoints,
+          waypointOrigins: waypoints.origins,
           plan,
           eva,
           assumptions: { maxSlopeDegrees, slopePenalty, returnToStart, ...evaAssumptions },
@@ -110,6 +128,9 @@ function App() {
           targetsState={targets}
           showTargets={showTargets}
           onShowTargetsChange={setShowTargets}
+          displayLayers={displayLayers}
+          surfaceImagery={surfaceImagery}
+          basemap={basemap}
           targetBrowser={
             <ScienceTargetBrowser
               state={targets}
@@ -137,6 +158,10 @@ function App() {
           targets={showTargets ? placedTargets : NO_TARGETS}
           selectedTargetId={selectedTargetId}
           onTargetClick={handleTargetClick}
+          onContextWaypoint={addContextWaypoint}
+          displayLayers={displayLayers}
+          surfaceImagery={surfaceImagery}
+          basemap={basemap}
         />
         <MissionPanel
           region={region}

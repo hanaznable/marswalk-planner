@@ -154,6 +154,7 @@ export function MissionReportDialog({ report, onClose, onDownloadJson }: Mission
 
           {scienceTargets && <ScienceTargetsSection targets={scienceTargets} />}
 
+          <SelectedObservations waypoints={report.waypoints} />
           <section>
             <h2>Routes</h2>
             {routes ? (
@@ -208,6 +209,28 @@ export function MissionReportDialog({ report, onClose, onDownloadJson }: Mission
     </div>,
     document.body,
   )
+}
+
+function SelectedObservations({ waypoints }: { waypoints: MissionReport['waypoints'] }) {
+  const selected = waypoints.filter((waypoint) => waypoint.provenance)
+  if (selected.length === 0) return null
+  return <section className="report-observations">
+    <h2>Selected observations and mineral findings</h2>
+    {selected.map((waypoint) => {
+      const origin = waypoint.provenance!
+      return <div key={waypoint.id} className="report-target">
+        <h3>{origin.name} · waypoint {waypoint.order}</h3>
+        <p>{origin.kind} · {origin.mission}{origin.measurementSol !== null ? ` · measurement sol ${origin.measurementSol}` : ''}</p>
+        <p>{origin.description}</p>
+        <p>Source rover-position proxy: {coordinate(origin.position.x)}, {coordinate(origin.position.y)} m in the terrain CRS. Positional uncertainty not stated.</p>
+        {origin.locationRelation === 'relocated' && <p><strong>This waypoint was moved from the source cell; these references describe the original observation, not its new location.</strong></p>}
+        {origin.reviewFlags.length > 0 && <p>Source review flags: {origin.reviewFlags.join('; ')}</p>}
+        <p>Source record: {origin.recordId}</p>
+        {origin.sourceSha256 && <p>Source snapshot SHA-256: {origin.sourceSha256}</p>}
+        <ul>{origin.sources.map((source) => <li key={source.url + source.provides}><a href={source.url}>{source.attribution}</a> · {source.provides}</li>)}</ul>
+      </div>
+    })}
+  </section>
 }
 
 function ScienceTargetsSection({ targets }: { targets: NonNullable<MissionReport['scienceTargets']> }) {

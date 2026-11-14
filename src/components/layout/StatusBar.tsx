@@ -11,7 +11,7 @@ function terrainStatus(state: TerrainState): string {
     case 'ready':
       return state.terrain.manifest.synthetic
         ? 'SYNTHETIC TERRAIN · NOT NASA DATA'
-        : `TERRAIN ${state.terrain.manifest.id.toUpperCase()} LOADED · NO SCIENCE TARGETS YET`
+        : `TERRAIN ${state.terrain.manifest.id.toUpperCase()} LOADED`
   }
 }
 
