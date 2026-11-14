@@ -1313,3 +1313,145 @@ dd {
     min-height: calc(100svh - 265px);
   }
 }
+
+/* Terrain, waypoint markers and placement feedback */
+.map-canvas.adding.leaflet-container,
+.map-canvas.adding .leaflet-grab,
+.map-canvas.adding .leaflet-interactive {
+  cursor: crosshair;
+}
+.terrain-image {
+  opacity: 0.85;
+}
+.leaflet-container .terrain-outline {
+  stroke: #a79b80;
+  stroke-dasharray: 4 4;
+}
+.synthetic-banner,
+.map-notice {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font: 9px var(--mono);
+  letter-spacing: 0.8px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.synthetic-banner {
+  top: 14px;
+  color: #e9c9a0;
+  background: #3a2c1ce8;
+  border: 1px solid #7a5a35;
+}
+.synthetic-banner span {
+  margin: 0 6px;
+}
+.map-notice {
+  bottom: 48px;
+  color: #c9cec7;
+  background: #1d241ded;
+  border: 1px solid #3b4434;
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 0;
+}
+.map-notice.warning {
+  color: #f0c4b0;
+  border-color: #8a5440;
+  background: #2e1f1aed;
+}
+.waypoint-marker {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 2px solid #101313;
+  box-shadow: 0 0 0 1px #e0e3e2a0;
+  font: 600 11px var(--mono);
+  color: #101313;
+  cursor: grab;
+}
+.waypoint-start {
+  background: #8fb07a;
+}
+.waypoint-stop {
+  background: #d9c48f;
+}
+.waypoint-destination {
+  background: var(--accent);
+}
+.waypoint-list {
+  list-style: none;
+  margin: 20px 0 16px;
+  padding: 0;
+}
+.waypoint-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3px 8px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+}
+.waypoint-role {
+  font-weight: 600;
+}
+.waypoint-role.role-start {
+  color: #8fb07a;
+}
+.waypoint-role.role-stop {
+  color: #d9c48f;
+}
+.waypoint-role.role-destination {
+  color: var(--accent);
+}
+.waypoint-position {
+  grid-column: 1;
+  color: var(--muted);
+  font: 10px var(--mono);
+}
+.waypoint-actions {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.waypoint-actions button {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 3px;
+  background: transparent;
+  color: #a3ac9e;
+}
+.waypoint-actions button:not(:disabled):hover {
+  background: #2a3030;
+}
+.waypoint-actions button:disabled {
+  opacity: 0.3;
+}
+.add-waypoint:not(:disabled):hover {
+  border-color: #6b604c;
+  color: #c9b99c;
+}
+.add-waypoint.active {
+  border-style: solid;
+  border-color: #8fb07a;
+  color: #b9d1a8;
+  background: #26302161;
+}
+.clear-waypoints {
+  display: block;
+  margin: 10px auto 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 10px;
+  text-decoration: underline;
+}
+.clear-waypoints:hover {
+  color: #c9cec7;
+}

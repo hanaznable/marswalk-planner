@@ -1,4 +1,7 @@
+import type { MapPoint } from '../../datasets/terrainContract'
+import type { TerrainPackage } from '../../datasets/terrainPackage'
 import type { MarsRegion } from '../../datasets/types'
+import type { Waypoint } from '../../routing'
 import { TerrainPlaceholder } from '../../terrain/components/TerrainPlaceholder'
 import { Icon } from '../../../components/ui/Icon'
 import type { ViewMode } from '../types'
@@ -11,6 +14,12 @@ interface MapViewportProps {
   showGrid: boolean
   expanded: boolean
   onExpand: () => void
+  terrain: TerrainPackage | null
+  waypoints: readonly Waypoint[]
+  addMode: boolean
+  notice: string | null
+  onPlace: (point: MapPoint) => void
+  onRelocate: (id: string, point: MapPoint) => boolean
 }
 
 export function MapViewport({
@@ -20,6 +29,12 @@ export function MapViewport({
   showGrid,
   expanded,
   onExpand,
+  terrain,
+  waypoints,
+  addMode,
+  notice,
+  onPlace,
+  onRelocate,
 }: MapViewportProps) {
   return (
     <section
@@ -35,13 +50,28 @@ export function MapViewport({
           <span className="breadcrumb-slash">/</span>
           <strong>{region.name}</strong>
         </div>
-        <span className="map-preview-label">DATA PREVIEW</span>
+        <span className="map-preview-label">
+          {terrain?.manifest.synthetic ? 'SYNTHETIC PREVIEW' : 'DATA PREVIEW'}
+        </span>
       </div>
       <div className="map-stage">
         {viewMode === '2d' ? (
-          <MapCanvas regionId={region.id} showGrid={showGrid} />
+          <MapCanvas
+            regionId={region.id}
+            showGrid={showGrid}
+            terrain={terrain}
+            waypoints={waypoints}
+            addMode={addMode}
+            onPlace={onPlace}
+            onRelocate={onRelocate}
+          />
         ) : (
           <TerrainPlaceholder />
+        )}
+        {viewMode === '2d' && (addMode || notice) && (
+          <div className={`map-notice${notice ? ' warning' : ''}`} role="status">
+            {notice ?? 'Click the terrain to place a waypoint'}
+          </div>
         )}
         <div className="view-switcher" role="group" aria-label="Viewport mode">
           <button
