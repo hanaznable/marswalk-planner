@@ -15,6 +15,9 @@
   --faint: #737e7b;
   --accent: #d38d70;
   --mono: 'IBM Plex Mono', Consolas, monospace;
+  /* Route identity colours, validated for CVD on the dark surface (dataviz validator). */
+  --route-shortest: #c98500;
+  --route-slope-aware: #3987e5;
 }
 
 * {

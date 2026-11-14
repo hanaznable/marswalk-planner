@@ -1471,14 +1471,18 @@ dd {
   stroke-linejoin: round;
 }
 .leaflet-container .route-slope-limited {
-  stroke: #8fb07a;
-  stroke-width: 4;
-  stroke-opacity: 0.95;
+  stroke: var(--route-slope-aware);
+  stroke-width: 3;
 }
 .leaflet-container .route-shortest {
-  stroke: #e6c98e;
+  stroke: var(--route-shortest);
   stroke-width: 2.5;
   stroke-dasharray: 6 6;
+}
+.leaflet-container .route-halo {
+  stroke: #101313;
+  stroke-width: 6;
+  stroke-opacity: 0.7;
 }
 .legend-swatch {
   display: inline-block;
@@ -1487,10 +1491,10 @@ dd {
   margin-right: 4px;
 }
 .legend-swatch.slope-limited {
-  border-top: 4px solid #8fb07a;
+  border-top: 3px solid var(--route-slope-aware);
 }
 .legend-swatch.shortest {
-  border-top: 2px dashed #e6c98e;
+  border-top: 2px dashed var(--route-shortest);
 }
 .route-legend {
   position: absolute;
@@ -1587,4 +1591,119 @@ dd {
   margin-top: 2px;
   color: var(--muted);
   font: 9px var(--mono);
+}
+
+/* Elevation profile chart */
+.profile-chart {
+  margin: 18px 0 0;
+}
+.profile-chart figcaption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.profile-chart figcaption .eyebrow {
+  font-size: 8px;
+}
+.profile-legend {
+  display: flex;
+  gap: 10px;
+  color: #c9cec7;
+  font-size: 10px;
+}
+.profile-plot {
+  position: relative;
+  margin-top: 8px;
+}
+.profile-plot svg {
+  display: block;
+  overflow: visible;
+}
+.profile-plot svg:focus-visible {
+  outline: 1px solid var(--muted);
+  outline-offset: 2px;
+}
+.profile-grid {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+.profile-axis {
+  fill: var(--muted);
+  font: 9px var(--mono);
+}
+.profile-line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.profile-line.profile-shortest {
+  stroke: var(--route-shortest);
+  stroke-dasharray: 5 4;
+}
+.profile-line.profile-slopeAware {
+  stroke: var(--route-slope-aware);
+}
+.profile-cursor line {
+  stroke: var(--muted);
+  stroke-width: 1;
+}
+.profile-dot {
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+.profile-dot.profile-shortest {
+  fill: var(--route-shortest);
+}
+.profile-dot.profile-slopeAware {
+  fill: var(--route-slope-aware);
+}
+.profile-hit {
+  fill: transparent;
+  cursor: crosshair;
+}
+.profile-tooltip {
+  position: absolute;
+  top: -6px;
+  transform: translate(-50%, -100%);
+  padding: 6px 8px;
+  border: 1px solid #3b4434;
+  border-radius: 4px;
+  background: #1d241df2;
+  color: #e0e3e2;
+  font-size: 10px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.profile-tooltip div + div {
+  margin-top: 3px;
+}
+.profile-table {
+  margin-top: 8px;
+  font-size: 10px;
+  color: var(--muted);
+}
+.profile-table summary {
+  cursor: pointer;
+}
+.profile-table table {
+  width: 100%;
+  margin-top: 6px;
+  border-collapse: collapse;
+}
+.profile-table th,
+.profile-table td {
+  padding: 4px 0;
+  text-align: right;
+  font-weight: 400;
+}
+.profile-table th[scope='row'],
+.profile-table thead th:first-child {
+  text-align: left;
+}
+.profile-table td {
+  color: #a3ac9e;
+  font-family: var(--mono);
 }
