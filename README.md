@@ -1,16 +1,18 @@
 # Marswalk Planner
 
-A modular Mars exploration application shell for a NASA Space Apps Challenge
+A modular Mars exploration prototype for a NASA Space Apps Challenge
 2026 project. The project name is provisional. Built with React, TypeScript,
-Vite, and Leaflet. There is no backend, database, authentication, routing
-algorithm, or 3D renderer.
+Vite, and Leaflet, with pure TypeScript route planning. There is no backend,
+database, authentication, or 3D renderer.
 
 ## Product scope
 
 The planned product is an astronaut-centered Mars science route planner with
 terrain and science layers, historical mission context, scientific target
 selection, equipment constraints, round-trip planning, route comparison, mission
-budgets, and export. These are planned capabilities, not implemented features.
+budgets, and export. Route planning currently runs on labeled synthetic terrain;
+the real terrain package is prepared separately. Other planned capabilities
+should not be inferred to be implemented.
 
 See [Project scope and phased roadmap (Turkish)](SCOPE.md) for the MVP, later
 phases, data requirements, acceptance criteria, and open decisions. Rover planning,
@@ -30,6 +32,7 @@ execution, use `npm.cmd install` and `npm.cmd run dev`.
 npm run build   # Type-check and build to dist/
 npm run preview # Serve the production build locally
 npm run lint   # Existing ESLint configuration
+npm test       # Routing, map/domain and real terrain contract checks
 ```
 
 ## Project structure
@@ -50,33 +53,39 @@ src/
       components/MapCanvas.tsx     Isolated Leaflet renderer and navigation
       types.ts                     View-mode UI contract
     mission/MissionPanel.tsx      Mission details and planning panel tabs
-    routing/                       Placeholder UI; future pure route algorithms
+    routing/                       Pure route algorithms, UI and terrain adapter
     terrain/                       Independent future 3D renderer boundary
 scripts/preprocessing/             Future Python geospatial preparation
-public/data/                      Future attributed, processed assets
+scripts/terrain/                   Region configs, source checks and v1 exporter
+public/data/gale/pahrump-hills-v1/  Real terrain package; UI integration pending
 ```
 
 ## Current behavior
 
 - Choose Jezero Crater or Gale Crater as a workspace label.
-- Pan and zoom an empty Leaflet viewport with keyboard or pointer controls;
+- Pan and zoom a labeled synthetic terrain fixture with keyboard or pointer controls;
   reset the view and expand or restore the viewport.
 - Toggle the visual viewport grid, inspect the empty data catalog, and switch
   between route planning and mission information.
 - Switch to a clearly labeled 3D placeholder. No 3D code is loaded or rendered.
 - Desktop uses three columns. On narrower screens panels flow below the map.
+- Place, move and order waypoints; compare distance and slope-aware routes and
+  include a return leg on the synthetic development terrain.
 
 ## Data honesty and integration
 
-No NASA imagery, elevation, scientific targets, mission observations, coordinates,
-or route results are included. The grid and globe illustration are decorative UI,
-not scientific data. Unavailable controls are disabled and all integration
-states are explicit. Region choices do not load data or imply geographic coverage.
+A real contract-v1 terrain package is prepared under
+`public/data/gale/pahrump-hills-v1`: numeric 5 m elevation/slope grids, matching
+HiRISE basemap, manifest and provenance. See [terrain preparation](scripts/terrain/README.md).
+It is not yet integrated into the UI: the app still uses labeled synthetic
+development terrain. Region choices do not load real data. The real package
+documents a working georeferencing convention and unverified registration
+accuracy; it is not an operationally validated navigation product.
 
-The empty map uses Leaflet `CRS.Simple`, an arbitrary non-geographic canvas. Its
-internal origin is not a Mars coordinate. Replace this placeholder with an
-explicit Mars-appropriate coordinate reference system when real datasets are
-integrated. No Earth basemap tiles, distances, or scale bar are used.
+Leaflet uses `CRS.Simple` for a local metric frame derived from raster bounds.
+The source Mars CRS and projected geotransform remain in the terrain manifest;
+map clicks and route cells use explicit conversion helpers. Do not use Earth
+basemap tiles or interpret projected Mars metres as Earth coordinates.
 
 Keep NASA asset provenance and reference-system metadata in `features/datasets`.
 Perform Python preprocessing outside the browser; serve validated outputs from

@@ -1,0 +1,99 @@
+{
+  "package_status": "prototype terrain package; frontend integration pending",
+  "software": {
+    "python": "3.13.9",
+    "numpy": "2.4.3",
+    "pillow": "12.1.1"
+  },
+  "pipeline_sha256": {
+    "export_terrain_v1.py": "527661d54125a0c4864a6bf148bbfc81588b0413889301cdec24e94ba23f1ac3",
+    "terrain_resampling.py": "44e81989ffe28e7852a7793d17cbdbf9ee87bef6234b809d8b3c2667fdc0c639",
+    "plan_terrain_package.py": "73dff34cf50b2121a3303c806c1a8bd891f78ae2c1fc5630aa0ce3e20501be83",
+    "terrain_config.py": "6f56623420446e0c7445c4ae6c9d02967135ebcc890484d176fd99652fd296be"
+  },
+  "contract_version": 1,
+  "sources": {
+    "dem": {
+      "path": "data/raw/pahrump-hills/DTEEC_040770_1755_039280_1755_A01.IMG",
+      "source_url": "https://www.uahirise.org/dtm/dtm.php?ID=ESP_040770_1755",
+      "sha256": "143708c00b11765da8dfe3aba7ce894e7cc89314b3fd406df9fefb9fda9cba26",
+      "attribution": "NASA/JPL-Caltech/UArizona"
+    },
+    "imagery": {
+      "path": "data/raw/pahrump-hills/ESP_039280_1755_RED_C_02_ORTHO.JP2",
+      "source_url": "https://www.uahirise.org/dtm/dtm.php?ID=ESP_040770_1755",
+      "sha256": "806ca514d75501b8d60f4386538e8b8f54a522c90a62858ec6f1850a14b2a7a7",
+      "attribution": "NASA/JPL-Caltech/UArizona",
+      "label_path": "data/raw/pahrump-hills/ESP_039280_1755_RED_C_02_ORTHO.LBL"
+    }
+  },
+  "source_checks": {
+    "dem_sha256": "matched",
+    "imagery_sha256": "matched",
+    "imagery_label_sha256": "2dcac6b7f08ded26af8b82164492c051cfb96c93b131bb8d170d3376af26417f",
+    "imagery_bytes": 26370446
+  },
+  "georeferencing": {
+    "working_origin_convention": "ua_pds_jp2",
+    "review_status": "accepted_for_prototype",
+    "rationale": "Use the UA PDS_JP2 convention for prototype consistency with matching labels and official JP2 metadata. Visual A/B review was inconclusive; physical alignment and absolute accuracy are not certified.",
+    "review_evidence": [
+      "docs/terrain/georeferencing-review.md"
+    ],
+    "reference_url": "https://pirlwww.lpl.arizona.edu/software/PDS_JP2/PDS_JP2/classPDS__Projection__Data.html"
+  },
+  "source_projection": {
+    "wkt": "PROJCS[\"Mars Equirectangular\",GEOGCS[\"Mars\",DATUM[\"Mars sphere\",SPHEROID[\"Mars label sphere\",3396190.0,0]],PRIMEM[\"Reference meridian\",0],UNIT[\"degree\",0.0174532925199433]],PROJECTION[\"Equirectangular\"],PARAMETER[\"standard_parallel_1\",0],PARAMETER[\"central_meridian\",137.39],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1]]",
+    "units": "metre",
+    "radius_m": 3396190.0,
+    "central_meridian_deg": 137.39
+  },
+  "source_reader_origin_xy_m": [
+    -3269.9991573082198,
+    -271630.49311855587
+  ],
+  "working_origin_policy": "UA PDS_JP2 offsets applied to DEM pixel positions; source samples unchanged before aggregation",
+  "source_cell_size_m": 1.0117571650087,
+  "source_window_with_halo": [
+    2009,
+    4220,
+    991,
+    991
+  ],
+  "routing_cell_size_m": 5.0,
+  "elevation_method": "Exact area-weighted mean of overlapping native DEM pixel footprints",
+  "slope_method": "Native-resolution Horn 3x3 slope in degrees, then maximum across all native cells with positive overlap in each routing cell",
+  "slope_semantics": "Conservative maximum native slope per routing cell, NOT slope of the averaged 5m DEM or an independently validated safety measure",
+  "slope_reference": "https://gdal.org/en/stable/programs/gdaldem.html",
+  "nodata_policy": "Any missing contributing elevation makes output elevation NaN; any missing 3x3 slope stencil or contributing slope makes output slope NaN; no gap filling",
+  "edge_policy": "Real one-native-cell halo; no extrapolation at AOI boundary",
+  "basemap_method": "Bilinear fractional crop to exact routing footprint; grayscale JPEG quality 95 for display only",
+  "vertical_reference": "Mars 2000 equipotential surface, per source label; elevations in metres",
+  "elevation_statistics": {
+    "valid_cells": 40000,
+    "nodata_cells": 0,
+    "min": -4466.024832511837,
+    "max": -4402.630883425753,
+    "median": -4446.250235630836
+  },
+  "slope_statistics_degrees": {
+    "valid_cells": 40000,
+    "nodata_cells": 0,
+    "min": 0.8757641284341869,
+    "max": 53.40414665891789,
+    "median": 17.010009132326296
+  },
+  "accuracy": "Absolute geolocation and image/DEM registration accuracy unverified; visual A/B review inconclusive",
+  "limits": [
+    "No validated hazard, thermal, mineral, resource-consumption or astronaut safety model.",
+    "Sub-cell hazards and DEM artifacts may remain; reduced grid is not a traversal certification.",
+    "Maximum-slope aggregation can block otherwise navigable parts of a coarse cell.",
+    "V1 manifest schema is unchanged; integration should expose these prototype limitations."
+  ],
+  "output_sha256": {
+    "manifest.json": "450ada2dc924b72e6188bedc476c6373f7776544d599c0c6402d8e3e6d05b5c5",
+    "elevation.f32": "8742eb59e72e80b0f762817d5918160cf16c36d073b835ead64e7e27deb877cc",
+    "slope.f32": "79d0aac550df19e0636d5668ffad09af611954d6725291368f31463c21829158",
+    "basemap.jpg": "bc29fea551923f65882585cf26889cc09227b857fd4b6eefbbe5c422566bb4f5"
+  }
+}

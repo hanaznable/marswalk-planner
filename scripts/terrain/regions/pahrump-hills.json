@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "id": "pahrump-hills",
+  "title": "Pahrump Hills, Gale Crater",
+  "body": "Mars",
+  "aoi": {
+    "bounds_xy_m": [
+      -1234.7661867630893,
+      -276902.8681376489,
+      -234.7661867630893,
+      -275902.8681376489
+    ],
+    "selection_report": "docs/terrain/pahrump-hills-aoi.json"
+  },
+  "grid": {
+    "strategy": "native_dem_covering_window"
+  },
+  "georeferencing": {
+    "working_origin_convention": "ua_pds_jp2",
+    "review_status": "accepted_for_prototype",
+    "rationale": "Use the UA PDS_JP2 convention for prototype consistency with matching labels and official JP2 metadata. Visual A/B review was inconclusive; physical alignment and absolute accuracy are not certified.",
+    "review_evidence": ["docs/terrain/georeferencing-review.md"],
+    "reference_url": "https://pirlwww.lpl.arizona.edu/software/PDS_JP2/PDS_JP2/classPDS__Projection__Data.html"
+  },
+  "sources": {
+    "dem": {
+      "path": "data/raw/pahrump-hills/DTEEC_040770_1755_039280_1755_A01.IMG",
+      "source_url": "https://www.uahirise.org/dtm/dtm.php?ID=ESP_040770_1755",
+      "sha256": "143708c00b11765da8dfe3aba7ce894e7cc89314b3fd406df9fefb9fda9cba26",
+      "attribution": "NASA/JPL-Caltech/UArizona"
+    },
+    "imagery": {
+      "path": "data/raw/pahrump-hills/ESP_039280_1755_RED_C_02_ORTHO.JP2",
+      "source_url": "https://www.uahirise.org/dtm/dtm.php?ID=ESP_040770_1755",
+      "sha256": "806ca514d75501b8d60f4386538e8b8f54a522c90a62858ec6f1850a14b2a7a7",
+      "attribution": "NASA/JPL-Caltech/UArizona",
+      "label_path": "data/raw/pahrump-hills/ESP_039280_1755_RED_C_02_ORTHO.LBL"
+    }
+  },
+  "optional_layers": []
+}
