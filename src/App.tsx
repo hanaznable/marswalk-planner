@@ -23,7 +23,8 @@ function App() {
   // Real packages load over HTTP; synthetic terrain only when explicitly selected.
   const terrainState = useTerrainSource(region)
   const terrain = terrainState.status === 'ready' ? terrainState.terrain : null
-  const dataset = terrainState.status === 'none' ? null : terrainState.dataset
+  // Only a successfully loaded real package is named as the active terrain.
+  const dataset = terrainState.status === 'ready' ? terrainState.dataset : null
   const waypoints = useWaypoints(terrain)
   // Scenario assumptions chosen by the user, not certified limits or an energy model.
   const [maxSlopeDegrees, setMaxSlopeDegrees] = useState(20)
@@ -103,7 +104,11 @@ function App() {
             ? `Terrain: ${dataset.title} (HiRISE, ${dataset.attribution}). Prototype data; science targets are not included yet.`
             : terrain?.manifest.synthetic
               ? 'Synthetic development terrain. Not NASA data.'
-              : 'No terrain package is loaded for this region.'}
+              : terrainState.status === 'loading'
+                ? 'Loading the terrain package…'
+                : terrainState.status === 'error'
+                  ? 'The terrain package failed to load; no other terrain is shown in its place.'
+                  : 'No terrain package exists for this region yet.'}
         </span>
       </div>
       <StatusBar terrainState={terrainState} />

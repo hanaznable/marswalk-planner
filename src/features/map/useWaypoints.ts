@@ -24,8 +24,9 @@ interface ScopedState {
 
 /**
  * Ordered waypoint list for one terrain package, with placement validation.
- * Waypoints are grid cells of a specific package, so they are dropped when the
- * terrain changes instead of being reinterpreted on another grid.
+ * Waypoints are grid cells of a specific package: they are only shown for the
+ * terrain they were placed on (never reinterpreted on another grid). Coming back
+ * to that terrain restores them unless waypoints were placed elsewhere meanwhile.
  */
 export function useWaypoints(terrain: TerrainPackage | null) {
   const terrainId = terrain?.manifest.id ?? null

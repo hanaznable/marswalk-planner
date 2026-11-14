@@ -208,8 +208,9 @@ export function LayersPanel({
           <div>
             <h3>Real science. Real sources.</h3>
             <p>
-              No NASA datasets are loaded yet. Map layers will become available
-              as data is integrated.
+              {datasetLoaded
+                ? 'HiRISE terrain is loaded with its source and limitations in the data catalog. Science targets are not loaded yet.'
+                : 'No NASA datasets are loaded for this selection. Map layers become available as data loads.'}
             </p>
           </div>
         </div>

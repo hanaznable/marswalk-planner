@@ -10,9 +10,9 @@ database, authentication, or 3D renderer.
 The planned product is an astronaut-centered Mars science route planner with
 terrain and science layers, historical mission context, scientific target
 selection, equipment constraints, round-trip planning, route comparison, mission
-budgets, and export. Route planning currently runs on labeled synthetic terrain;
-the real terrain package is prepared separately. Other planned capabilities
-should not be inferred to be implemented.
+budgets, and export. Route planning runs on the real Pahrump Hills prototype
+terrain package (HiRISE DTM); a labeled synthetic terrain remains as a development
+option. Other planned capabilities should not be inferred to be implemented.
 
 See [Project scope and phased roadmap (Turkish)](SCOPE.md) for the MVP, later
 phases, data requirements, acceptance criteria, and open decisions. Rover planning,
@@ -57,30 +57,34 @@ src/
     terrain/                       Independent future 3D renderer boundary
 scripts/preprocessing/             Future Python geospatial preparation
 scripts/terrain/                   Region configs, source checks and v1 exporter
-public/data/gale/pahrump-hills-v1/  Real terrain package; UI integration pending
+public/data/gale/pahrump-hills-v1/  Real terrain package, loaded by the app at startup
 ```
 
 ## Current behavior
 
-- Choose Jezero Crater or Gale Crater as a workspace label.
-- Pan and zoom a labeled synthetic terrain fixture with keyboard or pointer controls;
-  reset the view and expand or restore the viewport.
-- Toggle the visual viewport grid, inspect the empty data catalog, and switch
-  between route planning and mission information.
+- Gale Crater · Pahrump Hills (default) loads the real terrain package with
+  explicit loading and error states (with retry); it never falls back to
+  synthetic terrain. Jezero Crater has no package and shows an explicit empty
+  state. A labeled synthetic development terrain can be selected explicitly.
+- Pan and zoom the HiRISE basemap with keyboard or pointer controls; reset the
+  view and expand or restore the viewport.
+- Toggle the visual viewport grid, inspect the data catalog (source,
+  attribution, grid and prototype limitations), and switch between route
+  planning and mission information.
 - Switch to a clearly labeled 3D placeholder. No 3D code is loaded or rendered.
 - Desktop uses three columns. On narrower screens panels flow below the map.
 - Place, move and order waypoints; compare distance and slope-aware routes and
-  include a return leg on the synthetic development terrain.
+  include a return leg on the loaded terrain.
 
 ## Data honesty and integration
 
 A real contract-v1 terrain package is prepared under
 `public/data/gale/pahrump-hills-v1`: numeric 5 m elevation/slope grids, matching
 HiRISE basemap, manifest and provenance. See [terrain preparation](scripts/terrain/README.md).
-It is not yet integrated into the UI: the app still uses labeled synthetic
-development terrain. Region choices do not load real data. The real package
-documents a working georeferencing convention and unverified registration
-accuracy; it is not an operationally validated navigation product.
+The app loads it through `src/features/datasets/loadTerrainPackage.ts` and shows
+its attribution and prototype limitations. The real package documents a working
+georeferencing convention and unverified registration accuracy; it is not an
+operationally validated navigation product. Science targets are not included.
 
 Leaflet uses `CRS.Simple` for a local metric frame derived from raster bounds.
 The source Mars CRS and projected geotransform remain in the terrain manifest;

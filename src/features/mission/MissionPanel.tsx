@@ -147,13 +147,15 @@ export function MissionPanel({
           </span>
           Application shell<span>READY</span>
         </div>
+        <ReadinessItem
+          label="NASA terrain"
+          ready={terrainState.status === 'ready' && !terrainState.terrain.manifest.synthetic}
+          pending="PENDING"
+        />
+        <ReadinessItem label="Route planning" ready={terrainState.status === 'ready'} pending="NEEDS TERRAIN" />
         <div className="readiness-item">
           <span className="readiness-pending" />
-          NASA datasets<span>PENDING</span>
-        </div>
-        <div className="readiness-item">
-          <span className="readiness-pending" />
-          Route planning<span>PLANNED</span>
+          Science targets<span>PENDING</span>
         </div>
         <div className="readiness-item">
           <span className="readiness-pending" />
@@ -161,5 +163,21 @@ export function MissionPanel({
         </div>
       </div>
     </aside>
+  )
+}
+
+function ReadinessItem({ label, ready, pending }: { label: string; ready: boolean; pending: string }) {
+  return (
+    <div className="readiness-item">
+      {ready ? (
+        <span className="readiness-check">
+          <Icon name="check" size={12} />
+        </span>
+      ) : (
+        <span className="readiness-pending" />
+      )}
+      {label}
+      <span>{ready ? 'READY' : pending}</span>
+    </div>
   )
 }
