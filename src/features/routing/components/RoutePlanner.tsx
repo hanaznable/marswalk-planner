@@ -4,7 +4,7 @@ import {
   toLocalMetres,
   type RasterGrid,
 } from '../../datasets/terrainContract'
-import { waypointRoleLabel } from '../../map/waypointPlacement'
+import { waypointName, waypointRoleLabel } from '../../map/waypointPlacement'
 import type { Waypoint } from '../model/types'
 import type { RoutePlan } from '../useRoutePlan'
 import { RouteComparison } from './RouteComparison'
@@ -92,6 +92,9 @@ export function RoutePlanner({
               <li key={waypoint.id} className="waypoint-item">
                 <span className={`waypoint-role role-${role.split(' ')[0].toLowerCase()}`}>
                   {role}
+                  {waypointName(waypoint) && (
+                    <span className="waypoint-name"> · {waypointName(waypoint)}</span>
+                  )}
                 </span>
                 <span className="waypoint-position">
                   {local

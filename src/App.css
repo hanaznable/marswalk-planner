@@ -1434,6 +1434,11 @@ dd {
 .waypoint-role.role-destination {
   color: var(--accent);
 }
+.waypoint-name {
+  font-weight: 400;
+  color: #d5dad6;
+  overflow-wrap: anywhere;
+}
 .waypoint-position {
   grid-column: 1;
   color: var(--muted);
@@ -1690,6 +1695,170 @@ dd {
   color: var(--muted);
   font-size: 10px;
   line-height: 1.5;
+}
+
+/* Science targets: a diamond, distinct from round waypoints and route colours. */
+.target-marker {
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.target-marker span,
+.target-swatch {
+  display: block;
+  width: 11px;
+  height: 11px;
+  transform: rotate(45deg);
+  background: var(--science-target);
+  border: 2px solid #101313;
+  box-shadow: 0 0 0 1px #e0e3e2a0;
+}
+.target-marker.selected span {
+  width: 14px;
+  height: 14px;
+  box-shadow: 0 0 0 2px var(--science-target), 0 0 0 4px #101313;
+}
+.target-marker:focus-visible {
+  outline: 2px solid var(--science-target);
+  outline-offset: 3px;
+}
+.target-browser,
+.layers-panel .target-status {
+  margin: 0 18px 8px;
+  font-size: 10px;
+}
+.target-status {
+  color: var(--muted);
+  line-height: 1.5;
+}
+.target-error {
+  color: #f0c4b0;
+}
+.target-error p + p {
+  margin-top: 4px;
+}
+.target-error .retry-button {
+  margin-top: 8px;
+}
+.target-synthetic {
+  font: 8px var(--mono);
+  letter-spacing: 0.6px;
+  color: #e0b98f;
+  margin-bottom: 8px;
+}
+.target-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.target-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 2px 10px;
+  width: 100%;
+  padding: 7px 8px;
+  border-radius: 3px;
+  background: transparent;
+  color: #d5dad6;
+  text-align: left;
+  font-size: 11px;
+}
+.target-item:hover {
+  background: #232928;
+}
+.target-item[aria-pressed='true'] {
+  background: #2a2738;
+  box-shadow: inset 2px 0 0 var(--science-target);
+}
+.target-item .target-swatch {
+  grid-row: 1 / span 2;
+  width: 8px;
+  height: 8px;
+  margin: 0 2px;
+}
+.target-name {
+  overflow-wrap: anywhere;
+}
+.target-kind {
+  color: var(--muted);
+  font-size: 9px;
+}
+.target-details {
+  margin: 8px 0;
+  padding: 12px;
+  border: 1px solid #3d3852;
+  border-radius: 4px;
+  background: #1b1a22;
+  line-height: 1.5;
+}
+.target-details h3 {
+  font-size: 12px;
+  color: #e0e3e2;
+}
+.target-details p + p {
+  margin-top: 6px;
+}
+.target-caveat {
+  color: #e0b98f;
+}
+.target-meta {
+  font-family: var(--mono);
+  color: #c9cec7;
+}
+.target-description {
+  color: var(--muted);
+}
+.target-details h4 {
+  margin: 10px 0 4px;
+  font-size: 10px;
+  color: #c9cec7;
+}
+.target-sources {
+  margin: 0;
+  padding-left: 16px;
+  color: var(--muted);
+}
+.target-sources a {
+  color: #9ec5f4;
+}
+.target-add {
+  width: 100%;
+  margin-top: 12px;
+  padding: 8px;
+  border: 1px solid #5d5478;
+  border-radius: 3px;
+  background: #2a2738;
+  color: #e3dcf7;
+  font-size: 11px;
+}
+.target-add:not(:disabled):hover {
+  background: #353049;
+}
+.target-add:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.target-outside {
+  margin-top: 10px;
+  color: var(--muted);
+}
+.target-outside summary {
+  cursor: pointer;
+  color: #c9cec7;
+  padding: 4px 0;
+}
+.target-outside ul {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+}
+.target-outside li {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 0;
+  border-bottom: 1px solid #262c2a;
+  color: #b4bbb5;
 }
 
 /* Elevation profile chart */

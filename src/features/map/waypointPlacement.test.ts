@@ -6,6 +6,7 @@ import {
   nextWaypointId,
   placeWaypoint,
   toLatLng,
+  waypointName,
   waypointRoleLabel,
 } from './waypointPlacement'
 
@@ -52,6 +53,14 @@ describe('placeWaypoint', () => {
       ok: false,
       reason: 'noData',
     })
+  })
+})
+
+describe('waypointName', () => {
+  it('hides automatic names and keeps given ones', () => {
+    const cell = { row: 0, col: 0 }
+    expect(waypointName({ id: 'wp-3', label: 'Point 3', cell })).toBeNull()
+    expect(waypointName({ id: 'wp-4', label: 'Synthetic ridge C', cell })).toBe('Synthetic ridge C')
   })
 })
 

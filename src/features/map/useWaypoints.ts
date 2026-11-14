@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { MapPoint } from '../datasets/terrainContract'
+import type { MapPoint, RasterCell } from '../datasets/terrainContract'
 import type { TerrainPackage } from '../datasets/terrainPackage'
 import {
   insertWaypoint,
@@ -58,6 +58,16 @@ export function useWaypoints(terrain: TerrainPackage | null) {
     })
   }
 
+  /**
+   * Appends a waypoint on a known covered cell (e.g. a science target already
+   * placed by splitByCoverage), named after it.
+   */
+  function addAtCell(cell: RasterCell, label: string) {
+    if (!terrain) return
+    setNotice(null)
+    setWaypoints((list) => insertWaypoint(list, { id: nextWaypointId(list), label, cell }))
+  }
+
   /** Returns false when the new position is rejected, so the marker can snap back. */
   function relocate(id: string, point: MapPoint): boolean {
     if (!terrain) return false
@@ -75,6 +85,7 @@ export function useWaypoints(terrain: TerrainPackage | null) {
     waypoints,
     notice,
     place,
+    addAtCell,
     relocate,
     remove: (id: string) => setWaypoints((list) => removeWaypoint(list, id)),
     reorder: (id: string, toIndex: number) =>
