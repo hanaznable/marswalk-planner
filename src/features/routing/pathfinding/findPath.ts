@@ -127,6 +127,15 @@ export function findPath(
     }
   }
 
+  if (maxSlopeDegrees !== null) {
+    // Report the decisive blocker: slope only if lifting the limit would connect
+    // the endpoints, otherwise what blocks the unconstrained terrain.
+    const unconstrained = findPath(grid, from, to, { maxSlopeDegrees: null })
+    return unconstrained.status === 'ok'
+      ? failed({ code: 'NO_PATH', blockedBy: ['slope'] })
+      : unconstrained
+  }
+
   return failed({
     code: 'NO_PATH',
     blockedBy: BLOCKER_ORDER.filter((cause) => blockers.has(cause)),

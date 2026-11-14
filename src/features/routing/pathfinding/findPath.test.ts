@@ -128,6 +128,22 @@ describe('findPath', () => {
     })
   })
 
+  it('does not blame slope when terrain without a slope limit is also blocked', () => {
+    // A hazard wall separates the endpoints; a steep cell sits on the start side.
+    const g = gridFromAscii(['.6#.', '..#.', '..#.'])
+    expect(
+      findPath(g, { row: 1, col: 0 }, { row: 1, col: 3 }, { maxSlopeDegrees: 25 }),
+    ).toEqual({ status: 'failed', reason: { code: 'NO_PATH', blockedBy: ['hazard'] } })
+  })
+
+  it('reports only slope when lifting the slope limit would connect the endpoints', () => {
+    // Steep ridge across the grid with a no-data cell next to the start.
+    const g = gridFromAscii(['?6.', '.6.', '.6.'])
+    expect(
+      findPath(g, { row: 1, col: 0 }, { row: 1, col: 2 }, { maxSlopeDegrees: 25 }),
+    ).toEqual({ status: 'failed', reason: { code: 'NO_PATH', blockedBy: ['slope'] } })
+  })
+
   it('reports blocked endpoints before searching', () => {
     const g = gridFromAscii(['.#?'])
     expect(findPath(g, { row: 0, col: 1 }, { row: 0, col: 0 }, opts)).toEqual({
