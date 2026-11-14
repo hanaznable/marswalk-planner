@@ -5,6 +5,15 @@ import {
   type MapPoint,
   type RasterCell,
 } from '../../datasets/terrainContract'
+import {
+  describePosition,
+  type PlacedTarget,
+  type ScienceTarget,
+  type ScienceTargetCollection,
+  type ScienceTargetKind,
+  type TargetSource,
+  type UnplacedTarget,
+} from '../../datasets/scienceTargets'
 import { elevationAt, type TerrainPackage } from '../../datasets/terrainPackage'
 import type { DatasetMetadata } from '../../datasets/types'
 import type { DurationEstimate } from '../../eva/evaEstimate'
@@ -31,6 +40,31 @@ export interface MissionReportInput {
   readonly plan: RoutePlan | null
   readonly eva: EvaPlan | null
   readonly assumptions: MissionAssumptions
+  /** Science targets split by coverage for this terrain; null when none are loaded. */
+  readonly scienceTargets: {
+    readonly collection: ScienceTargetCollection
+    readonly inside: readonly PlacedTarget[]
+    readonly outside: readonly UnplacedTarget[]
+  } | null
+}
+
+export interface ReportTarget {
+  readonly id: string
+  readonly name: string
+  readonly kind: ScienceTargetKind
+  /** Covered cells only can be visited; the others are listed, never routed to. */
+  readonly coverage: 'covered' | 'outsideTerrain' | 'noData'
+  /** Orders (1-based) of the waypoints standing on this target's cell. */
+  readonly visitedByWaypoints: readonly number[]
+  /** As delivered, in the terrain's source CRS. */
+  readonly position: ScienceTarget['position']
+  /** Plain-language caveat for the position basis. */
+  readonly positionNote: string
+  readonly mission: string | null
+  readonly activitySol: number | null
+  readonly positionSol: number | null
+  readonly description: string
+  readonly sources: readonly TargetSource[]
 }
 
 export interface ReportLeg {
@@ -80,7 +114,15 @@ export interface MissionReport {
     readonly localMetres: { readonly east: number; readonly north: number }
     readonly sourceCrs: MapPoint
     readonly elevationMeters: number | null
+    /** Science target on this waypoint's cell, if any. */
+    readonly scienceTargetId: string | null
   }[]
+  readonly scienceTargets: {
+    readonly collectionId: string
+    readonly synthetic: boolean
+    /** Every target in the collection, in collection order. */
+    readonly targets: readonly ReportTarget[]
+  } | null
   readonly routes: {
     readonly identical: boolean
     readonly shortest: ReportRoute
@@ -92,9 +134,12 @@ const SYNTHETIC_LIMITATION = 'Synthetic development terrain: made-up values, not
 
 /** A complete, self-describing record of the current plan for export or printing. */
 export function buildMissionReport(input: MissionReportInput): MissionReport {
-  const { terrain, dataset, waypoints, plan, eva, assumptions } = input
+  const { terrain, dataset, waypoints, plan, eva, assumptions, scienceTargets } = input
   const { raster, synthetic, source } = terrain.manifest
   const cellSize = cellSizeMeters(raster)
+  const onCell = (a: RasterCell, b: RasterCell) => a.row === b.row && a.col === b.col
+  const targetOnCell = (cell: RasterCell) =>
+    scienceTargets?.inside.find((placed) => onCell(placed.cell, cell))?.target.id ?? null
   const roleOf = (id: string) => {
     const index = waypoints.findIndex((waypoint) => waypoint.id === id)
     return index === -1 ? id : waypointRoleLabel(index, waypoints.length)
@@ -132,6 +177,13 @@ export function buildMissionReport(input: MissionReportInput): MissionReport {
       `Distances are planar grid distances on the terrain's ${cellSize} m routing grid; no Earth geodesy.`,
       'Slope limit, slope penalty, walking speed and stop time are user scenario assumptions, not certified limits.',
       'EVA duration is a simple planning estimate (walking time plus stop time), not a physiological model.',
+      ...(scienceTargets
+        ? [
+            scienceTargets.collection.synthetic
+              ? 'Science targets are synthetic development fixtures: made-up, not NASA data.'
+              : 'Science target positions follow their stated basis: a rover-position proxy is not the exact target location.',
+          ]
+        : []),
     ],
     terrain: {
       id: terrain.manifest.id,
@@ -161,8 +213,35 @@ export function buildMissionReport(input: MissionReportInput): MissionReport {
         localMetres: { east: local.x, north: local.y },
         sourceCrs,
         elevationMeters: elevationAt(terrain, waypoint.cell),
+        scienceTargetId: targetOnCell(waypoint.cell),
       }
     }),
+    scienceTargets: scienceTargets
+      ? {
+          collectionId: scienceTargets.collection.id,
+          synthetic: scienceTargets.collection.synthetic,
+          targets: scienceTargets.collection.targets.map((target): ReportTarget => {
+            const placed = scienceTargets.inside.find((item) => item.target.id === target.id)
+            const unplaced = scienceTargets.outside.find((item) => item.target.id === target.id)
+            return {
+              id: target.id,
+              name: target.name,
+              kind: target.kind,
+              coverage: placed ? 'covered' : (unplaced?.reason ?? 'outsideTerrain'),
+              visitedByWaypoints: placed
+                ? waypoints.flatMap((waypoint, index) => (onCell(waypoint.cell, placed.cell) ? [index + 1] : []))
+                : [],
+              position: { ...target.position },
+              positionNote: describePosition(target),
+              mission: target.mission,
+              activitySol: target.activitySol,
+              positionSol: target.positionSol,
+              description: target.description,
+              sources: target.sources.map((item) => ({ ...item })),
+            }
+          }),
+        }
+      : null,
     routes: plan
       ? {
           identical: plan.alternatives.identical,

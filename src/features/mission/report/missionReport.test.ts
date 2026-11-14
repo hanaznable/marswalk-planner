@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { parseScienceTargets, splitByCoverage } from '../../datasets/scienceTargets'
 import { parseTerrainManifest } from '../../datasets/terrainContract'
 import { createTerrainPackage, elevationAt } from '../../datasets/terrainPackage'
 import type { DatasetMetadata } from '../../datasets/types'
@@ -82,9 +83,100 @@ function input(overrides: Partial<MissionReportInput> = {}): MissionReportInput 
     plan,
     eva,
     assumptions,
+    scienceTargets: null,
     ...overrides,
   }
 }
+
+// Made-up targets on the strip, not NASA data: one on the start cell, one on
+// the middle cell, one east of the strip.
+function targetsOn(terrain: ReturnType<typeof strip>, synthetic: boolean) {
+  const target = (id: string, x: number, basis: string) => ({
+    id,
+    name: `Target ${id}`,
+    kind: 'drill-site',
+    position: { x, y: 2005, uncertaintyMeters: null, basis },
+    mission: synthetic ? null : 'MSL Curiosity',
+    activitySol: synthetic ? null : 780,
+    positionSol: synthetic ? null : 779,
+    description: 'Made-up target for tests.',
+    sources: synthetic
+      ? []
+      : [{ url: 'https://example.org/src', attribution: 'Test', provides: 'rover position' }],
+  })
+  const collection = parseScienceTargets({
+    contractVersion: 1,
+    id: 'test-targets',
+    terrainPackageId: 'test-strip',
+    terrainManifestSha256: 'c'.repeat(64),
+    synthetic,
+    targets: [
+      target('a', 1005, 'rover-position-proxy'),
+      target('b', 1015, 'target-location'),
+      target('c', 2000, 'target-location'),
+    ],
+  })
+  return { collection, ...splitByCoverage(collection, terrain) }
+}
+
+describe('buildMissionReport science targets', () => {
+  const terrain = strip(false)
+
+  it('is null when no targets are loaded', () => {
+    const report = buildMissionReport(input())
+    expect(report.scienceTargets).toBeNull()
+    expect(report.disclaimers.join(' ')).not.toMatch(/Science target/)
+  })
+
+  it('links a waypoint to the target on its cell', () => {
+    const report = buildMissionReport(input({ terrain, scienceTargets: targetsOn(terrain, false) }))
+    expect(report.waypoints.map((waypoint) => waypoint.scienceTargetId)).toEqual(['a', null])
+  })
+
+  it('records every target with coverage, visits, caveat and sources', () => {
+    const report = buildMissionReport(input({ terrain, scienceTargets: targetsOn(terrain, false) }))
+    expect(report.scienceTargets?.collectionId).toBe('test-targets')
+    expect(report.scienceTargets?.synthetic).toBe(false)
+    const [a, b, c] = report.scienceTargets?.targets ?? []
+    expect(a).toEqual({
+      id: 'a',
+      name: 'Target a',
+      kind: 'drill-site',
+      coverage: 'covered',
+      visitedByWaypoints: [1],
+      position: { x: 1005, y: 2005, uncertaintyMeters: null, basis: 'rover-position-proxy' },
+      positionNote: 'Rover position associated with this target (proxy), not the exact location',
+      mission: 'MSL Curiosity',
+      activitySol: 780,
+      positionSol: 779,
+      description: 'Made-up target for tests.',
+      sources: [{ url: 'https://example.org/src', attribution: 'Test', provides: 'rover position' }],
+    })
+    expect(b).toMatchObject({ coverage: 'covered', visitedByWaypoints: [] })
+    expect(c).toMatchObject({ coverage: 'outsideTerrain', visitedByWaypoints: [] })
+  })
+
+  it('lists every waypoint that visits a target, including the return', () => {
+    const middle: Waypoint = { id: 'wp-3', label: 'Target b', cell: { row: 0, col: 1 } }
+    const again: Waypoint = { id: 'wp-4', label: 'Point 4', cell: { row: 0, col: 1 } }
+    const report = buildMissionReport(
+      input({ terrain, waypoints: [start, middle, again, end], scienceTargets: targetsOn(terrain, false) }),
+    )
+    expect(report.scienceTargets?.targets[1].visitedByWaypoints).toEqual([2, 3])
+  })
+
+  it('states the position caveat for real targets and the fixture label for synthetic ones', () => {
+    const real = buildMissionReport(input({ terrain, scienceTargets: targetsOn(terrain, false) }))
+    expect(real.disclaimers.join(' ')).toMatch(/rover-position proxy is not the exact target location/)
+    const fake = buildMissionReport(input({ terrain, scienceTargets: targetsOn(terrain, true) }))
+    expect(fake.disclaimers.join(' ')).toMatch(/synthetic development fixtures: made-up, not NASA data/)
+  })
+
+  it('serialises targets to JSON unchanged', () => {
+    const report = buildMissionReport(input({ terrain, scienceTargets: targetsOn(terrain, false) }))
+    expect(JSON.parse(JSON.stringify(report))).toEqual(report)
+  })
+})
 
 describe('buildMissionReport', () => {
   it('records the terrain source, projection, grid and limitations', () => {
@@ -123,6 +215,7 @@ describe('buildMissionReport', () => {
       localMetres: { east: 5, north: 5 },
       sourceCrs: { x: 1005, y: 2005 },
       elevationMeters: 10,
+      scienceTargetId: null,
     })
     expect(last.role).toBe('Destination')
     expect(last.sourceCrs).toEqual({ x: 1025, y: 2005 })

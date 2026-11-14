@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { formatDuration } from '../../eva/evaEstimate'
 import { formatDistance } from '../../routing'
+import { kindLabel, outsideReason, solSummary } from '../../science/targetDisplay'
 import type { MissionReport, ReportRoute } from './missionReport'
 
 interface MissionReportDialogProps {
@@ -34,7 +35,7 @@ export function MissionReportDialog({ report, onClose, onDownloadJson }: Mission
   }, [onClose])
 
   const generated = new Date(report.generatedAt)
-  const { terrain, assumptions, routes } = report
+  const { terrain, assumptions, routes, scienceTargets } = report
 
   return createPortal(
     <div className="report-backdrop">
@@ -123,6 +124,7 @@ export function MissionReportDialog({ report, onClose, onDownloadJson }: Mission
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Role</th>
+                  <th scope="col">Name</th>
                   <th scope="col">East / North (local m)</th>
                   <th scope="col">Source CRS x / y (m)</th>
                   <th scope="col">Elevation</th>
@@ -133,6 +135,10 @@ export function MissionReportDialog({ report, onClose, onDownloadJson }: Mission
                   <tr key={waypoint.id}>
                     <td>{waypoint.order}</td>
                     <td>{waypoint.role}</td>
+                    <td>
+                      {waypoint.label}
+                      {waypoint.scienceTargetId && <span className="report-tag"> · science target</span>}
+                    </td>
                     <td>
                       {Math.round(waypoint.localMetres.east)} / {Math.round(waypoint.localMetres.north)}
                     </td>
@@ -145,6 +151,8 @@ export function MissionReportDialog({ report, onClose, onDownloadJson }: Mission
               </tbody>
             </table>
           </section>
+
+          {scienceTargets && <ScienceTargetsSection targets={scienceTargets} />}
 
           <section>
             <h2>Routes</h2>
@@ -199,5 +207,71 @@ export function MissionReportDialog({ report, onClose, onDownloadJson }: Mission
       </div>
     </div>,
     document.body,
+  )
+}
+
+function ScienceTargetsSection({ targets }: { targets: NonNullable<MissionReport['scienceTargets']> }) {
+  const visited = targets.targets.filter((target) => target.visitedByWaypoints.length > 0)
+  const notVisited = targets.targets.filter(
+    (target) => target.coverage === 'covered' && target.visitedByWaypoints.length === 0,
+  )
+  const outside = targets.targets.filter((target) => target.coverage !== 'covered')
+  return (
+    <section className="report-science">
+      <h2>Science targets</h2>
+      {targets.synthetic && (
+        <p>
+          <strong>Synthetic development targets: made-up, not NASA data.</strong>
+        </p>
+      )}
+      {visited.length === 0 ? (
+        <p>No waypoint is placed on a science target.</p>
+      ) : (
+        <div className="report-targets">
+          {visited.map((target) => {
+            const sols = solSummary(target)
+            return (
+              <div key={target.id} className="report-target">
+                <h3>
+                  {target.name}{' '}
+                  <span className="report-tag">
+                    {kindLabel(target.kind)}
+                    {target.mission ? ` · ${target.mission}` : ''} · waypoint{' '}
+                    {target.visitedByWaypoints.join(', ')}
+                  </span>
+                </h3>
+                <p>
+                  <strong>Position:</strong> {target.positionNote}. Source CRS x / y{' '}
+                  {coordinate(target.position.x)} / {coordinate(target.position.y)} m.
+                </p>
+                {sols && <p>{sols}</p>}
+                <p>{target.description}</p>
+                {target.sources.length > 0 && (
+                  <ul>
+                    {target.sources.map((source) => (
+                      <li key={`${source.url}#${source.provides}`}>
+                        {source.provides}: {source.attribution} — <a href={source.url}>{source.url}</a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      )}
+      {notVisited.length > 0 && (
+        <p>
+          <strong>Also on this terrain, not visited:</strong>{' '}
+          {notVisited.map((target) => target.name).join(', ')}.
+        </p>
+      )}
+      {outside.length > 0 && (
+        <p>
+          <strong>Outside this terrain (not routable):</strong>{' '}
+          {outside.map((target) => `${target.name} (${outsideReason(target.coverage === 'noData' ? 'noData' : 'outsideTerrain').toLowerCase()})`).join(', ')}.
+        </p>
+      )}
+    </section>
   )
 }
