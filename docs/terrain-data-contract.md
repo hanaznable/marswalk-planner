@@ -1,42 +1,62 @@
-# Terrain Data Contract (v1) — Proposal
+# Terrain Data Contract (v1)
 
-**Status:** Proposal from Developer Y for review by Developer B. Nothing here is final
-until both agree. Code: `src/features/datasets/terrainContract.ts`.
+**Status:** Agreed conventions between Developer B (data pipeline) and Developer Y
+(frontend). The final raster metadata is not verified yet; the values below are
+implementation targets, not claims about processed datasets. The shared code in
+`src/features/datasets/` is jointly owned: coordinate breaking schema changes.
+Code: `src/features/datasets/terrainContract.ts`.
 
 This contract defines how processed terrain data gets from the Python pipeline
 (`scripts/`) to the frontend. It fixes formats and conventions, not values: no
 coordinates, raster sizes, or elevations are assumed.
+
+## Decisions (Developer B)
+
+| Topic | Decision |
+|---|---|
+| CRS | The candidate HiRISE DTM uses an equirectangular Mars projection (exact parameters to be confirmed in QGIS/GDAL). The original CRS and transform are preserved in the manifest; the frontend works in local metres derived from the raster. No Earth EPSG:4326 coordinates. |
+| Resolution | Source DTM ~1.01 m/pixel. Routing grid target: **5 m/cell, about 200 × 200 cells** for the ~1 × 1 km area. The full-resolution DEM is kept for later use. |
+| Slope | Computed by the pipeline in degrees (Python/Rasterio/NumPy). **Required layer**; the frontend does not derive slope. |
+| Hazard | No validated hazard dataset. **Not part of v1.** Routing uses distance, slope and no-data handling only. Slope limits are planning assumptions, not certified safety thresholds. |
+| Basemap | JPEG, at most about 2048 × 2048 px, same footprint as the routing grid, with its own pixel-to-map transform. |
+| Ownership | `src/features/datasets/` is jointly owned by B and Y. |
 
 ## What the pipeline delivers
 
 One folder per terrain package, for example `public/data/gale/<package-id>/`:
 
 ```text
-manifest.json     Metadata (below)
-elevation.f32     Required. Elevation in metres
-slope.f32         Optional. Slope in degrees (frontend derives it if missing)
-hazard.u8         Optional. 1 = known hazard, 0 = none
-basemap.png|jpg   Optional. Orthoimage covering exactly the raster extent
+manifest.json   Metadata (below)
+elevation.f32   Required. Elevation in metres
+slope.f32       Required. Slope in degrees
+basemap.jpg     Optional. Orthoimage with the same footprint
 ```
 
 ## Raster rules
 
-All raster layers in a package share one grid.
+Elevation and slope share one grid.
 
 | Topic | Rule |
 |---|---|
 | Dimensions | Any `width` × `height`; given in the manifest, never assumed |
 | Orientation | Row-major, row 0 is the **north** edge, column 0 the **west** edge |
 | Resolution | Square cells in metres, from the geotransform |
-| Encoding | `.f32` = little-endian Float32, `.u8` = one byte per cell, no header |
-| NoData | `NaN` in float layers. Convert the source sentinel (e.g. HiRISE `-3.4028227e+38`) to NaN during preprocessing |
+| Encoding | Little-endian Float32, no header, `width × height × 4` bytes |
+| NoData | `NaN`. Convert the source sentinel (e.g. HiRISE `-3.4028227e+38`) to NaN in preprocessing |
 | Coverage | Cells without DEM coverage are NaN. The frontend treats them as impassable and never as safe |
-| CRS | A projected Mars CRS in metres; the full WKT goes in the manifest |
+| CRS | The source Mars CRS (projected, metres); the full WKT goes in the manifest |
 | Pixel → map | GDAL geotransform: `x = x0 + (col + 0.5) * dx`, `y = y0 + (row + 0.5) * dy` for cell centres |
-| Basemap alignment | Cropped and resampled to exactly the raster extent; any pixel size is fine |
 
 The geotransform must be north-up with no rotation (`rx = ry = 0`, `dx > 0`,
 `dy < 0`) and square cells (`|dx| = |dy|`). The frontend rejects packages that break this.
+
+**Frontend frame:** the map uses local metres east and north of the raster's
+south-west corner (`toLocalMetres` / `fromLocalMetres`). This keeps map numbers
+small; the source CRS coordinates are always recoverable from the manifest.
+
+**Basemap alignment:** the basemap carries its own `width`, `height` and
+`geoTransform` (any pixel size, north-up). Its footprint must match the raster
+extent to within half a basemap pixel, or the package is rejected.
 
 ## manifest.json
 
@@ -55,30 +75,26 @@ The geotransform must be north-up with no rotation (`rx = ry = 0`, `dx > 0`,
   "raster": { "width": 0, "height": 0, "geoTransform": [0, 0, 0, 0, 0, 0] },
   "layers": {
     "elevation": { "url": "elevation.f32", "dataType": "float32" },
-    "slope": { "url": "slope.f32", "dataType": "float32" },
-    "hazard": { "url": "hazard.u8", "dataType": "uint8" }
+    "slope": { "url": "slope.f32", "dataType": "float32" }
   },
-  "basemap": { "url": "basemap.jpg" }
+  "basemap": {
+    "url": "basemap.jpg",
+    "width": 0,
+    "height": 0,
+    "geoTransform": [0, 0, 0, 0, 0, 0]
+  }
 }
 ```
 
-The values above are placeholders, not real data. `geoTransform` is exactly what
-GDAL's `GetGeoTransform()` returns. Development fixtures set `"synthetic": true`
-and `"source": null`; the UI labels them as synthetic and never presents them as
-NASA data.
+The values above are placeholders, not real data. Each `geoTransform` is exactly
+what GDAL's `GetGeoTransform()` returns. Development fixtures set
+`"synthetic": true` and `"source": null`; the UI labels them as synthetic and
+never presents them as NASA data.
 
 ## How the frontend uses it
 
-- Leaflet displays the package in its own projected metres (`CRS.Simple` with map
-  y/x in metres). Over a ~1 km area this needs no projection library.
-- Clicks become grid cells with `mapToCell`; routes are drawn with `cellCenterToMap`.
 - `parseTerrainManifest` validates the manifest and lists every problem at once,
   so pipeline mistakes show up clearly.
-
-## Open questions for Developer B
-
-1. Which CRS does the processed DTM use (the HiRISE product's native one)?
-2. What is the DTM cell size, and do you prefer to deliver slope or let the frontend derive it?
-3. Is there a hazard source, or should `hazard` stay out of v1?
-4. Should the basemap be PNG or JPEG, and at what pixel size?
-5. Where should the shared contract code live? It is in `src/features/datasets/` for now.
+- Leaflet (`CRS.Simple`) displays the package in local metres. Over a ~1 km area
+  this needs no projection library.
+- Clicks become grid cells with `mapToCell`; routes are drawn with `cellCenterToMap`.

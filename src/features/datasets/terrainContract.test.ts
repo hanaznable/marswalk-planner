@@ -3,10 +3,12 @@ import {
   cellCenterToMap,
   cellSizeMeters,
   decodeRaster,
+  fromLocalMetres,
   mapToCell,
   parseTerrainManifest,
   rasterBounds,
   TerrainContractError,
+  toLocalMetres,
 } from './terrainContract'
 
 // Synthetic fixture: arbitrary numbers, not NASA data.
@@ -21,8 +23,18 @@ function validManifest(): Record<string, unknown> {
     raster: { width: 4, height: 3, geoTransform: [1000, 2, 0, 5000, 0, -2] },
     layers: {
       elevation: { url: 'elevation.f32', dataType: 'float32' },
-      hazard: { url: 'hazard.u8', dataType: 'uint8' },
+      slope: { url: 'slope.f32', dataType: 'float32' },
     },
+  }
+}
+
+// Same 8 m x 6 m footprint as the raster, at 0.5 m per basemap pixel.
+function alignedBasemap(): Record<string, unknown> {
+  return {
+    url: 'basemap.jpg',
+    width: 16,
+    height: 12,
+    geoTransform: [1000, 0.5, 0, 5000, 0, -0.5],
   }
 }
 
@@ -81,16 +93,59 @@ describe('parseTerrainManifest', () => {
     expect(issuesOf(input)).toContain(issue)
   })
 
+  it('requires elevation and slope layers', () => {
+    const input = validManifest()
+    input.layers = {}
+    expect(issuesOf(input)).toEqual(
+      expect.arrayContaining([
+        'layers.elevation is required',
+        'layers.slope is required',
+      ]),
+    )
+  })
+
   it('rejects wrong layer data types', () => {
     const input = validManifest()
     input.layers = {
       elevation: { url: 'e', dataType: 'uint8' },
-      hazard: { url: 'h', dataType: 'float32' },
+      slope: { url: 's', dataType: 'int16' },
     }
     expect(issuesOf(input)).toEqual(
       expect.arrayContaining([
         'layers.elevation.dataType must be float32',
-        'layers.hazard.dataType must be uint8',
+        'layers.slope.dataType must be float32',
+      ]),
+    )
+  })
+
+  it('rejects a hazard layer, which is not part of v1', () => {
+    const input = validManifest()
+    input.layers = {
+      ...(input.layers as object),
+      hazard: { url: 'h', dataType: 'uint8' },
+    }
+    expect(issuesOf(input)).toContain('layers.hazard is not part of contract v1')
+  })
+
+  it('accepts a basemap with the same footprint as the raster', () => {
+    const manifest = parseTerrainManifest({ ...validManifest(), basemap: alignedBasemap() })
+    expect(manifest.basemap?.width).toBe(16)
+  })
+
+  it('rejects a basemap whose footprint differs from the raster', () => {
+    const basemap = { ...alignedBasemap(), geoTransform: [1001, 0.5, 0, 5000, 0, -0.5] }
+    expect(issuesOf({ ...validManifest(), basemap })).toContain(
+      'basemap footprint must match the raster extent',
+    )
+  })
+
+  it('rejects a basemap without size or transform', () => {
+    expect(
+      issuesOf({ ...validManifest(), basemap: { url: 'basemap.jpg' } }),
+    ).toEqual(
+      expect.arrayContaining([
+        'basemap width and height must be positive integers',
+        'basemap.geoTransform must be 6 finite numbers',
       ]),
     )
   })
@@ -109,7 +164,7 @@ describe('parseTerrainManifest', () => {
 describe('raster coordinates', () => {
   const raster = parseTerrainManifest(validManifest()).raster
 
-  it('computes the raster extent in map units', () => {
+  it('computes the raster extent in source CRS units', () => {
     expect(rasterBounds(raster)).toEqual({
       minX: 1000,
       maxX: 1008,
@@ -136,6 +191,11 @@ describe('raster coordinates', () => {
     expect(mapToCell(raster, { x: 1008, y: 4999 })).toBeNull()
     expect(mapToCell(raster, { x: 1001, y: 5000.1 })).toBeNull()
   })
+
+  it('converts to local metres measured from the south-west corner and back', () => {
+    expect(toLocalMetres(raster, { x: 1001, y: 4999 })).toEqual({ x: 1, y: 5 })
+    expect(fromLocalMetres(raster, { x: 1, y: 5 })).toEqual({ x: 1001, y: 4999 })
+  })
 })
 
 describe('decodeRaster', () => {
@@ -146,20 +206,13 @@ describe('decodeRaster', () => {
     const view = new DataView(buffer)
     for (let i = 0; i < 12; i++) view.setFloat32(i * 4, i * 1.5, true)
     view.setFloat32(4 * 5, Number.NaN, true)
-    const values = decodeRaster(buffer, raster, 'float32')
-    expect(values).toBeInstanceOf(Float32Array)
+    const values = decodeRaster(buffer, raster)
     expect(values[1]).toBeCloseTo(1.5)
     expect(Number.isNaN(values[5])).toBe(true)
   })
 
-  it('decodes uint8 masks', () => {
-    const values = decodeRaster(new Uint8Array(12).fill(1).buffer, raster, 'uint8')
-    expect(values).toBeInstanceOf(Uint8Array)
-    expect(values[11]).toBe(1)
-  })
-
   it('rejects a buffer whose size does not match the raster', () => {
-    expect(() => decodeRaster(new ArrayBuffer(4 * 11), raster, 'float32')).toThrow(
+    expect(() => decodeRaster(new ArrayBuffer(4 * 11), raster)).toThrow(
       TerrainContractError,
     )
   })
