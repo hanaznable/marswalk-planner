@@ -1047,6 +1047,33 @@ dd {
 .map-expanded .mission-panel {
   display: none;
 }
+/*
+ * Three-column layout: the workspace takes the remaining window height and the
+ * map fills it. Side panels scroll inside themselves, so a growing waypoint list
+ * or route comparison never stretches or moves the map under the cursor.
+ */
+@media (min-width: 1021px) {
+  .app-shell {
+    height: 100svh;
+  }
+  .workspace {
+    flex: 1 1 0;
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .layers-panel,
+  .mission-panel {
+    /* Contain absolutely positioned content (e.g. screen-reader-only labels)
+       so it is clipped by the panel instead of stretching the page. */
+    position: relative;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #3b4434 transparent;
+  }
+  .map-viewport {
+    min-height: 0;
+  }
+}
 @media (min-width: 1600px) {
   .workspace {
     grid-template-columns: 270px minmax(300px, 1fr) 320px;
