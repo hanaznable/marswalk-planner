@@ -27,7 +27,7 @@ import { elevationToRgba } from '../terrainImage'
 import { fromLatLng, placeWaypoint, toLatLng, waypointRoleLabel } from '../waypointPlacement'
 import type { DisplayLayersController } from '../../mapLayers/useDisplayLayers'
 import { contextLayer, ensureDisplayPanes } from '../../mapLayers/contextLayers'
-import { rasterPixels } from '../../mapLayers/rasterDisplay'
+import { rasterCanvas } from '../../mapLayers/rasterDisplay'
 import type { BasemapStatus } from '../useBasemapStatus'
 import type { WaypointOrigin } from '../../datasets/waypointOrigin'
 
@@ -145,10 +145,7 @@ export function MapCanvas({
     const { raster } = terrain.manifest
     const extent = rasterBounds(raster)
     const bounds = latLngBounds(toLatLng(raster, { x: extent.minX, y: extent.minY }), toLatLng(raster, { x: extent.maxX, y: extent.maxY }))
-    const canvas = document.createElement('canvas')
-    canvas.width = raster.width
-    canvas.height = raster.height
-    canvas.getContext('2d')?.putImageData(new ImageData(rasterPixels(terrain, activeRaster), raster.width, raster.height), 0, 0)
+    const canvas = rasterCanvas(terrain, activeRaster)
     const overlay = imageOverlay(canvas.toDataURL('image/png'), bounds, { pane: 'dataRaster', interactive: false, className: 'map-raster-overlay', alt: `${activeRaster} data overlay` }).addTo(map)
     rasterImage.current = overlay
     return () => { overlay.remove(); rasterImage.current = null }
