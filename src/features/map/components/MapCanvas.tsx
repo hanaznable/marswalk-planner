@@ -110,10 +110,10 @@ export function MapCanvas({
     const draw = (result: RouteResult, className: string) => {
       for (const leg of result.legs) {
         if (leg.status !== 'ok' || leg.path.length < 2) continue
-        polyline(
-          leg.path.map((cell) => toLatLng(raster, cellCenterToMap(raster, cell))),
-          { className, interactive: false },
-        ).addTo(group)
+        const points = leg.path.map((cell) => toLatLng(raster, cellCenterToMap(raster, cell)))
+        // Dark halo keeps the line readable on light and dark terrain alike.
+        polyline(points, { className: 'route-line route-halo', interactive: false }).addTo(group)
+        polyline(points, { className, interactive: false }).addTo(group)
       }
     }
     draw(routes.terrain, 'route-line route-slope-limited')

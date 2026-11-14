@@ -3,12 +3,19 @@ import { waypointRoleLabel } from '../../map/waypointPlacement'
 import type { RouteResult, Waypoint } from '../model/types'
 import { describeFailure, formatDistance, type RouteSummary } from '../routeStats'
 import type { RoutePlan } from '../useRoutePlan'
+import { ElevationProfileChart } from '../../eva/components/ElevationProfileChart'
+import { formatDuration, type EvaAssumptions } from '../../eva/evaEstimate'
+import type { EvaPlan } from '../../eva/useEvaPlan'
 
 interface RouteComparisonProps {
   plan: RoutePlan | null
   waypoints: readonly Waypoint[]
   maxSlopeDegrees: number
   slopePenalty: number
+  eva: EvaPlan | null
+  evaAssumptions: EvaAssumptions
+  /** True when the terrain is a synthetic development fixture. */
+  synthetic: boolean
 }
 
 const formatMetres = (value: number | null) =>
@@ -19,6 +26,9 @@ export function RouteComparison({
   waypoints,
   maxSlopeDegrees,
   slopePenalty,
+  eva,
+  evaAssumptions,
+  synthetic,
 }: RouteComparisonProps) {
   const roleOf = (id: string) => {
     const index = waypoints.findIndex((waypoint) => waypoint.id === id)
@@ -73,9 +83,9 @@ export function RouteComparison({
             </tr>
           ))}
           <tr>
-            <th scope="row">Duration</th>
-            <td>—</td>
-            <td>—</td>
+            <th scope="row">EVA duration</th>
+            <td>{formatDuration(eva?.shortest.duration?.totalMinutes ?? null)}</td>
+            <td>{formatDuration(eva?.slopeAware.duration?.totalMinutes ?? null)}</td>
           </tr>
         </tbody>
       </table>
@@ -86,11 +96,21 @@ export function RouteComparison({
       <FailureList title="Shortest" result={alternatives.distance} roleOf={roleOf} />
       <FailureList title="Slope-aware" result={alternatives.terrain} roleOf={roleOf} />
 
+      {eva && (
+        <ElevationProfileChart
+          shortest={eva.shortest.profile}
+          slopeAware={eva.slopeAware.profile}
+          synthetic={synthetic}
+        />
+      )}
+
       <div className="summary-note">
         <Icon name="info" size={13} />
         <span>
-          Planar grid distances on the loaded terrain. EVA duration is not
-          calculated yet.
+          Planar grid distances on the loaded terrain. EVA duration = walking at{' '}
+          {evaAssumptions.walkingSpeedKmh} km/h + {evaAssumptions.stopMinutes} min at
+          each waypoint after the start. A planning estimate, not a physiological
+          model.
         </span>
       </div>
     </div>
