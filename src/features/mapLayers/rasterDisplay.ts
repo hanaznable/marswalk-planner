@@ -8,6 +8,16 @@ export function rasterScale(terrain: TerrainPackage, kind: RasterDisplay) {
   return { values, min, max, unit: kind === 'elevation' ? 'm' : '°' }
 }
 
+/** One canvas pixel per raster cell, row 0 = north edge; shared by the 2D and 3D views. */
+export function rasterCanvas(terrain: TerrainPackage, kind: RasterDisplay): HTMLCanvasElement {
+  const { width, height } = terrain.manifest.raster
+  const canvas = document.createElement('canvas')
+  canvas.width = width
+  canvas.height = height
+  canvas.getContext('2d')?.putImageData(new ImageData(rasterPixels(terrain, kind), width, height), 0, 0)
+  return canvas
+}
+
 export function rasterPixels(terrain: TerrainPackage, kind: RasterDisplay): Uint8ClampedArray<ArrayBuffer> {
   const { values, min, max } = rasterScale(terrain, kind)
   const pixels = new Uint8ClampedArray(values.length * 4)

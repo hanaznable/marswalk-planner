@@ -2,7 +2,8 @@ import type { PlacedTarget } from '../../datasets/scienceTargets'
 import type { MapPoint } from '../../datasets/terrainContract'
 import type { MarsRegion } from '../../datasets/types'
 import type { RouteAlternatives, Waypoint } from '../../routing'
-import { TerrainPlaceholder } from '../../terrain/components/TerrainPlaceholder'
+import { useState } from 'react'
+import { Terrain3DPanel } from '../../terrain3d/Terrain3DPanel'
 import { Icon } from '../../../components/ui/Icon'
 import type { ViewMode } from '../types'
 import type { TerrainState } from '../useTerrainSource'
@@ -59,6 +60,20 @@ export function MapViewport({
 }: MapViewportProps) {
   const terrain = terrainState.status === 'ready' ? terrainState.terrain : null
   const title = terrain ? terrain.manifest.title : region.name
+  // A view setting, kept here so it survives switching between 2D and 3D.
+  const [verticalScale, setVerticalScale] = useState(1)
+  const rgb = surfaceImagery.mode === 'rgb' && surfaceImagery.state.status === 'ready' ? surfaceImagery.state.manifest : null
+  const imageFootprint = rgb ? rgb.image : (terrain?.manifest.basemap ?? null)
+  const imageLabel = !terrain
+    ? ''
+    : terrain.manifest.synthetic
+      ? 'Synthetic terrain coloured by elevation (not NASA data)'
+      : rgb
+        ? `${rgb.title}: ${rgb.colorMeaning}. ${rgb.registration}.`
+        : terrain.manifest.source
+          ? `HiRISE orthoimage (grayscale), ${terrain.manifest.source.attribution}`
+          : 'Terrain surface'
+  const context = displayLayers.state.status === 'ready' ? displayLayers.state.context : null
   const previewLabel =
     terrainState.status === 'ready'
       ? terrainState.terrain.manifest.synthetic
@@ -107,8 +122,34 @@ export function MapViewport({
             onContextWaypoint={onContextWaypoint}
             displayLayers={displayLayers}
           />
+        ) : terrain ? (
+          <Terrain3DPanel
+            terrain={terrain}
+            imageUrl={basemap.url}
+            imageFootprint={imageFootprint}
+            imageLabel={imageLabel}
+            raster={displayLayers.settings.raster}
+            rasterOpacity={displayLayers.settings.opacity}
+            waypoints={waypoints}
+            routes={routes}
+            targets={targets}
+            selectedTargetId={selectedTargetId}
+            onTargetClick={onTargetClick}
+            context={context}
+            showApxs={displayLayers.settings.apxs}
+            showTraverse={displayLayers.settings.traverse}
+            showMinerals={displayLayers.settings.minerals}
+            verticalScale={verticalScale}
+            onVerticalScaleChange={setVerticalScale}
+            onUse2D={() => onViewModeChange('2d')}
+          />
         ) : (
-          <TerrainPlaceholder />
+          <TerrainStatusPanel state={terrainState} regionName={region.name} />
+        )}
+        {viewMode === '3d' && addMode && (
+          <div className="map-notice" role="status">
+            Waypoints are placed and moved in the 2D map
+          </div>
         )}
         {viewMode === '2d' && (addMode || notice) && (
           <div className={`map-notice${notice ? ' warning' : ''}`} role="status">
@@ -133,7 +174,7 @@ export function MapViewport({
             onClick={() => onViewModeChange('3d')}
           >
             <Icon name="cube" size={14} />
-            3D terrain<span className="soon-label">SOON</span>
+            3D terrain
           </button>
         </div>
         <button
@@ -152,12 +193,12 @@ export function MapViewport({
       <div className="viewport-bottom">
         <span>
           <span className="hollow-dot" />{' '}
-          {viewMode === '2d' ? '2D MAP VIEW' : '3D PLACEHOLDER'}
+          {viewMode === '2d' ? '2D MAP VIEW' : `3D TERRAIN VIEW · ${verticalScale}× VERTICAL`}
         </span>
         <span>
           {viewMode === '2d'
             ? 'DRAG TO PAN · SCROLL TO ZOOM'
-            : 'RENDERING NOT IMPLEMENTED'}
+            : 'DRAG TO ORBIT · RIGHT-DRAG TO PAN · SCROLL TO ZOOM'}
         </span>
       </div>
     </section>

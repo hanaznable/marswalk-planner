@@ -2,8 +2,9 @@
 
 A modular Mars exploration prototype for a NASA Space Apps Challenge
 2026 project. The project name is provisional. Built with React, TypeScript,
-Vite, and Leaflet, with pure TypeScript route planning. There is no backend,
-database, authentication, or 3D renderer.
+Vite, and Leaflet, with pure TypeScript route planning and an optional,
+lazy-loaded Three.js terrain view. There is no backend, database, or
+authentication.
 
 ## Product scope
 
@@ -57,7 +58,7 @@ src/
     routing/                       Pure route algorithms, UI and terrain adapter
     mapLayers/                     Independent display layers, RGB loading and selection provenance
     science/                       Science target selection and waypoint flow
-    terrain/                       Independent future 3D renderer boundary
+    terrain3d/                     Lazy-loaded, read-only Three.js terrain view
 scripts/preprocessing/             Pointer to the implemented terrain pipeline
 scripts/terrain/                   Region configs, source checks and v1 exporter
 public/data/gale/pahrump-hills-v1/  Real terrain package, loaded by the app at startup
@@ -78,7 +79,10 @@ layer-lab.html                    Independent local layer comparison page
 - Toggle the visual viewport grid, inspect the data catalog (source,
   attribution, grid and prototype limitations), and switch between route
   planning and mission information.
-- Switch to a clearly labeled 3D placeholder. No 3D code is loaded or rendered.
+- Switch to a read-only 3D terrain view (Three.js, loaded on demand) showing the
+  same imagery, waypoints, routes, science targets and context layers. Vertical
+  scale is 1× by default; exaggeration is a labelled display setting. Waypoints
+  are edited in 2D. See [src/features/terrain3d/README.md](src/features/terrain3d/README.md).
 - Desktop uses three columns. On narrower screens panels flow below the map.
 - Place, move and order waypoints; compare distance and slope-aware routes and
   include a return leg on the loaded terrain.
@@ -113,8 +117,8 @@ basemap tiles or interpret projected Mars metres as Earth coordinates.
 Keep NASA asset provenance and reference-system metadata in `features/datasets`.
 Perform Python preprocessing outside the browser; serve validated outputs from
 `public/data`. Future route algorithms should consume validated data without
-depending on React or Leaflet. Future Three.js / React Three Fiber rendering
-belongs in `features/terrain` and should load on demand. Neither the datasets
+depending on React or Leaflet. Three.js rendering lives in
+`features/terrain3d` and loads on demand. Neither the datasets
 boundary nor route algorithms should import a renderer.
 
 The UI uses optional Google Fonts with local system fallbacks. Dataset requests
