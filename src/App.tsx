@@ -9,6 +9,7 @@ import { createSyntheticTerrain } from './features/map/fixtures/syntheticTerrain
 import { useWaypoints } from './features/map/useWaypoints'
 import { MissionPanel } from './features/mission/MissionPanel'
 import { RoutePlanner } from './features/routing/components/RoutePlanner'
+import { useRoutePlan } from './features/routing/useRoutePlan'
 import type { ViewMode } from './features/map/types'
 import './App.css'
 
@@ -22,6 +23,10 @@ function App() {
   // Synthetic development terrain until Developer B delivers a real package.
   const terrain = useMemo(() => createSyntheticTerrain(), [])
   const waypoints = useWaypoints(terrain)
+  // Scenario assumption chosen by the user, not a certified limit.
+  const [maxSlopeDegrees, setMaxSlopeDegrees] = useState(20)
+  const [returnToStart, setReturnToStart] = useState(false)
+  const plan = useRoutePlan(terrain, waypoints.waypoints, maxSlopeDegrees, returnToStart)
 
   return (
     <div className={`app-shell${expanded ? ' map-expanded' : ''}`}>
@@ -58,6 +63,7 @@ function App() {
           notice={waypoints.notice}
           onPlace={waypoints.place}
           onRelocate={waypoints.relocate}
+          routes={plan?.alternatives ?? null}
         />
         <MissionPanel
           region={region}
@@ -70,6 +76,11 @@ function App() {
               onRemove={waypoints.remove}
               onReorder={waypoints.reorder}
               onClear={waypoints.clear}
+              plan={plan}
+              maxSlopeDegrees={maxSlopeDegrees}
+              onMaxSlopeChange={setMaxSlopeDegrees}
+              returnToStart={returnToStart}
+              onReturnToStartChange={setReturnToStart}
             />
           }
         />

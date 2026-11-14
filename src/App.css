@@ -1455,3 +1455,130 @@ dd {
 .clear-waypoints:hover {
   color: #c9cec7;
 }
+
+/* Route lines, legend, settings and comparison */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.leaflet-container .route-line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.leaflet-container .route-slope-limited {
+  stroke: #8fb07a;
+  stroke-width: 4;
+  stroke-opacity: 0.95;
+}
+.leaflet-container .route-shortest {
+  stroke: #e6c98e;
+  stroke-width: 2.5;
+  stroke-dasharray: 6 6;
+}
+.legend-swatch {
+  display: inline-block;
+  width: 18px;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+.legend-swatch.slope-limited {
+  border-top: 4px solid #8fb07a;
+}
+.legend-swatch.shortest {
+  border-top: 2px dashed #e6c98e;
+}
+.route-legend {
+  position: absolute;
+  left: 19px;
+  bottom: 34px;
+  z-index: 2;
+  display: flex;
+  gap: 14px;
+  padding: 5px 9px;
+  border-radius: 4px;
+  background: #1d241ded;
+  border: 1px solid #3b4434;
+  color: #c9cec7;
+  font-size: 10px;
+  pointer-events: none;
+}
+.route-settings {
+  border-top: 1px solid var(--border);
+  margin-top: 22px;
+  padding-top: 18px;
+}
+.route-settings > .eyebrow {
+  font-size: 8px;
+}
+.setting-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  font-size: 11px;
+  color: #c9cec7;
+}
+.setting-row input[type='range'] {
+  flex: 1;
+  accent-color: #8fb07a;
+}
+.setting-row output {
+  min-width: 30px;
+  text-align: right;
+  font: 11px var(--mono);
+}
+.setting-row.checkbox input {
+  accent-color: #8fb07a;
+}
+.setting-hint {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 9px;
+}
+.route-table {
+  width: 100%;
+  margin-top: 14px;
+  border-collapse: collapse;
+  font-size: 10px;
+}
+.route-table th,
+.route-table td {
+  padding: 7px 0;
+  text-align: right;
+  font-weight: 400;
+}
+.route-table thead th {
+  color: #c9cec7;
+  white-space: nowrap;
+}
+.route-table tbody th {
+  text-align: left;
+  color: var(--muted);
+}
+.route-table td {
+  color: #a3ac9e;
+  font-family: var(--mono);
+}
+.route-note {
+  margin: 8px 0 0;
+  font-size: 10px;
+  color: #b9d1a8;
+}
+.route-failures {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border: 1px solid #8a5440;
+  border-radius: 4px;
+  background: #2e1f1a80;
+  color: #f0c4b0;
+  font-size: 10px;
+}
+.route-failures ul {
+  margin: 4px 0 0;
+  padding-left: 16px;
+}

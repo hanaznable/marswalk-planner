@@ -26,3 +26,10 @@ export {
   type RouteAlternatives,
   type RoutePlanInput,
 } from './planRoute'
+export { terrainPackageToGrid } from './adapters/terrainPackageGrid'
+export {
+  describeFailure,
+  formatDistance,
+  summarizeRoute,
+  type RouteSummary,
+} from './routeStats'

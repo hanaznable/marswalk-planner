@@ -7,6 +7,7 @@ import {
   layerGroup,
   map as createMap,
   marker,
+  polyline,
   rectangle,
 } from 'leaflet'
 import type { LatLngBounds, LayerGroup, Map as LeafletMap } from 'leaflet'
@@ -18,7 +19,7 @@ import {
   type MapPoint,
 } from '../../datasets/terrainContract'
 import type { TerrainPackage } from '../../datasets/terrainPackage'
-import type { Waypoint } from '../../routing'
+import type { RouteAlternatives, RouteResult, Waypoint } from '../../routing'
 import { elevationToRgba } from '../terrainImage'
 import { fromLatLng, toLatLng, waypointRoleLabel } from '../waypointPlacement'
 
@@ -31,6 +32,8 @@ interface MapCanvasProps {
   onPlace: (point: MapPoint) => void
   /** Returns false to reject the move; the marker then snaps back. */
   onRelocate: (id: string, point: MapPoint) => boolean
+  /** Computed routes to draw; null when fewer than two waypoints. */
+  routes: RouteAlternatives | null
 }
 
 /**
@@ -45,11 +48,13 @@ export function MapCanvas({
   addMode,
   onPlace,
   onRelocate,
+  routes,
 }: MapCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<LeafletMap | null>(null)
   const boundsRef = useRef<LatLngBounds | null>(null)
   const markersRef = useRef<LayerGroup | null>(null)
+  const routesRef = useRef<LayerGroup | null>(null)
   const [zoom, setZoom] = useState(0)
   const [zoomRange, setZoomRange] = useState({ min: -2, max: 3 })
 
@@ -72,6 +77,7 @@ export function MapCanvas({
       attributionControl: false,
     })
     mapRef.current = map
+    routesRef.current = layerGroup().addTo(map)
     markersRef.current = layerGroup().addTo(map)
     map.on('zoomend', () => setZoom(map.getZoom()))
     map.on('click', (event) => {
@@ -85,8 +91,34 @@ export function MapCanvas({
       map.remove()
       mapRef.current = null
       markersRef.current = null
+      routesRef.current = null
     }
   }, [])
+
+  useEffect(() => {
+    containerRef.current?.classList.toggle('with-grid', showGrid)
+    containerRef.current?.classList.toggle('adding', addMode)
+  }, [showGrid, addMode])
+
+  // Route lines: slope-limited solid underneath, shortest dashed on top.
+  useEffect(() => {
+    const group = routesRef.current
+    if (!group) return
+    group.clearLayers()
+    if (!terrain || !routes) return
+    const { raster } = terrain.manifest
+    const draw = (result: RouteResult, className: string) => {
+      for (const leg of result.legs) {
+        if (leg.status !== 'ok' || leg.path.length < 2) continue
+        polyline(
+          leg.path.map((cell) => toLatLng(raster, cellCenterToMap(raster, cell))),
+          { className, interactive: false },
+        ).addTo(group)
+      }
+    }
+    draw(routes.terrain, 'route-line route-slope-limited')
+    draw(routes.distance, 'route-line route-shortest')
+  }, [terrain, routes])
 
   // Terrain image, extent outline, and zoom limits.
   useEffect(() => {
@@ -176,7 +208,10 @@ export function MapCanvas({
     <>
       <div
         ref={containerRef}
-        className={`map-canvas${showGrid ? ' with-grid' : ''}${addMode ? ' adding' : ''}`}
+        // Static on purpose: Leaflet adds its own classes to this element, and a
+        // changing className would make React overwrite them. State classes are
+        // toggled in an effect instead.
+        className="map-canvas"
         aria-label={
           terrain
             ? `2D map of ${terrain.manifest.title}. Use arrow keys to pan, plus and minus to zoom.`
@@ -252,6 +287,16 @@ export function MapCanvas({
           <Icon name="target" />
         </button>
       </div>
+      {routes && (
+        <div className="route-legend" aria-label="Route legend">
+          <span>
+            <span className="legend-swatch shortest" aria-hidden="true" /> Shortest
+          </span>
+          <span>
+            <span className="legend-swatch slope-limited" aria-hidden="true" /> Slope-limited
+          </span>
+        </div>
+      )}
       <div className="map-attribution">
         {terrain
           ? terrain.manifest.synthetic
