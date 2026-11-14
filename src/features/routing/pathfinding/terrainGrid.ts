@@ -80,8 +80,12 @@ export function classifyCell(
   if (!isInBounds(grid, cell)) return { passable: false, cause: 'outOfCoverage' }
   const index = cell.row * grid.cols + cell.col
   const slope = grid.slopeDegrees[index]
-  if (slope === null) return { passable: false, cause: 'noData' }
-  if (grid.hazard[index]) return { passable: false, cause: 'hazard' }
+  const hazard = grid.hazard[index]
+  // Defensive: grids may be hand-built; anything not a valid value is unknown, never safe.
+  if (typeof slope !== 'number' || !Number.isFinite(slope) || typeof hazard !== 'boolean') {
+    return { passable: false, cause: 'noData' }
+  }
+  if (hazard) return { passable: false, cause: 'hazard' }
   if (maxSlopeDegrees !== null && slope > maxSlopeDegrees) {
     return { passable: false, cause: 'slope' }
   }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { gridFromAscii } from '../testing/gridFromAscii'
-import { classifyCell, createTerrainGrid } from './terrainGrid'
+import { classifyCell, createTerrainGrid, type TerrainGrid } from './terrainGrid'
 
 describe('createTerrainGrid', () => {
   it('rejects mismatched slope length', () => {
@@ -82,6 +82,30 @@ describe('classifyCell', () => {
     expect(classifyCell(g, { row: -1, col: 0 }, null)).toEqual({
       passable: false,
       cause: 'outOfCoverage',
+    })
+  })
+
+  it('never treats malformed data in a hand-built grid as safe', () => {
+    // Grids may arrive from preprocessing without going through createTerrainGrid.
+    const g = {
+      rows: 1,
+      cols: 4,
+      cellSizeMeters: 1,
+      slopeDegrees: [0, undefined, Number.NaN, 0],
+      hazard: [false, false, false],
+    } as unknown as TerrainGrid
+    expect(classifyCell(g, { row: 0, col: 1 }, 10)).toEqual({
+      passable: false,
+      cause: 'noData',
+    })
+    expect(classifyCell(g, { row: 0, col: 2 }, null)).toEqual({
+      passable: false,
+      cause: 'noData',
+    })
+    // a missing hazard entry is unknown, not "no hazard"
+    expect(classifyCell(g, { row: 0, col: 3 }, null)).toEqual({
+      passable: false,
+      cause: 'noData',
     })
   })
 
