@@ -78,6 +78,7 @@ function App() {
           plan,
           eva,
           assumptions: { maxSlopeDegrees, slopePenalty, returnToStart, ...evaAssumptions },
+          scienceTargets: targets.status === 'ready' ? targets : null,
         })
       : null
 

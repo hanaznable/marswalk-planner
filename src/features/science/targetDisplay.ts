@@ -32,7 +32,7 @@ export function solLabel(sol: number | null): string | null {
  * Activity and position-record sols, kept separate as the contract requires.
  * Null when neither is known.
  */
-export function solSummary(target: ScienceTarget): string | null {
+export function solSummary(target: Pick<ScienceTarget, 'activitySol' | 'positionSol'>): string | null {
   const activity = solLabel(target.activitySol)
   const position = solLabel(target.positionSol)
   if (activity && position) {

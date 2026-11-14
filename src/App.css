@@ -2109,6 +2109,25 @@ dd {
   font-family: var(--mono);
   font-size: 11px;
 }
+.report-tag {
+  font-family: inherit;
+  font-weight: 400;
+  color: #5a5d57;
+}
+.report-target {
+  margin-top: 10px;
+  padding-left: 10px;
+  border-left: 3px solid #8b74d6;
+}
+.report-target h3 {
+  margin-top: 0;
+}
+.report-target p {
+  margin: 2px 0;
+}
+.report-science > p {
+  margin: 8px 0 0;
+}
 
 @media print {
   @page {
@@ -2139,5 +2158,12 @@ dd {
   }
   .report-page section {
     break-inside: avoid-page;
+  }
+  /* Can be long: break between targets, never inside one. */
+  .report-page section.report-science {
+    break-inside: auto;
+  }
+  .report-target {
+    break-inside: avoid;
   }
 }
