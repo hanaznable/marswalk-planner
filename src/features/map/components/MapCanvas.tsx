@@ -19,8 +19,10 @@ import {
   rasterBounds,
   type MapPoint,
 } from '../../datasets/terrainContract'
+import { describePosition, type PlacedTarget } from '../../datasets/scienceTargets'
 import type { TerrainPackage } from '../../datasets/terrainPackage'
 import type { RouteAlternatives, RouteResult, Waypoint } from '../../routing'
+import { kindLabel } from '../../science/targetDisplay'
 import { elevationToRgba } from '../terrainImage'
 import { fromLatLng, toLatLng, waypointRoleLabel } from '../waypointPlacement'
 
@@ -39,6 +41,10 @@ interface MapCanvasProps {
   basemapUrl: string | null
   /** Shown instead of the decorative empty state when there is no terrain. */
   emptyState?: ReactNode
+  /** Science targets on covered cells to draw; empty when hidden. */
+  targets: readonly PlacedTarget[]
+  selectedTargetId: string | null
+  onTargetClick: (id: string) => void
 }
 
 /**
@@ -56,12 +62,16 @@ export function MapCanvas({
   routes,
   basemapUrl,
   emptyState,
+  targets,
+  selectedTargetId,
+  onTargetClick,
 }: MapCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<LeafletMap | null>(null)
   const boundsRef = useRef<LatLngBounds | null>(null)
   const markersRef = useRef<LayerGroup | null>(null)
   const routesRef = useRef<LayerGroup | null>(null)
+  const targetsRef = useRef<LayerGroup | null>(null)
   const [zoom, setZoom] = useState(0)
   const [zoomRange, setZoomRange] = useState({ min: -2, max: 3 })
   // Keyed by URL so a failure never sticks to a different basemap.
@@ -69,9 +79,9 @@ export function MapCanvas({
   const basemapFailed = basemapUrl !== null && failedBasemap === basemapUrl
 
   // Latest values for Leaflet event handlers bound once.
-  const latest = useRef({ addMode, onPlace, onRelocate, terrain })
+  const latest = useRef({ addMode, onPlace, onRelocate, onTargetClick, terrain })
   useEffect(() => {
-    latest.current = { addMode, onPlace, onRelocate, terrain }
+    latest.current = { addMode, onPlace, onRelocate, onTargetClick, terrain }
   })
 
   useEffect(() => {
@@ -88,6 +98,8 @@ export function MapCanvas({
     })
     mapRef.current = map
     routesRef.current = layerGroup().addTo(map)
+    // Targets sit under waypoint markers, so a waypoint on a target stays draggable.
+    targetsRef.current = layerGroup().addTo(map)
     markersRef.current = layerGroup().addTo(map)
     map.on('zoomend', () => setZoom(map.getZoom()))
     map.on('click', (event) => {
@@ -102,8 +114,43 @@ export function MapCanvas({
       mapRef.current = null
       markersRef.current = null
       routesRef.current = null
+      targetsRef.current = null
     }
   }, [])
+
+  // Science target markers (covered cells only; splitByCoverage drops the rest).
+  useEffect(() => {
+    const group = targetsRef.current
+    if (!group) return
+    group.clearLayers()
+    if (!terrain) return
+    const { raster } = terrain.manifest
+    for (const { target, cell } of targets) {
+      const selected = target.id === selectedTargetId
+      const item = marker(toLatLng(raster, cellCenterToMap(raster, cell)), {
+        icon: divIcon({
+          className: `target-marker${selected ? ' selected' : ''}`,
+          html: '<span></span>',
+          iconSize: [18, 18],
+        }),
+        title: `${target.name} (${kindLabel(target.kind)}). ${describePosition(target)}.`,
+        alt: target.name,
+        zIndexOffset: selected ? 100 : 0,
+      })
+      item.on('click', () => latest.current.onTargetClick(target.id))
+      item.addTo(group)
+    }
+  }, [terrain, targets, selectedTargetId])
+
+  // Bring a target selected from the list into view.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !terrain || !selectedTargetId) return
+    const placed = targets.find(({ target }) => target.id === selectedTargetId)
+    if (!placed) return
+    const { raster } = terrain.manifest
+    map.panInside(toLatLng(raster, cellCenterToMap(raster, placed.cell)), { padding: [60, 60] })
+  }, [terrain, targets, selectedTargetId])
 
   useEffect(() => {
     containerRef.current?.classList.toggle('with-grid', showGrid)

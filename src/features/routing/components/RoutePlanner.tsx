@@ -4,7 +4,7 @@ import {
   toLocalMetres,
   type RasterGrid,
 } from '../../datasets/terrainContract'
-import { waypointRoleLabel } from '../../map/waypointPlacement'
+import { waypointName, waypointRoleLabel } from '../../map/waypointPlacement'
 import type { Waypoint } from '../model/types'
 import type { RoutePlan } from '../useRoutePlan'
 import { RouteComparison } from './RouteComparison'
@@ -31,6 +31,10 @@ interface RoutePlannerProps {
   synthetic: boolean
   returnToStart: boolean
   onReturnToStartChange: (value: boolean) => void
+  /** True when a terrain is loaded and at least one waypoint is placed. */
+  exportAvailable: boolean
+  onOpenReport: () => void
+  onDownloadJson: () => void
 }
 
 export function RoutePlanner({
@@ -52,6 +56,9 @@ export function RoutePlanner({
   synthetic,
   returnToStart,
   onReturnToStartChange,
+  exportAvailable,
+  onOpenReport,
+  onDownloadJson,
 }: RoutePlannerProps) {
   return (
     <div className="route-planner">
@@ -85,6 +92,9 @@ export function RoutePlanner({
               <li key={waypoint.id} className="waypoint-item">
                 <span className={`waypoint-role role-${role.split(' ')[0].toLowerCase()}`}>
                   {role}
+                  {waypointName(waypoint) && (
+                    <span className="waypoint-name"> · {waypointName(waypoint)}</span>
+                  )}
                 </span>
                 <span className="waypoint-position">
                   {local
@@ -234,6 +244,23 @@ export function RoutePlanner({
         evaAssumptions={evaAssumptions}
         synthetic={synthetic}
       />
+
+      <div className="route-export">
+        <span className="eyebrow">EXPORT</span>
+        <div className="export-buttons">
+          <button disabled={!exportAvailable} onClick={onOpenReport}>
+            Mission report
+          </button>
+          <button disabled={!exportAvailable} onClick={onDownloadJson}>
+            Download JSON
+          </button>
+        </div>
+        <p className="setting-hint">
+          {exportAvailable
+            ? 'Includes sources, assumptions, waypoints, both routes and limitations.'
+            : 'Load terrain and place a waypoint to export.'}
+        </p>
+      </div>
     </div>
   )
 }

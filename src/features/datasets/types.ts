@@ -24,4 +24,9 @@ export interface DatasetMetadata {
   processedAssetUrl: string
   /** Prototype limitations to show wherever the data is used. */
   limitations: readonly string[]
+  /**
+   * Science target collection for this package (contract v1), relative to the
+   * app's base URL; null until one is delivered.
+   */
+  scienceTargetsUrl: string | null
 }

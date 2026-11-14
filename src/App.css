@@ -1047,6 +1047,33 @@ dd {
 .map-expanded .mission-panel {
   display: none;
 }
+/*
+ * Three-column layout: the workspace takes the remaining window height and the
+ * map fills it. Side panels scroll inside themselves, so a growing waypoint list
+ * or route comparison never stretches or moves the map under the cursor.
+ */
+@media (min-width: 1021px) {
+  .app-shell {
+    height: 100svh;
+  }
+  .workspace {
+    flex: 1 1 0;
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .layers-panel,
+  .mission-panel {
+    /* Contain absolutely positioned content (e.g. screen-reader-only labels)
+       so it is clipped by the panel instead of stretching the page. */
+    position: relative;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #3b4434 transparent;
+  }
+  .map-viewport {
+    min-height: 0;
+  }
+}
 @media (min-width: 1600px) {
   .workspace {
     grid-template-columns: 270px minmax(300px, 1fr) 320px;
@@ -1407,6 +1434,11 @@ dd {
 .waypoint-role.role-destination {
   color: var(--accent);
 }
+.waypoint-name {
+  font-weight: 400;
+  color: #d5dad6;
+  overflow-wrap: anywhere;
+}
 .waypoint-position {
   grid-column: 1;
   color: var(--muted);
@@ -1665,6 +1697,170 @@ dd {
   line-height: 1.5;
 }
 
+/* Science targets: a diamond, distinct from round waypoints and route colours. */
+.target-marker {
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.target-marker span,
+.target-swatch {
+  display: block;
+  width: 11px;
+  height: 11px;
+  transform: rotate(45deg);
+  background: var(--science-target);
+  border: 2px solid #101313;
+  box-shadow: 0 0 0 1px #e0e3e2a0;
+}
+.target-marker.selected span {
+  width: 14px;
+  height: 14px;
+  box-shadow: 0 0 0 2px var(--science-target), 0 0 0 4px #101313;
+}
+.target-marker:focus-visible {
+  outline: 2px solid var(--science-target);
+  outline-offset: 3px;
+}
+.target-browser,
+.layers-panel .target-status {
+  margin: 0 18px 8px;
+  font-size: 10px;
+}
+.target-status {
+  color: var(--muted);
+  line-height: 1.5;
+}
+.target-error {
+  color: #f0c4b0;
+}
+.target-error p + p {
+  margin-top: 4px;
+}
+.target-error .retry-button {
+  margin-top: 8px;
+}
+.target-synthetic {
+  font: 8px var(--mono);
+  letter-spacing: 0.6px;
+  color: #e0b98f;
+  margin-bottom: 8px;
+}
+.target-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.target-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 2px 10px;
+  width: 100%;
+  padding: 7px 8px;
+  border-radius: 3px;
+  background: transparent;
+  color: #d5dad6;
+  text-align: left;
+  font-size: 11px;
+}
+.target-item:hover {
+  background: #232928;
+}
+.target-item[aria-pressed='true'] {
+  background: #2a2738;
+  box-shadow: inset 2px 0 0 var(--science-target);
+}
+.target-item .target-swatch {
+  grid-row: 1 / span 2;
+  width: 8px;
+  height: 8px;
+  margin: 0 2px;
+}
+.target-name {
+  overflow-wrap: anywhere;
+}
+.target-kind {
+  color: var(--muted);
+  font-size: 9px;
+}
+.target-details {
+  margin: 8px 0;
+  padding: 12px;
+  border: 1px solid #3d3852;
+  border-radius: 4px;
+  background: #1b1a22;
+  line-height: 1.5;
+}
+.target-details h3 {
+  font-size: 12px;
+  color: #e0e3e2;
+}
+.target-details p + p {
+  margin-top: 6px;
+}
+.target-caveat {
+  color: #e0b98f;
+}
+.target-meta {
+  font-family: var(--mono);
+  color: #c9cec7;
+}
+.target-description {
+  color: var(--muted);
+}
+.target-details h4 {
+  margin: 10px 0 4px;
+  font-size: 10px;
+  color: #c9cec7;
+}
+.target-sources {
+  margin: 0;
+  padding-left: 16px;
+  color: var(--muted);
+}
+.target-sources a {
+  color: #9ec5f4;
+}
+.target-add {
+  width: 100%;
+  margin-top: 12px;
+  padding: 8px;
+  border: 1px solid #5d5478;
+  border-radius: 3px;
+  background: #2a2738;
+  color: #e3dcf7;
+  font-size: 11px;
+}
+.target-add:not(:disabled):hover {
+  background: #353049;
+}
+.target-add:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.target-outside {
+  margin-top: 10px;
+  color: var(--muted);
+}
+.target-outside summary {
+  cursor: pointer;
+  color: #c9cec7;
+  padding: 4px 0;
+}
+.target-outside ul {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+}
+.target-outside li {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 0;
+  border-bottom: 1px solid #262c2a;
+  color: #b4bbb5;
+}
+
 /* Elevation profile chart */
 .profile-chart {
   margin: 18px 0 0;
@@ -1780,4 +1976,194 @@ dd {
 .profile-table td {
   color: #a3ac9e;
   font-family: var(--mono);
+}
+
+/* Export section and mission report */
+.route-export {
+  border-top: 1px solid var(--border);
+  margin-top: 22px;
+  padding-top: 18px;
+}
+.route-export > .eyebrow {
+  font-size: 8px;
+}
+.export-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.export-buttons button,
+.report-actions button {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #4b4437;
+  border-radius: 4px;
+  background: #2c292161;
+  color: #e0e3e2;
+  font-size: 11px;
+}
+.export-buttons button:not(:disabled):hover,
+.report-actions button:hover {
+  background: #3a3526;
+}
+.report-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  padding: 32px 16px;
+  overflow-y: auto;
+  background: #0a0c0ce6;
+}
+.report-dialog {
+  width: min(860px, 100%);
+  height: max-content;
+  outline: none;
+}
+/* Focused on open for screen readers; its buttons keep their own focus rings. */
+.report-dialog:focus-visible {
+  outline: none;
+}
+.report-actions {
+  position: sticky;
+  top: 0;
+  display: flex;
+  gap: 8px;
+  padding-bottom: 12px;
+}
+.report-actions button {
+  flex: 0 1 auto;
+  background: #1d241d;
+}
+.report-page {
+  padding: 32px 36px;
+  border-radius: 6px;
+  background: #f7f6f2;
+  color: #1b1d1d;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.report-page h1 {
+  margin: 4px 0;
+  font-size: 22px;
+}
+.report-page h2 {
+  margin: 22px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #c9c6bd;
+  font-size: 14px;
+}
+.report-page h3 {
+  margin: 12px 0 4px;
+  font-size: 12px;
+}
+.report-page ul,
+.report-page ol {
+  margin: 4px 0;
+  padding-left: 20px;
+}
+.report-page a {
+  color: #1c5cab;
+  word-break: break-all;
+}
+.report-eyebrow {
+  margin: 0;
+  font: 9px var(--mono);
+  letter-spacing: 1px;
+  color: #5a5d57;
+}
+.report-meta {
+  margin: 0;
+  color: #5a5d57;
+}
+.report-facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 16px;
+  margin: 0;
+}
+.report-facts dt {
+  color: #5a5d57;
+}
+.report-facts dd {
+  margin: 0;
+  color: #1b1d1d;
+}
+.report-page table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.report-page th,
+.report-page td {
+  padding: 4px 8px 4px 0;
+  border-bottom: 1px solid #e2dfd7;
+  text-align: left;
+  font-weight: 400;
+}
+.report-page thead th {
+  color: #5a5d57;
+  font-size: 11px;
+}
+.report-page td {
+  font-family: var(--mono);
+  font-size: 11px;
+}
+.report-tag {
+  font-family: inherit;
+  font-weight: 400;
+  color: #5a5d57;
+}
+.report-target {
+  margin-top: 10px;
+  padding-left: 10px;
+  border-left: 3px solid #8b74d6;
+}
+.report-target h3 {
+  margin-top: 0;
+}
+.report-target p {
+  margin: 2px 0;
+}
+.report-science > p {
+  margin: 8px 0 0;
+}
+
+@media print {
+  @page {
+    margin: 14mm;
+  }
+  :root,
+  body.report-open {
+    /* The app sets its dark page colour on :root; print on white. */
+    background: #fff;
+  }
+  body.report-open #root {
+    display: none;
+  }
+  body.report-open .report-backdrop {
+    position: static;
+    padding: 0;
+    overflow: visible;
+    background: #fff;
+  }
+  body.report-open .report-actions {
+    display: none;
+  }
+  body.report-open .report-page {
+    padding: 0;
+    border-radius: 0;
+    background: #fff;
+    color: #000;
+  }
+  .report-page section {
+    break-inside: avoid-page;
+  }
+  /* Can be long: break between targets, never inside one. */
+  .report-page section.report-science {
+    break-inside: auto;
+  }
+  .report-target {
+    break-inside: avoid;
+  }
 }
