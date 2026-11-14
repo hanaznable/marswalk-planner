@@ -1,6 +1,6 @@
 /**
- * Science target contract (version 1) — PROPOSAL for review with Developer B.
- * See docs/science-target-contract.md.
+ * Science target contract (version 1). Agreed with Developer B; see
+ * docs/science-target-contract.md.
  *
  * Targets are tied to one terrain package and positioned in that package's
  * source CRS (metres), so they share its georeferencing and its limits.
@@ -18,8 +18,21 @@ export const SCIENCE_TARGET_KINDS = [
   'traverse-point',
   'landmark',
 ] as const
-
 export type ScienceTargetKind = (typeof SCIENCE_TARGET_KINDS)[number]
+
+/**
+ * What the position actually marks. A rover-position proxy is where the rover
+ * was recorded around the activity, never the exact target (e.g. a drill hole).
+ */
+export const POSITION_BASES = ['rover-position-proxy', 'target-location'] as const
+export type PositionBasis = (typeof POSITION_BASES)[number]
+
+export interface TargetSource {
+  readonly url: string
+  readonly attribution: string
+  /** What this source supports, e.g. "rover position" or "target association". */
+  readonly provides: string
+}
 
 export interface ScienceTarget {
   /** Unique within the collection. */
@@ -30,17 +43,20 @@ export interface ScienceTarget {
   readonly position: {
     readonly x: number
     readonly y: number
-    /** Known horizontal uncertainty in metres; null when the source gives none. */
+    /** Horizontal uncertainty stated by the source; null when it states none. */
     readonly uncertaintyMeters: number | null
+    readonly basis: PositionBasis
   }
   /** e.g. "MSL Curiosity"; null when not mission-specific. */
   readonly mission: string | null
-  /** Mission sol of the observation; null when not applicable or unknown. */
-  readonly sol: number | null
-  /** What was observed or done, as stated by the source. Never inferred. */
+  /** Sol of the scientific activity; null when unknown or not applicable. */
+  readonly activitySol: number | null
+  /** Sol of the position record used for `position`; may differ from the activity sol. */
+  readonly positionSol: number | null
+  /** What the sources say. Never inferred. */
   readonly description: string
-  /** Required for real targets, null for synthetic fixtures. */
-  readonly source: { readonly url: string; readonly attribution: string } | null
+  /** At least one for real data; empty for synthetic fixtures. */
+  readonly sources: readonly TargetSource[]
 }
 
 export interface ScienceTargetCollection {
@@ -48,6 +64,8 @@ export interface ScienceTargetCollection {
   readonly id: string
   /** Terrain package whose CRS the positions use. */
   readonly terrainPackageId: string
+  /** SHA-256 of that package's manifest.json, recording the exact terrain version. */
+  readonly terrainManifestSha256: string
   /** True for development fixtures; never shown as NASA data. */
   readonly synthetic: boolean
   readonly targets: readonly ScienceTarget[]
@@ -70,6 +88,8 @@ const isNonEmptyString = (value: unknown): value is string =>
   typeof value === 'string' && value.trim().length > 0
 const isFiniteNumber = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value)
+const isSolOrNull = (value: unknown) =>
+  value === null || (typeof value === 'number' && Number.isInteger(value) && value >= 0)
 
 /** Validates untrusted JSON. Throws ScienceTargetContractError listing every problem. */
 export function parseScienceTargets(input: unknown): ScienceTargetCollection {
@@ -83,6 +103,9 @@ export function parseScienceTargets(input: unknown): ScienceTargetCollection {
   if (!isNonEmptyString(input.id)) issues.push('id must be a non-empty string')
   if (!isNonEmptyString(input.terrainPackageId)) {
     issues.push('terrainPackageId must be a non-empty string')
+  }
+  if (typeof input.terrainManifestSha256 !== 'string' || !/^[0-9a-f]{64}$/i.test(input.terrainManifestSha256)) {
+    issues.push('terrainManifestSha256 must be 64 hexadecimal characters')
   }
   const synthetic = input.synthetic
   if (typeof synthetic !== 'boolean') issues.push('synthetic must be a boolean')
@@ -124,30 +147,54 @@ function validateTarget(target: unknown, at: string, synthetic: boolean, issues:
     if (uncertainty !== null && !(isFiniteNumber(uncertainty) && uncertainty >= 0)) {
       issues.push(`${at}.position.uncertaintyMeters must be null or a non-negative number`)
     }
+    if (!POSITION_BASES.includes(position.basis as PositionBasis)) {
+      issues.push(`${at}.position.basis must be one of ${POSITION_BASES.join(', ')}`)
+    }
   }
 
   if (target.mission !== null && !isNonEmptyString(target.mission)) {
     issues.push(`${at}.mission must be null or a non-empty string`)
   }
-  const sol = target.sol
-  if (sol !== null && !(typeof sol === 'number' && Number.isInteger(sol) && sol >= 0)) {
-    issues.push(`${at}.sol must be null or a non-negative integer`)
+  if (!isSolOrNull(target.activitySol)) {
+    issues.push(`${at}.activitySol must be null or a non-negative integer`)
+  }
+  if (!isSolOrNull(target.positionSol)) {
+    issues.push(`${at}.positionSol must be null or a non-negative integer`)
   }
   if (!isNonEmptyString(target.description)) {
     issues.push(`${at}.description must be a non-empty string`)
   }
 
-  const source = target.source
-  if (synthetic) {
-    if (source !== null) issues.push(`${at}.source must be null when synthetic is true`)
-  } else if (!isRecord(source)) {
-    issues.push(`${at}.source is required when synthetic is false`)
+  const sources = target.sources
+  if (!Array.isArray(sources)) {
+    issues.push(`${at}.sources must be an array`)
+  } else if (synthetic) {
+    if (sources.length > 0) issues.push(`${at}.sources must be empty when synthetic is true`)
+  } else if (sources.length === 0) {
+    issues.push(`${at}.sources must list at least one source when synthetic is false`)
   } else {
-    if (!isNonEmptyString(source.url)) issues.push(`${at}.source.url must be a non-empty string`)
-    if (!isNonEmptyString(source.attribution)) {
-      issues.push(`${at}.source.attribution must be a non-empty string`)
-    }
+    sources.forEach((source, index) => {
+      const where = `${at}.sources[${index}]`
+      if (!isRecord(source)) {
+        issues.push(`${where} must be an object`)
+        return
+      }
+      for (const key of ['url', 'attribution', 'provides']) {
+        if (!isNonEmptyString(source[key])) issues.push(`${where}.${key} must be a non-empty string`)
+      }
+    })
   }
+}
+
+/** Plain-language position caveat for the UI; a proxy never reads as exact. */
+export function describePosition(target: ScienceTarget): string {
+  const { basis, uncertaintyMeters } = target.position
+  if (basis === 'rover-position-proxy') {
+    return 'Rover position associated with this target (proxy), not the exact location'
+  }
+  return uncertaintyMeters === null
+    ? 'Target location; uncertainty not stated by the source'
+    : `Target location; ±${uncertaintyMeters} m per the source`
 }
 
 export interface PlacedTarget {
