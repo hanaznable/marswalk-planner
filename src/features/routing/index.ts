@@ -25,6 +25,7 @@ export {
   planRoute,
   type RouteAlternatives,
   type RoutePlanInput,
+  type SlopeAssumptions,
 } from './planRoute'
 export { terrainPackageToGrid } from './adapters/terrainPackageGrid'
 export {

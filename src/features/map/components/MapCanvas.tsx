@@ -100,7 +100,7 @@ export function MapCanvas({
     containerRef.current?.classList.toggle('adding', addMode)
   }, [showGrid, addMode])
 
-  // Route lines: slope-limited solid underneath, shortest dashed on top.
+  // Route lines: slope-aware solid underneath, shortest dashed on top.
   useEffect(() => {
     const group = routesRef.current
     if (!group) return
@@ -293,7 +293,7 @@ export function MapCanvas({
             <span className="legend-swatch shortest" aria-hidden="true" /> Shortest
           </span>
           <span>
-            <span className="legend-swatch slope-limited" aria-hidden="true" /> Slope-limited
+            <span className="legend-swatch slope-limited" aria-hidden="true" /> Slope-aware
           </span>
         </div>
       )}

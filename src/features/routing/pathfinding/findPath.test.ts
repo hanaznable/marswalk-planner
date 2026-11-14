@@ -144,6 +144,42 @@ describe('findPath', () => {
     ).toEqual({ status: 'failed', reason: { code: 'NO_PATH', blockedBy: ['slope'] } })
   })
 
+  describe('slope penalty', () => {
+    // 20 degree cell between two flat cells, flat row below; 10 m cells.
+    const g = gridFromAscii(['.4.', '...'], 10)
+    const from = { row: 0, col: 0 }
+    const to = { row: 0, col: 2 }
+
+    it('takes the direct crossing when the penalty is zero', () => {
+      const r = findPath(g, from, to, { maxSlopeDegrees: null, slopePenalty: 0 })
+      expect(r.status === 'ok' && r.path).toContainEqual({ row: 0, col: 1 })
+      expect(r.status === 'ok' && r.distanceMeters).toBeCloseTo(20)
+    })
+
+    it('prefers a longer flat detour over a short steep crossing', () => {
+      // direct: 2 steps of 10 m at grade tan(10 deg) -> 20 * (1 + 4 * 0.176) = 34.1
+      // detour: 2 flat diagonal steps -> 28.3
+      const r = findPath(g, from, to, { maxSlopeDegrees: null, slopePenalty: 4 })
+      expect(r.status === 'ok' && r.path).not.toContainEqual({ row: 0, col: 1 })
+    })
+
+    it('reports the geometric distance, not the weighted cost', () => {
+      const r = findPath(g, from, to, { maxSlopeDegrees: null, slopePenalty: 4 })
+      expect(r.status === 'ok' && r.distanceMeters).toBeCloseTo(20 * Math.SQRT2)
+    })
+
+    it('treats a missing penalty as zero', () => {
+      const r = findPath(g, from, to, { maxSlopeDegrees: null })
+      expect(r.status === 'ok' && r.distanceMeters).toBeCloseTo(20)
+    })
+
+    it.each([-1, Number.NaN, Infinity])('rejects penalty %s', (penalty) => {
+      expect(() =>
+        findPath(g, from, to, { maxSlopeDegrees: null, slopePenalty: penalty }),
+      ).toThrow(RangeError)
+    })
+  })
+
   it('reports blocked endpoints before searching', () => {
     const g = gridFromAscii(['.#?'])
     expect(findPath(g, { row: 0, col: 1 }, { row: 0, col: 0 }, opts)).toEqual({
