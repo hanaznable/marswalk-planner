@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { AppHeader } from './components/layout/AppHeader'
 import { StatusBar } from './components/layout/StatusBar'
 import { Icon } from './components/ui/Icon'
@@ -8,6 +8,9 @@ import { MapViewport } from './features/map/components/MapViewport'
 import { useTerrainSource } from './features/map/useTerrainSource'
 import { useWaypoints } from './features/map/useWaypoints'
 import { MissionPanel } from './features/mission/MissionPanel'
+import { downloadMissionReport } from './features/mission/report/downloadMissionReport'
+import { MissionReportDialog } from './features/mission/report/MissionReportDialog'
+import { buildMissionReport, type MissionReport } from './features/mission/report/missionReport'
 import { RoutePlanner } from './features/routing/components/RoutePlanner'
 import { useRoutePlan } from './features/routing/useRoutePlan'
 import type { EvaAssumptions } from './features/eva/evaEstimate'
@@ -42,6 +45,22 @@ function App() {
     stopMinutes: 15,
   })
   const eva = useEvaPlan(plan, terrain, evaAssumptions)
+  const [report, setReport] = useState<MissionReport | null>(null)
+  const closeReport = useCallback(() => setReport(null), [])
+
+  // Built on demand so generatedAt is the moment of export.
+  const currentReport = () =>
+    terrain
+      ? buildMissionReport({
+          generatedAt: new Date(),
+          terrain,
+          dataset,
+          waypoints: waypoints.waypoints,
+          plan,
+          eva,
+          assumptions: { maxSlopeDegrees, slopePenalty, returnToStart, ...evaAssumptions },
+        })
+      : null
 
   return (
     <div className={`app-shell${expanded ? ' map-expanded' : ''}`}>
@@ -103,6 +122,12 @@ function App() {
               synthetic={terrain?.manifest.synthetic ?? false}
               returnToStart={returnToStart}
               onReturnToStartChange={setReturnToStart}
+              exportAvailable={terrain !== null && waypoints.waypoints.length > 0}
+              onOpenReport={() => setReport(currentReport())}
+              onDownloadJson={() => {
+                const next = currentReport()
+                if (next) downloadMissionReport(next)
+              }}
             />
           }
         />
@@ -123,6 +148,13 @@ function App() {
         </span>
       </div>
       <StatusBar terrainState={terrainState} />
+      {report && (
+        <MissionReportDialog
+          report={report}
+          onClose={closeReport}
+          onDownloadJson={() => downloadMissionReport(report)}
+        />
+      )}
     </div>
   )
 }

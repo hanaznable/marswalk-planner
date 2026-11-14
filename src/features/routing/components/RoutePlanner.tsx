@@ -31,6 +31,10 @@ interface RoutePlannerProps {
   synthetic: boolean
   returnToStart: boolean
   onReturnToStartChange: (value: boolean) => void
+  /** True when a terrain is loaded and at least one waypoint is placed. */
+  exportAvailable: boolean
+  onOpenReport: () => void
+  onDownloadJson: () => void
 }
 
 export function RoutePlanner({
@@ -52,6 +56,9 @@ export function RoutePlanner({
   synthetic,
   returnToStart,
   onReturnToStartChange,
+  exportAvailable,
+  onOpenReport,
+  onDownloadJson,
 }: RoutePlannerProps) {
   return (
     <div className="route-planner">
@@ -234,6 +241,23 @@ export function RoutePlanner({
         evaAssumptions={evaAssumptions}
         synthetic={synthetic}
       />
+
+      <div className="route-export">
+        <span className="eyebrow">EXPORT</span>
+        <div className="export-buttons">
+          <button disabled={!exportAvailable} onClick={onOpenReport}>
+            Mission report
+          </button>
+          <button disabled={!exportAvailable} onClick={onDownloadJson}>
+            Download JSON
+          </button>
+        </div>
+        <p className="setting-hint">
+          {exportAvailable
+            ? 'Includes sources, assumptions, waypoints, both routes and limitations.'
+            : 'Load terrain and place a waypoint to export.'}
+        </p>
+      </div>
     </div>
   )
 }
