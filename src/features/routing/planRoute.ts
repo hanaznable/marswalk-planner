@@ -38,6 +38,7 @@ export function planRoute(
   }
 
   const maxSlopeDegrees = profile.kind === 'terrain' ? profile.maxSlopeDegrees : null
+  const slopePenalty = profile.kind === 'terrain' ? profile.slopePenalty : 0
   const pairs: [Waypoint, Waypoint, LegKind][] = []
   for (let i = 1; i < waypoints.length; i++) {
     pairs.push([waypoints[i - 1], waypoints[i], 'outbound'])
@@ -47,7 +48,7 @@ export function planRoute(
   }
 
   const legs = pairs.map(([from, to, kind]): LegResult => {
-    const result = findPath(grid, from.cell, to.cell, { maxSlopeDegrees })
+    const result = findPath(grid, from.cell, to.cell, { maxSlopeDegrees, slopePenalty })
     const base = { kind, fromId: from.id, toId: to.id }
     return result.status === 'ok'
       ? { status: 'ok', ...base, path: result.path, distanceMeters: result.distanceMeters }
@@ -61,16 +62,23 @@ export function planRoute(
   return { profile, legs, complete, totalDistanceMeters }
 }
 
+/** User scenario inputs for the slope-aware profile. */
+export interface SlopeAssumptions {
+  readonly maxSlopeDegrees: number
+  readonly slopePenalty: number
+}
+
 /** Plans the same input with both profiles. Identical results are reported, not altered. */
 export function planAlternatives(
   grid: TerrainGrid,
   input: RoutePlanInput,
-  maxSlopeDegrees: number,
+  { maxSlopeDegrees, slopePenalty }: SlopeAssumptions,
 ): RouteAlternatives {
   const distance = planRoute(grid, input, { kind: 'distance' })
   const terrain = planRoute(grid, input, {
     kind: 'terrain',
     maxSlopeDegrees,
+    slopePenalty,
     slopeLimitIsScenarioAssumption: true,
   })
   return { distance, terrain, identical: sameRoute(distance, terrain) }

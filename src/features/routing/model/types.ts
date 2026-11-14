@@ -26,7 +26,9 @@ export type RouteProfile =
   | {
       readonly kind: 'terrain'
       readonly maxSlopeDegrees: number
-      /** The slope limit is a user scenario input, not an official limit. */
+      /** Preference for gentler ground; 0 = shortest within the limit. A planning heuristic. */
+      readonly slopePenalty: number
+      /** The slope limit and penalty are user scenario inputs, not official limits. */
       readonly slopeLimitIsScenarioAssumption: true
     }
 

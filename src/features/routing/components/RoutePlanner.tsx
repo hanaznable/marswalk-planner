@@ -21,6 +21,8 @@ interface RoutePlannerProps {
   plan: RoutePlan | null
   maxSlopeDegrees: number
   onMaxSlopeChange: (degrees: number) => void
+  slopePenalty: number
+  onSlopePenaltyChange: (penalty: number) => void
   returnToStart: boolean
   onReturnToStartChange: (value: boolean) => void
 }
@@ -36,6 +38,8 @@ export function RoutePlanner({
   plan,
   maxSlopeDegrees,
   onMaxSlopeChange,
+  slopePenalty,
+  onSlopePenaltyChange,
   returnToStart,
   onReturnToStartChange,
 }: RoutePlannerProps) {
@@ -150,6 +154,23 @@ export function RoutePlanner({
         <p id="slope-hint" className="setting-hint">
           Scenario assumption, not a certified astronaut safety limit.
         </p>
+        <label className="setting-row">
+          <span>Slope penalty</span>
+          <input
+            type="range"
+            min={0}
+            max={10}
+            step={0.5}
+            value={slopePenalty}
+            onChange={(event) => onSlopePenaltyChange(Number(event.target.value))}
+            aria-describedby="penalty-hint"
+          />
+          <output>{slopePenalty}</output>
+        </label>
+        <p id="penalty-hint" className="setting-hint">
+          How strongly the slope-aware route avoids steep ground. 0 = shortest
+          within the limit. Planning heuristic, not an energy model.
+        </p>
         <label className="setting-row checkbox">
           <input
             type="checkbox"
@@ -164,6 +185,7 @@ export function RoutePlanner({
         plan={plan}
         waypoints={waypoints}
         maxSlopeDegrees={maxSlopeDegrees}
+        slopePenalty={slopePenalty}
       />
     </div>
   )

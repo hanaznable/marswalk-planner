@@ -23,10 +23,15 @@ function App() {
   // Synthetic development terrain until Developer B delivers a real package.
   const terrain = useMemo(() => createSyntheticTerrain(), [])
   const waypoints = useWaypoints(terrain)
-  // Scenario assumption chosen by the user, not a certified limit.
+  // Scenario assumptions chosen by the user, not certified limits or an energy model.
   const [maxSlopeDegrees, setMaxSlopeDegrees] = useState(20)
+  const [slopePenalty, setSlopePenalty] = useState(3)
+  const assumptions = useMemo(
+    () => ({ maxSlopeDegrees, slopePenalty }),
+    [maxSlopeDegrees, slopePenalty],
+  )
   const [returnToStart, setReturnToStart] = useState(false)
-  const plan = useRoutePlan(terrain, waypoints.waypoints, maxSlopeDegrees, returnToStart)
+  const plan = useRoutePlan(terrain, waypoints.waypoints, assumptions, returnToStart)
 
   return (
     <div className={`app-shell${expanded ? ' map-expanded' : ''}`}>
@@ -79,6 +84,8 @@ function App() {
               plan={plan}
               maxSlopeDegrees={maxSlopeDegrees}
               onMaxSlopeChange={setMaxSlopeDegrees}
+              slopePenalty={slopePenalty}
+              onSlopePenaltyChange={setSlopePenalty}
               returnToStart={returnToStart}
               onReturnToStartChange={setReturnToStart}
             />

@@ -1582,3 +1582,9 @@ dd {
   margin: 4px 0 0;
   padding-left: 16px;
 }
+.route-table .column-detail {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font: 9px var(--mono);
+}

@@ -8,12 +8,18 @@ interface RouteComparisonProps {
   plan: RoutePlan | null
   waypoints: readonly Waypoint[]
   maxSlopeDegrees: number
+  slopePenalty: number
 }
 
 const formatMetres = (value: number | null) =>
   value === null ? '—' : `${Math.round(value)} m`
 
-export function RouteComparison({ plan, waypoints, maxSlopeDegrees }: RouteComparisonProps) {
+export function RouteComparison({
+  plan,
+  waypoints,
+  maxSlopeDegrees,
+  slopePenalty,
+}: RouteComparisonProps) {
   const roleOf = (id: string) => {
     const index = waypoints.findIndex((waypoint) => waypoint.id === id)
     return index === -1 ? id : waypointRoleLabel(index, waypoints.length)
@@ -51,8 +57,10 @@ export function RouteComparison({ plan, waypoints, maxSlopeDegrees }: RouteCompa
               <span className="legend-swatch shortest" aria-hidden="true" /> Shortest
             </th>
             <th scope="col">
-              <span className="legend-swatch slope-limited" aria-hidden="true" /> Slope ≤{' '}
-              {maxSlopeDegrees}°
+              <span className="legend-swatch slope-limited" aria-hidden="true" /> Slope-aware
+              <span className="column-detail">
+                ≤ {maxSlopeDegrees}° · penalty {slopePenalty}
+              </span>
             </th>
           </tr>
         </thead>
@@ -76,7 +84,7 @@ export function RouteComparison({ plan, waypoints, maxSlopeDegrees }: RouteCompa
         <p className="route-note">Both profiles give the same route.</p>
       )}
       <FailureList title="Shortest" result={alternatives.distance} roleOf={roleOf} />
-      <FailureList title="Slope-limited" result={alternatives.terrain} roleOf={roleOf} />
+      <FailureList title="Slope-aware" result={alternatives.terrain} roleOf={roleOf} />
 
       <div className="summary-note">
         <Icon name="info" size={13} />

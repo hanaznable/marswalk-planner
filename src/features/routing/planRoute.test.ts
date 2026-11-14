@@ -92,12 +92,13 @@ describe('planAlternatives', () => {
     const r = planAlternatives(
       open,
       { waypoints: [wp('s', 0, 0), wp('t', 0, 4)], returnToStart: false },
-      25,
+      { maxSlopeDegrees: 25, slopePenalty: 0 },
     )
     expect(r.identical).toBe(true)
     expect(r.terrain.profile).toEqual({
       kind: 'terrain',
       maxSlopeDegrees: 25,
+      slopePenalty: 0,
       slopeLimitIsScenarioAssumption: true,
     })
   })
@@ -107,7 +108,7 @@ describe('planAlternatives', () => {
     const r = planAlternatives(
       g,
       { waypoints: [wp('s', 0, 0), wp('t', 0, 2)], returnToStart: false },
-      25,
+      { maxSlopeDegrees: 25, slopePenalty: 0 },
     )
     expect(r.distance.totalDistanceMeters).toBe(20)
     // a diagonal step next to the steep cell counts as corner cutting: down, right 2, up
@@ -120,13 +121,27 @@ describe('planAlternatives', () => {
     const r = planAlternatives(
       g,
       { waypoints: [wp('s', 0, 0), wp('t', 0, 2)], returnToStart: false },
-      25,
+      { maxSlopeDegrees: 25, slopePenalty: 0 },
     )
     expect(r.distance.complete).toBe(true)
     expect(r.terrain.legs[0]).toMatchObject({
       status: 'failed',
       reason: { code: 'NO_PATH', blockedBy: ['slope'] },
     })
+    expect(r.identical).toBe(false)
+  })
+
+  it('applies the slope penalty to the slope-aware profile only', () => {
+    // 20 degree cell between two flat cells, flat row below; 10 m cells.
+    const g = gridFromAscii(['.4.', '...'], 10)
+    const r = planAlternatives(
+      g,
+      { waypoints: [wp('s', 0, 0), wp('t', 0, 2)], returnToStart: false },
+      { maxSlopeDegrees: 45, slopePenalty: 4 },
+    )
+    expect(r.distance.totalDistanceMeters).toBe(20)
+    expect(r.terrain.totalDistanceMeters).toBeCloseTo(20 * Math.SQRT2)
+    expect(r.terrain.profile).toMatchObject({ slopePenalty: 4 })
     expect(r.identical).toBe(false)
   })
 })
