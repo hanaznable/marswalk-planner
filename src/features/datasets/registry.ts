@@ -20,6 +20,9 @@ export const datasetRegistry: readonly DatasetMetadata[] = [
       'No validated hazard, thermal, mineral or astronaut safety model; routes are not traversal certifications.',
       'Curiosity traverse and science targets are not included in this package.',
     ],
+    // Agreed location: data/science/pahrump-hills-v1/targets.json (Developer B).
+    // Set it here once that file is delivered.
+    scienceTargetsUrl: null,
   },
 ]
 

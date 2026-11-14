@@ -3,6 +3,7 @@ import type { KeyboardEvent, ReactNode } from 'react'
 import { Icon } from '../../components/ui/Icon'
 import type { MarsRegion } from '../datasets/types'
 import type { TerrainState } from '../map/useTerrainSource'
+import type { ScienceTargetsState } from '../science/useScienceTargets'
 
 function terrainLabel(state: TerrainState): string {
   switch (state.status) {
@@ -19,13 +20,30 @@ function terrainLabel(state: TerrainState): string {
   }
 }
 
+function targetsLabel(state: ScienceTargetsState): string {
+  switch (state.status) {
+    case 'none':
+      return 'Not included yet'
+    case 'loading':
+      return 'Loading…'
+    case 'error':
+      return 'Failed to load'
+    case 'ready': {
+      const count = `${state.inside.length} on this terrain${state.outside.length ? `, ${state.outside.length} outside` : ''}`
+      return state.collection.synthetic ? `${count} (synthetic, not NASA data)` : count
+    }
+  }
+}
+
 export function MissionPanel({
   region,
   terrainState,
+  targetsState,
   routePlanner,
 }: {
   region: MarsRegion
   terrainState: TerrainState
+  targetsState: ScienceTargetsState
   routePlanner: ReactNode
 }) {
   const [tab, setTab] = useState<'route' | 'mission'>('route')
@@ -123,7 +141,7 @@ export function MissionPanel({
           </div>
           <div>
             <dt>Science targets</dt>
-            <dd>Not included yet</dd>
+            <dd>{targetsLabel(targetsState)}</dd>
           </div>
           <div>
             <dt>Surface conditions</dt>
@@ -153,10 +171,13 @@ export function MissionPanel({
           pending="PENDING"
         />
         <ReadinessItem label="Route planning" ready={terrainState.status === 'ready'} pending="NEEDS TERRAIN" />
-        <div className="readiness-item">
-          <span className="readiness-pending" />
-          Science targets<span>PENDING</span>
-        </div>
+        <ReadinessItem
+          label="Science targets"
+          ready={targetsState.status === 'ready' && !targetsState.collection.synthetic}
+          pending={
+            targetsState.status === 'ready' ? 'SYNTHETIC' : targetsState.status === 'error' ? 'FAILED' : 'PENDING'
+          }
+        />
         <div className="readiness-item">
           <span className="readiness-pending" />
           3D visualization<span>PLANNED</span>

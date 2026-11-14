@@ -1,3 +1,4 @@
+import type { PlacedTarget } from '../../datasets/scienceTargets'
 import type { MapPoint } from '../../datasets/terrainContract'
 import type { MarsRegion } from '../../datasets/types'
 import type { RouteAlternatives, Waypoint } from '../../routing'
@@ -21,6 +22,9 @@ interface MapViewportProps {
   onPlace: (point: MapPoint) => void
   onRelocate: (id: string, point: MapPoint) => boolean
   routes: RouteAlternatives | null
+  targets: readonly PlacedTarget[]
+  selectedTargetId: string | null
+  onTargetClick: (id: string) => void
 }
 
 export function MapViewport({
@@ -37,6 +41,9 @@ export function MapViewport({
   onPlace,
   onRelocate,
   routes,
+  targets,
+  selectedTargetId,
+  onTargetClick,
 }: MapViewportProps) {
   const terrain = terrainState.status === 'ready' ? terrainState.terrain : null
   const title = terrain ? terrain.manifest.title : region.name
@@ -79,13 +86,19 @@ export function MapViewport({
             routes={routes}
             basemapUrl={terrainState.status === 'ready' ? terrainState.basemapUrl : null}
             emptyState={<TerrainStatusPanel state={terrainState} regionName={region.name} />}
+            targets={targets}
+            selectedTargetId={selectedTargetId}
+            onTargetClick={onTargetClick}
           />
         ) : (
           <TerrainPlaceholder />
         )}
         {viewMode === '2d' && (addMode || notice) && (
           <div className={`map-notice${notice ? ' warning' : ''}`} role="status">
-            {notice ?? 'Click the terrain to place a waypoint'}
+            {notice ??
+              (targets.length > 0
+                ? 'Click the terrain or a science target to place a waypoint'
+                : 'Click the terrain to place a waypoint')}
           </div>
         )}
         <div className="view-switcher" role="group" aria-label="Viewport mode">

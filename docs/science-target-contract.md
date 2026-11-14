@@ -85,3 +85,20 @@ cell are shown and can be added as waypoints. Targets outside the terrain or on 
 no-data cell are **not shown as part of the region**; they are listed separately
 as "outside this terrain". Next to every target the UI shows its position caveat,
 and that the terrain's absolute geolocation is unverified.
+
+## Delivering a collection
+
+1. Add `targets.json` (and `provenance.json`) under
+   `public/data/science/pahrump-hills-v1/`.
+2. Set `scienceTargetsUrl: 'data/science/pahrump-hills-v1/targets.json'` on the
+   package's entry in `src/features/datasets/registry.ts`.
+
+The app then loads and validates the file when that terrain is loaded. A file that
+breaks the contract or names another terrain package is reported as an error, and
+no targets are shown. Until then, real terrain shows no targets. The synthetic
+development region uses made-up targets
+(`src/features/science/fixtures/syntheticTargets.ts`) labelled as not NASA data.
+
+`terrainManifestSha256` is recorded but not yet checked in the browser. Git
+line-ending conversion can change the served manifest's bytes, so a hash check
+needs `manifest.json` pinned to LF first.

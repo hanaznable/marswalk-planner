@@ -28,6 +28,11 @@ export function waypointRoleLabel(index: number, count: number): string {
   return `Stop ${index}`
 }
 
+/** The waypoint's own name (e.g. a science target), or null for an automatic "Point N". */
+export function waypointName(waypoint: Waypoint): string | null {
+  return /^Point \d+$/.test(waypoint.label) ? null : waypoint.label
+}
+
 export function nextWaypointId(list: readonly Waypoint[]): string {
   const highest = list.reduce((max, waypoint) => {
     const match = /^wp-(\d+)$/.exec(waypoint.id)

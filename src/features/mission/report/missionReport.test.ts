@@ -37,6 +37,7 @@ const dataset: DatasetMetadata = {
   coordinateReferenceSystem: 'Test CRS',
   processedAssetUrl: 'data/test/manifest.json',
   limitations: ['Test limitation.'],
+  scienceTargetsUrl: null,
 }
 
 const start: Waypoint = { id: 'wp-1', label: 'Point 1', cell: { row: 0, col: 0 } }

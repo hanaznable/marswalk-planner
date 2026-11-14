@@ -18,6 +18,8 @@
   /* Route identity colours, validated for CVD on the dark surface (dataviz validator). */
   --route-shortest: #c98500;
   --route-slope-aware: #3987e5;
+  /* Science target markers; kept apart from route and waypoint hues. */
+  --science-target: #b9a4f2;
 }
 
 * {
