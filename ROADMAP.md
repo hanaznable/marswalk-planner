@@ -204,7 +204,8 @@ Developer Y can build the application and test routing with clearly labeled synt
 
 ## 7. Current Status
 
-Updated 2026-11-15 (Developer B branch; science delivery awaits commit/PR).
+Updated 2026-11-15 (Developer B branch; 2D baseline committed and clean-checkout
+verified, PR preparation complete; merge remains pending).
 
 **Implemented:**
 - Gale Crater as the study region.
@@ -234,21 +235,22 @@ Updated 2026-11-15 (Developer B branch; science delivery awaits commit/PR).
 - Additional observation-specific evidence and instrument analysis results.
 - A separate contract for the historical Curiosity traverse, if needed.
 - Final project name.
-- Whether 3D will be completed.
+- Final shared 3D scene/selection contract and UI redesign specification.
 
 ## 8. Immediate Next Steps
 
-**Developer B:** Review and submit the science collection delivery. Next, expand
-source-backed scientific descriptions only where evidence supports them; agree
-on a separate traverse overlay if it is needed. Keep optional 3D behind core
-data quality and demonstration work.
+**Developer B:** Merge the verified 2D baseline through its PR, then create a
+fresh branch from updated main for the independent 3D terrain viewer. Agree on
+scene axes, metric scale, vertical display offset, imagery UV/grid mapping and
+NoData behavior before projecting existing routes/targets into 3D.
 
-**Developer Y:** Review the registered science collection in the existing target
-UI, waypoint flow and exported reports. Review outstanding app audit findings
-in `docs/terrain/app-verification-2026-11-14.md`.
+**Developer Y:** Frontend integration review is complete per the user. After the
+baseline merge, start the UI redesign from the same updated main, preserving
+source caveats, selection/waypoint flows, report exports and loading/error states.
 
-**Both:** Merge the science delivery through a Pull Request and review the
-end-to-end real-data demonstration. Coordinate shared contract changes before
-expanding coverage or adding data types.
+**Both:** Use the completed pre-merge verification in
+`docs/terrain/premerge-verification-2026-11-15.md`. Merge the baseline before the
+larger 3D/UI changes; agree on a small shared view/selection contract and retain
+one routing implementation. Coordinate additional scientific data/coverage work.
 
 **Core priority:** Build a working 2D Gale Crater map with real terrain-aware route planning before expanding to optional features.

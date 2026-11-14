@@ -1,7 +1,16 @@
 # 2D baseline merge readiness
 
-Checked 2026-11-15 after fetching origin. This is a readiness assessment, not a
-merge, commit, push or published PR.
+Initial assessment and completion update, 2026-11-15.
+
+## Latest status: ready for the baseline PR
+
+The user confirmed frontend review is complete. The image-status issues,
+report-provenance gap and narrow-map banner collision are fixed in implementation
+commit `6ff83e5`. A detached, clean checkout passed build, lint, 193 TypeScript
+tests, 23 Python tests and 39 production-browser checks, with no raw NASA files.
+See [completed verification](premerge-verification-2026-11-15.md). The remaining
+sections preserve the original assessment/checklist; they are not a request to
+repeat frontend review. The actual merge has not been performed.
 
 ## Repository state
 
@@ -31,7 +40,7 @@ checks cover waypoint actions, context failure/retry and region isolation.
 These results are evidence for the present local implementation, not a substitute
 for checking the actual committed PR head.
 
-## Recommended work before merging this delivery
+## Original checklist (completed; see latest status above)
 
 Implementation follow-up: frontend review is complete per the user. The image
 status/recovery and report-provenance fixes below are now implemented. The
