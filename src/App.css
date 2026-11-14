@@ -1599,6 +1599,72 @@ dd {
   font: 9px var(--mono);
 }
 
+/* Real terrain package: prototype banner, loading/error states, catalog */
+.leaflet-container .basemap-image {
+  opacity: 1;
+}
+.synthetic-banner.prototype-banner {
+  color: #cfe0f5;
+  background: #1c2836e8;
+  border-color: #3d5a7a;
+}
+.terrain-status h2 {
+  font-size: 18px;
+}
+.terrain-status .terrain-error {
+  max-width: 420px;
+  color: #f0c4b0;
+  font-family: var(--mono);
+  font-size: 10px;
+  word-break: break-word;
+}
+.retry-button {
+  margin-top: 12px;
+  padding: 7px 14px;
+  border: 1px solid #6b604c;
+  border-radius: 4px;
+  background: #2c292161;
+  color: #e0e3e2;
+  font-size: 11px;
+}
+.retry-button:hover {
+  background: #3a3526;
+}
+.layer-loaded {
+  font: 8px var(--mono);
+  letter-spacing: 0.6px;
+  color: #b9d1a8;
+}
+.catalog-entry {
+  text-align: left;
+}
+.catalog-entry h3 {
+  font-size: 12px;
+  color: #e0e3e2;
+}
+.catalog-entry dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 5px 0;
+  font-size: 10px;
+}
+.catalog-entry a {
+  color: #9ec5f4;
+}
+.catalog-entry h4 {
+  margin: 14px 0 6px;
+  font-size: 10px;
+  color: #c9cec7;
+}
+.limitations {
+  margin: 0;
+  padding-left: 16px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
 /* Elevation profile chart */
 .profile-chart {
   margin: 18px 0 0;

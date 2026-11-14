@@ -1,0 +1,50 @@
+{
+  "contractVersion": 1,
+  "id": "pahrump-hills-v1",
+  "title": "Pahrump Hills, Gale Crater",
+  "synthetic": false,
+  "source": {
+    "productId": "DTEEC_040770_1755_039280_1755_A01",
+    "url": "https://www.uahirise.org/dtm/dtm.php?ID=ESP_040770_1755",
+    "attribution": "NASA/JPL-Caltech/UArizona"
+  },
+  "crs": {
+    "name": "EQUIRECTANGULAR MARS",
+    "wkt": "PROJCS[\"Mars Equirectangular\",GEOGCS[\"Mars\",DATUM[\"Mars sphere\",SPHEROID[\"Mars label sphere\",3396190.0,0]],PRIMEM[\"Reference meridian\",0],UNIT[\"degree\",0.0174532925199433]],PROJECTION[\"Equirectangular\"],PARAMETER[\"standard_parallel_1\",0],PARAMETER[\"central_meridian\",137.39],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1]]"
+  },
+  "raster": {
+    "width": 200,
+    "height": 200,
+    "geoTransform": [
+      -1234.7661867630893,
+      5.0,
+      0.0,
+      -275902.8681376489,
+      0.0,
+      -5.0
+    ]
+  },
+  "layers": {
+    "elevation": {
+      "url": "elevation.f32",
+      "dataType": "float32"
+    },
+    "slope": {
+      "url": "slope.f32",
+      "dataType": "float32"
+    }
+  },
+  "basemap": {
+    "url": "basemap.jpg",
+    "width": 989,
+    "height": 989,
+    "geoTransform": [
+      -1234.7661867630893,
+      1.0111223458038423,
+      0.0,
+      -275902.8681376489,
+      0.0,
+      -1.0111223458038423
+    ]
+  }
+}

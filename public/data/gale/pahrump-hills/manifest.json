@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "kind": "mars-map-preview",
+  "id": "pahrump-hills",
+  "body": "Mars",
+  "status": "prototype-preview",
+  "integration_status": "awaiting Developer Y data-contract coordination",
+  "crs": {
+    "wkt": "PROJCS[\"Mars Equirectangular\",GEOGCS[\"Mars\",DATUM[\"Mars sphere\",SPHEROID[\"Mars label sphere\",3396190.0,0]],PRIMEM[\"Reference meridian\",0],UNIT[\"degree\",0.0174532925199433]],PROJECTION[\"Equirectangular\"],PARAMETER[\"standard_parallel_1\",0],PARAMETER[\"central_meridian\",137.39],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1]]",
+    "units": "metre",
+    "radius_m": 3396190.0,
+    "central_meridian_deg": 137.39
+  },
+  "grid": {
+    "rows": 989,
+    "cols": 989,
+    "cell_size_m": 1.0117571650087,
+    "source_window": {
+      "col_offset": 2010,
+      "row_offset": 4221,
+      "cols": 989,
+      "rows": 989
+    },
+    "origin_upper_left_corner_xy_m": [
+      -1234.8496198932198,
+      -275902.6377478051
+    ],
+    "bounds_xy_m": [
+      -1234.8496198932198,
+      -276903.2655839987,
+      -234.22178369961557,
+      -275902.6377478051
+    ],
+    "row_direction": "south",
+    "col_direction": "east",
+    "array_order": "row-major",
+    "pixel_reference": "outer corner for origin; center at (col+0.5, row+0.5)"
+  },
+  "requested_aoi_bounds_xy_m": [
+    -1234.7661867630893,
+    -276902.8681376489,
+    -234.7661867630893,
+    -275902.8681376489
+  ],
+  "imagery": {
+    "path": "imagery.png",
+    "width": 989,
+    "height": 989,
+    "encoding": "8-bit grayscale PNG with alpha; decoded source DN preserved",
+    "resampling": "none",
+    "null_pixels": 0,
+    "low_saturation_pixels": 0,
+    "high_saturation_pixels": 0,
+    "sha256": "91e5f1ddbec235467c53dd1f7b0493889f237a901841cfc3b15bb9203bfea888",
+    "attribution": "NASA/JPL-Caltech/UArizona"
+  },
+  "georeferencing": {
+    "working_origin_convention": "ua_pds_jp2",
+    "review_status": "accepted_for_prototype",
+    "rationale": "Use the UA PDS_JP2 convention for prototype consistency with matching labels and official JP2 metadata. Visual A/B review was inconclusive; physical alignment and absolute accuracy are not certified.",
+    "review_evidence": [
+      "docs/terrain/georeferencing-review.md"
+    ],
+    "reference_url": "https://pirlwww.lpl.arizona.edu/software/PDS_JP2/PDS_JP2/classPDS__Projection__Data.html"
+  },
+  "accuracy": {
+    "absolute_geolocation": "not independently verified",
+    "image_dem_registration": "A/B visual comparison inconclusive; working convention documented",
+    "numerical_accuracy_m": null
+  },
+  "provenance": {
+    "sources": {
+      "dem": {
+        "path": "data/raw/pahrump-hills/DTEEC_040770_1755_039280_1755_A01.IMG",
+        "source_url": "https://www.uahirise.org/dtm/dtm.php?ID=ESP_040770_1755",
+        "sha256": "143708c00b11765da8dfe3aba7ce894e7cc89314b3fd406df9fefb9fda9cba26",
+        "attribution": "NASA/JPL-Caltech/UArizona"
+      },
+      "imagery": {
+        "path": "data/raw/pahrump-hills/ESP_039280_1755_RED_C_02_ORTHO.JP2",
+        "source_url": "https://www.uahirise.org/dtm/dtm.php?ID=ESP_040770_1755",
+        "sha256": "806ca514d75501b8d60f4386538e8b8f54a522c90a62858ec6f1850a14b2a7a7",
+        "attribution": "NASA/JPL-Caltech/UArizona",
+        "label_path": "data/raw/pahrump-hills/ESP_039280_1755_RED_C_02_ORTHO.LBL"
+      }
+    },
+    "source_checks": {
+      "dem_sha256": "matched",
+      "imagery_sha256": "matched",
+      "imagery_label_sha256": "2dcac6b7f08ded26af8b82164492c051cfb96c93b131bb8d170d3376af26417f",
+      "imagery_bytes": 26370446
+    },
+    "dem_coverage_check": {
+      "cells": 978121,
+      "valid_cells": 978121,
+      "missing_or_nonfinite_cells": 0,
+      "source_nodata": -3.4028226550889045e+38
+    },
+    "raw_pds_reader_origin_xy_m": [
+      -3269.9991573082198,
+      -271630.49311855587
+    ]
+  },
+  "available_assets": [
+    "imagery"
+  ],
+  "not_exported": [
+    "elevation",
+    "slope",
+    "hazards",
+    "science targets",
+    "EVA routes"
+  ],
+  "limitations": [
+    "Prototype imagery package; not a validated operational navigation product.",
+    "Bounds are projected Mars metres, not Earth latitude/longitude.",
+    "Actual footprint covers whole native cells and slightly exceeds the requested AOI.",
+    "Curiosity data is not required to load or export this package.",
+    "Source grayscale values are not mineral or thermal measurements."
+  ]
+}

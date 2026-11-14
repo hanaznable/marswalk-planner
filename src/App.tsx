@@ -5,7 +5,7 @@ import { Icon } from './components/ui/Icon'
 import { regions } from './features/datasets/regions'
 import { LayersPanel } from './features/map/components/LayersPanel'
 import { MapViewport } from './features/map/components/MapViewport'
-import { createSyntheticTerrain } from './features/map/fixtures/syntheticTerrain'
+import { useTerrainSource } from './features/map/useTerrainSource'
 import { useWaypoints } from './features/map/useWaypoints'
 import { MissionPanel } from './features/mission/MissionPanel'
 import { RoutePlanner } from './features/routing/components/RoutePlanner'
@@ -22,8 +22,11 @@ function App() {
   const [expanded, setExpanded] = useState(false)
   const [addMode, setAddMode] = useState(false)
   const region = regions.find((item) => item.id === regionId) ?? regions[0]
-  // Synthetic development terrain until Developer B delivers a real package.
-  const terrain = useMemo(() => createSyntheticTerrain(), [])
+  // Real packages load over HTTP; synthetic terrain only when explicitly selected.
+  const terrainState = useTerrainSource(region)
+  const terrain = terrainState.status === 'ready' ? terrainState.terrain : null
+  // Only a successfully loaded real package is named as the active terrain.
+  const dataset = terrainState.status === 'ready' ? terrainState.dataset : null
   const waypoints = useWaypoints(terrain)
   // Scenario assumptions chosen by the user, not certified limits or an energy model.
   const [maxSlopeDegrees, setMaxSlopeDegrees] = useState(20)
@@ -61,7 +64,7 @@ function App() {
         </div>
       </div>
       <main className="workspace" aria-label="Mars exploration workspace">
-        <LayersPanel showGrid={showGrid} onGridChange={setShowGrid} />
+        <LayersPanel showGrid={showGrid} onGridChange={setShowGrid} terrainState={terrainState} />
         <MapViewport
           region={region}
           viewMode={viewMode}
@@ -69,7 +72,7 @@ function App() {
           showGrid={showGrid}
           expanded={expanded}
           onExpand={() => setExpanded(!expanded)}
-          terrain={terrain}
+          terrainState={terrainState}
           waypoints={waypoints.waypoints}
           addMode={addMode}
           notice={waypoints.notice}
@@ -79,9 +82,10 @@ function App() {
         />
         <MissionPanel
           region={region}
+          terrainState={terrainState}
           routePlanner={
             <RoutePlanner
-              raster={terrain.manifest.raster}
+              raster={terrain?.manifest.raster ?? null}
               waypoints={waypoints.waypoints}
               addMode={addMode}
               onToggleAddMode={() => setAddMode(!addMode)}
@@ -96,7 +100,7 @@ function App() {
               eva={eva}
               evaAssumptions={evaAssumptions}
               onEvaAssumptionsChange={setEvaAssumptions}
-              synthetic={terrain.manifest.synthetic}
+              synthetic={terrain?.manifest.synthetic ?? false}
               returnToStart={returnToStart}
               onReturnToStartChange={setReturnToStart}
             />
@@ -107,10 +111,18 @@ function App() {
         <Icon name="info" size={14} />
         <span>Built for exploration. Grounded in real data.</span>
         <span className="note-detail">
-          NASA mission datasets will be connected in a future integration.
+          {dataset
+            ? `Terrain: ${dataset.title} (HiRISE, ${dataset.attribution}). Prototype data; science targets are not included yet.`
+            : terrain?.manifest.synthetic
+              ? 'Synthetic development terrain. Not NASA data.'
+              : terrainState.status === 'loading'
+                ? 'Loading the terrain package…'
+                : terrainState.status === 'error'
+                  ? 'The terrain package failed to load; no other terrain is shown in its place.'
+                  : 'No terrain package exists for this region yet.'}
         </span>
       </div>
-      <StatusBar />
+      <StatusBar terrainState={terrainState} />
     </div>
   )
 }

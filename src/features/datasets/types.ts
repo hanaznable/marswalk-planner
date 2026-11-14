@@ -1,7 +1,15 @@
-/** A region selection is metadata only; it does not imply loaded map coverage. */
+/**
+ * A workspace region. `terrain` says what the map can load for it; a region
+ * without a terrain package shows an explicit empty state and never borrows
+ * another region's terrain or labels.
+ */
 export interface MarsRegion {
   id: string
   name: string
+  terrain:
+    | { kind: 'package'; datasetId: DatasetMetadata['id'] }
+    | { kind: 'synthetic' }
+    | null
 }
 
 /** Future adapters must preserve source provenance and the native Mars CRS. */
@@ -12,5 +20,8 @@ export interface DatasetMetadata {
   sourceUrl: string
   attribution: string
   coordinateReferenceSystem: string
+  /** Manifest path, relative to the app's base URL. */
   processedAssetUrl: string
+  /** Prototype limitations to show wherever the data is used. */
+  limitations: readonly string[]
 }
