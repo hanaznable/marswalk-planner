@@ -10,6 +10,8 @@ import { useWaypoints } from './features/map/useWaypoints'
 import { MissionPanel } from './features/mission/MissionPanel'
 import { RoutePlanner } from './features/routing/components/RoutePlanner'
 import { useRoutePlan } from './features/routing/useRoutePlan'
+import type { EvaAssumptions } from './features/eva/evaEstimate'
+import { useEvaPlan } from './features/eva/useEvaPlan'
 import type { ViewMode } from './features/map/types'
 import './App.css'
 
@@ -35,6 +37,11 @@ function App() {
   )
   const [returnToStart, setReturnToStart] = useState(false)
   const plan = useRoutePlan(terrain, waypoints.waypoints, assumptions, returnToStart)
+  const [evaAssumptions, setEvaAssumptions] = useState<EvaAssumptions>({
+    walkingSpeedKmh: 2,
+    stopMinutes: 15,
+  })
+  const eva = useEvaPlan(plan, terrain, evaAssumptions)
 
   return (
     <div className={`app-shell${expanded ? ' map-expanded' : ''}`}>
@@ -90,6 +97,10 @@ function App() {
               onMaxSlopeChange={setMaxSlopeDegrees}
               slopePenalty={slopePenalty}
               onSlopePenaltyChange={setSlopePenalty}
+              eva={eva}
+              evaAssumptions={evaAssumptions}
+              onEvaAssumptionsChange={setEvaAssumptions}
+              synthetic={terrain?.manifest.synthetic ?? false}
               returnToStart={returnToStart}
               onReturnToStartChange={setReturnToStart}
             />

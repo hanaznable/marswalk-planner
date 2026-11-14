@@ -8,6 +8,8 @@ import { waypointRoleLabel } from '../../map/waypointPlacement'
 import type { Waypoint } from '../model/types'
 import type { RoutePlan } from '../useRoutePlan'
 import { RouteComparison } from './RouteComparison'
+import type { EvaAssumptions } from '../../eva/evaEstimate'
+import type { EvaPlan } from '../../eva/useEvaPlan'
 
 interface RoutePlannerProps {
   /** Null until a terrain package is loaded. */
@@ -23,6 +25,10 @@ interface RoutePlannerProps {
   onMaxSlopeChange: (degrees: number) => void
   slopePenalty: number
   onSlopePenaltyChange: (penalty: number) => void
+  eva: EvaPlan | null
+  evaAssumptions: EvaAssumptions
+  onEvaAssumptionsChange: (assumptions: EvaAssumptions) => void
+  synthetic: boolean
   returnToStart: boolean
   onReturnToStartChange: (value: boolean) => void
 }
@@ -40,6 +46,10 @@ export function RoutePlanner({
   onMaxSlopeChange,
   slopePenalty,
   onSlopePenaltyChange,
+  eva,
+  evaAssumptions,
+  onEvaAssumptionsChange,
+  synthetic,
   returnToStart,
   onReturnToStartChange,
 }: RoutePlannerProps) {
@@ -171,6 +181,40 @@ export function RoutePlanner({
           How strongly the slope-aware route avoids steep ground. 0 = shortest
           within the limit. Planning heuristic, not an energy model.
         </p>
+        <label className="setting-row">
+          <span>Walking speed</span>
+          <input
+            type="range"
+            min={0.5}
+            max={5}
+            step={0.1}
+            value={evaAssumptions.walkingSpeedKmh}
+            onChange={(event) =>
+              onEvaAssumptionsChange({ ...evaAssumptions, walkingSpeedKmh: Number(event.target.value) })
+            }
+            aria-describedby="eva-hint"
+          />
+          <output>{evaAssumptions.walkingSpeedKmh.toFixed(1)} km/h</output>
+        </label>
+        <label className="setting-row">
+          <span>Time per stop</span>
+          <input
+            type="range"
+            min={0}
+            max={120}
+            step={5}
+            value={evaAssumptions.stopMinutes}
+            onChange={(event) =>
+              onEvaAssumptionsChange({ ...evaAssumptions, stopMinutes: Number(event.target.value) })
+            }
+            aria-describedby="eva-hint"
+          />
+          <output>{evaAssumptions.stopMinutes} min</output>
+        </label>
+        <p id="eva-hint" className="setting-hint">
+          Scenario assumptions for the EVA estimate, not measured astronaut
+          performance.
+        </p>
         <label className="setting-row checkbox">
           <input
             type="checkbox"
@@ -186,6 +230,9 @@ export function RoutePlanner({
         waypoints={waypoints}
         maxSlopeDegrees={maxSlopeDegrees}
         slopePenalty={slopePenalty}
+        eva={eva}
+        evaAssumptions={evaAssumptions}
+        synthetic={synthetic}
       />
     </div>
   )
