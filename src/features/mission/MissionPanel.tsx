@@ -35,30 +35,34 @@ function targetsLabel(state: ScienceTargetsState): string {
   }
 }
 
+const TABS = ['route', 'library', 'mission'] as const
+type Tab = (typeof TABS)[number]
+
 export function MissionPanel({
   region,
   terrainState,
   targetsState,
   routePlanner,
+  missionLibrary,
 }: {
   region: MarsRegion
   terrainState: TerrainState
   targetsState: ScienceTargetsState
   routePlanner: ReactNode
+  missionLibrary: ReactNode
 }) {
-  const [tab, setTab] = useState<'route' | 'mission'>('route')
+  const [tab, setTab] = useState<Tab>('route')
 
   function handleTabKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return
     event.preventDefault()
+    const index = TABS.indexOf(tab)
     const next =
       event.key === 'Home'
-        ? 'route'
+        ? TABS[0]
         : event.key === 'End'
-          ? 'mission'
-          : tab === 'route'
-            ? 'mission'
-            : 'route'
+          ? TABS[TABS.length - 1]
+          : TABS[(index + (event.key === 'ArrowRight' ? 1 : TABS.length - 1)) % TABS.length]
     setTab(next)
     event.currentTarget
       .querySelector<HTMLButtonElement>(`#${next}-tab`)
@@ -92,6 +96,17 @@ export function MissionPanel({
           Route planner
         </button>
         <button
+          id="library-tab"
+          role="tab"
+          aria-selected={tab === 'library'}
+          aria-controls="library-panel"
+          tabIndex={tab === 'library' ? 0 : -1}
+          onClick={() => setTab('library')}
+        >
+          <Icon name="database" size={15} />
+          Missions
+        </button>
+        <button
           id="mission-tab"
           role="tab"
           aria-selected={tab === 'mission'}
@@ -111,6 +126,15 @@ export function MissionPanel({
         hidden={tab !== 'route'}
       >
         {routePlanner}
+      </div>
+      <div
+        id="library-panel"
+        role="tabpanel"
+        aria-labelledby="library-tab"
+        tabIndex={0}
+        hidden={tab !== 'library'}
+      >
+        {missionLibrary}
       </div>
       <div
         id="mission-panel"
@@ -178,10 +202,7 @@ export function MissionPanel({
             targetsState.status === 'ready' ? 'SYNTHETIC' : targetsState.status === 'error' ? 'FAILED' : 'PENDING'
           }
         />
-        <div className="readiness-item">
-          <span className="readiness-pending" />
-          3D visualization<span>PLANNED</span>
-        </div>
+        <ReadinessItem label="3D terrain view" ready={terrainState.status === 'ready'} pending="NEEDS TERRAIN" />
       </div>
     </aside>
   )

@@ -26,6 +26,9 @@ import { placeWaypoint } from './features/map/waypointPlacement'
 import type { MapPoint } from './features/datasets/terrainContract'
 import type { WaypointOrigin } from './features/datasets/waypointOrigin'
 import { useBasemapStatus } from './features/map/useBasemapStatus'
+import { MissionLibrary, type MissionStatus } from './features/missions/MissionLibrary'
+import { checkCompatibility, createMissionRecord, type MissionRecord } from './features/missions/missionRecord'
+import { useMissionLibrary } from './features/missions/useMissionLibrary'
 import './App.css'
 
 const NO_TARGETS: readonly PlacedTarget[] = []
@@ -100,6 +103,113 @@ function App() {
         })
       : null
 
+  // Named missions (browser-local library).
+  const library = useMissionLibrary()
+  const [activeMission, setActiveMission] = useState<{ id: string; name: string; terrainId: string } | null>(null)
+  const [pendingMission, setPendingMission] = useState<MissionRecord | null>(null)
+  const [missionStatus, setMissionStatus] = useState<MissionStatus | null>(null)
+  // A saved mission is "open" only while its own terrain is shown.
+  const openMission = terrain && activeMission?.terrainId === terrain.manifest.id ? activeMission : null
+
+  // Opening may switch region. The mission is applied once that region's terrain
+  // and science targets have settled: a guarded state update during render
+  // (React's "adjust state when inputs change" pattern), so routes are planned
+  // from the restored inputs on the next render without an extra effect pass.
+  if (pendingMission) {
+    if (terrainState.status === 'error' || terrainState.status === 'none') {
+      setPendingMission(null)
+      setMissionStatus({
+        tone: 'error',
+        text: `"${pendingMission.name}" was not opened: the terrain for its region is not available.`,
+      })
+    } else if (terrainState.status === 'ready' && targets.status !== 'loading') {
+      const opened = terrainState.terrain
+      const result = checkCompatibility(pendingMission, opened, targets.status === 'ready' ? targets.collection : null)
+      setPendingMission(null)
+      if (!result.ok) {
+        setMissionStatus({ tone: 'error', text: `"${pendingMission.name}" was not opened.`, details: result.reasons })
+      } else {
+        const { settings, selectedTargetId: savedTarget } = pendingMission
+        waypoints.restore(opened.manifest.id, result.waypoints, result.origins)
+        setMaxSlopeDegrees(settings.maxSlopeDegrees)
+        setSlopePenalty(settings.slopePenalty)
+        setReturnToStart(settings.returnToStart)
+        setEvaAssumptions({ walkingSpeedKmh: settings.walkingSpeedKmh, stopMinutes: settings.stopMinutes })
+        const known = targets.status === 'ready' && targets.inside.some(({ target }) => target.id === savedTarget)
+        setSelectedTargetId(known ? savedTarget : null)
+        setAddMode(false)
+        setActiveMission({ id: pendingMission.id, name: pendingMission.name, terrainId: opened.manifest.id })
+        setMissionStatus({
+          tone: result.warnings.length > 0 ? 'warning' : 'info',
+          text: `Opened "${pendingMission.name}". Routes and estimates were recalculated.`,
+          details: result.warnings,
+        })
+      }
+    }
+  }
+
+  const startOpening = (record: MissionRecord) => {
+    const target = regions.find((item) => item.id === record.regionId)
+    if (!target) {
+      setMissionStatus({ tone: 'error', text: `"${record.name}" was not opened: its region (${record.regionId}) no longer exists.` })
+      return
+    }
+    setMissionStatus(null)
+    setRegionId(target.id)
+    setPendingMission(record)
+  }
+
+  const saveMission = (name: string, asNew: boolean) => {
+    if (!terrain) return
+    const id = !asNew && openMission ? openMission.id : crypto.randomUUID()
+    let record: MissionRecord
+    try {
+      record = createMissionRecord(
+        {
+          name,
+          regionId,
+          terrain,
+          scienceTargets: targets.status === 'ready' ? targets.collection : null,
+          waypoints: waypoints.waypoints,
+          origins: waypoints.origins,
+          settings: { maxSlopeDegrees, slopePenalty, returnToStart, ...evaAssumptions },
+          selectedTargetId,
+        },
+        id,
+        new Date(),
+      )
+    } catch (error) {
+      setMissionStatus({ tone: 'error', text: error instanceof Error ? error.message : String(error) })
+      return
+    }
+    const result = library.save(record)
+    if (!result.ok) {
+      setMissionStatus({ tone: 'error', text: `"${record.name}" was not saved. ${result.message}` })
+      return
+    }
+    setActiveMission({ id: record.id, name: record.name, terrainId: terrain.manifest.id })
+    setMissionStatus({ tone: 'info', text: `Saved "${record.name}" in this browser.` })
+  }
+
+  const deleteMission = (record: MissionRecord) => {
+    const error = library.remove(record.id)
+    if (error) {
+      setMissionStatus({ tone: 'error', text: `"${record.name}" was not deleted. ${error}` })
+      return
+    }
+    if (activeMission?.id === record.id) setActiveMission(null)
+    setMissionStatus({ tone: 'info', text: `Deleted "${record.name}". The plan on the map is unchanged.` })
+  }
+
+  const importMission = async (file: File) => {
+    const result = await library.importFile(file)
+    setMissionStatus(
+      result.ok
+        ? { tone: 'info', text: `Imported "${result.record.name}". Open it to load it on the map.` }
+        : { tone: 'error', text: result.message },
+    )
+  }
+
   return (
     <div className={`app-shell${expanded ? ' map-expanded' : ''}`}>
       <a className="skip-link" href="#map-viewport">
@@ -167,6 +277,30 @@ function App() {
           region={region}
           terrainState={terrainState}
           targetsState={targets}
+          missionLibrary={
+            <MissionLibrary
+              missions={library.missions}
+              active={openMission}
+              canSave={terrain !== null && waypoints.waypoints.length > 0}
+              saveHint={
+                !terrain
+                  ? 'Load terrain to save a mission.'
+                  : waypoints.waypoints.length === 0
+                    ? 'Place at least one waypoint to save a mission.'
+                    : 'Saves the waypoints, science selections and route settings with the terrain version.'
+              }
+              hasPlan={waypoints.waypoints.length > 0}
+              status={missionStatus}
+              skipped={library.skipped}
+              storageError={library.storageError}
+              opening={pendingMission !== null}
+              onSave={saveMission}
+              onOpen={startOpening}
+              onExport={library.exportFile}
+              onDelete={deleteMission}
+              onImport={(file) => void importMission(file)}
+            />
+          }
           routePlanner={
             <RoutePlanner
               raster={terrain?.manifest.raster ?? null}
