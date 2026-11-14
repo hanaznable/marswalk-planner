@@ -59,7 +59,8 @@ export function ElevationProfileChart({
     MARGIN.top + (1 - (elevation - yMin) / (yMax - yMin)) * plotHeight
 
   const xTicks = niceTicks(0, maxDistance, 3)
-  const yTicks = niceTicks(yMin, yMax, 3)
+  // Five steps so a ~60 m relief range still gets 3-4 labelled gridlines.
+  const yTicks = niceTicks(yMin, yMax, 5)
 
   const pathFor = (profile: readonly ProfilePoint[]) =>
     profile

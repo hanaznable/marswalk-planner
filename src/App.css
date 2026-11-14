@@ -1529,7 +1529,13 @@ dd {
 }
 .setting-row input[type='range'] {
   flex: 1;
+  /* Range inputs have an intrinsic width; let them shrink in the narrow panel. */
+  min-width: 0;
   accent-color: #8fb07a;
+}
+.setting-row > span,
+.setting-row output {
+  white-space: nowrap;
 }
 .setting-row output {
   min-width: 30px;
@@ -1666,8 +1672,10 @@ dd {
 }
 .profile-tooltip {
   position: absolute;
-  top: -6px;
-  transform: translate(-50%, -100%);
+  /* Below the plot, so it never covers the caption, legend or lines. */
+  top: calc(100% + 4px);
+  transform: translateX(-50%);
+  z-index: 2;
   padding: 6px 8px;
   border: 1px solid #3b4434;
   border-radius: 4px;
