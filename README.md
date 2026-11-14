@@ -5,6 +5,17 @@ A modular Mars exploration application shell for a NASA Space Apps Challenge
 Vite, and Leaflet. There is no backend, database, authentication, routing
 algorithm, or 3D renderer.
 
+## Product scope
+
+The planned product is an astronaut-centered Mars science route planner with
+terrain and science layers, historical mission context, scientific target
+selection, equipment constraints, round-trip planning, route comparison, mission
+budgets, and export. These are planned capabilities, not implemented features.
+
+See [Project scope and phased roadmap (Turkish)](SCOPE.md) for the MVP, later
+phases, data requirements, acceptance criteria, and open decisions. Rover planning,
+live replanning, and 3D rendering are outside the initial MVP.
+
 ## Run locally
 
 ```sh
