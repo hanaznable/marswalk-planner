@@ -1,0 +1,3311 @@
+{
+  "kind": "research-inventory-not-runtime-science-targets",
+  "terrainPackageId": "pahrump-hills-v1",
+  "terrainManifestSha256": "450ada2dc924b72e6188bedc476c6373f7776544d599c0c6402d8e3e6d05b5c5",
+  "source": {
+    "citation": "Berger, J. A. (2020), Overview of MSL APXS Targets from Sol 0 to 2301, doi:10.17189/1519050",
+    "table_url": "https://pds-geosciences.wustl.edu/msl/urn-nasa-pds-msl_apxs_supplement_sols_0_2301/data/ds01_2020je006536rr.csv",
+    "table_sha256": "6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c",
+    "label_url": "https://pds-geosciences.wustl.edu/msl/urn-nasa-pds-msl_apxs_supplement_sols_0_2301/data/ds01_2020je006536rr.xml",
+    "label_sha256": "c7b752b4bdb4041594ec7a1d6042b8efa11d47b5af989ede2c7ebf95bcea6ccd"
+  },
+  "waypoint_source": {
+    "local_filename": "MSL_waypoints.json",
+    "source_url": "https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json",
+    "sha256": "5a32324f4b8ba22ebdfac50a503e195f47ccdc876ad4c15b19e29dc7cef15a09"
+  },
+  "conversion": {
+    "target_crs_wkt": "PROJCS[\"Mars Equirectangular\",GEOGCS[\"Mars\",DATUM[\"Mars sphere\",SPHEROID[\"Mars label sphere\",3396190.0,0]],PRIMEM[\"Reference meridian\",0],UNIT[\"degree\",0.0174532925199433]],PROJECTION[\"Equirectangular\"],PARAMETER[\"standard_parallel_1\",0],PARAMETER[\"central_meridian\",137.39],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1]]",
+    "sphere_radius_m": 3396190.0,
+    "central_meridian_east_deg": 137.39,
+    "standard_parallel_deg": 0,
+    "projected_x": "R * radians(longitude_east_deg - central_meridian_east_deg)",
+    "projected_y": "R * radians(latitude_deg)",
+    "local_map_x": "projected_x - terrain_west_edge",
+    "local_map_y": "projected_y - terrain_south_edge",
+    "grid_col": "floor((projected_x - geoTransform[0]) / geoTransform[1])",
+    "grid_row": "floor((projected_y - geoTransform[3]) / geoTransform[5])",
+    "origin_policy": "Use the package geotransform to map projected positions to cells. Do not add/subtract the raster's 1.5-pixel interpretation difference to rover coordinates.",
+    "source_projected_properties_max_residual_m_for_these_records": 0.0023950720205903053
+  },
+  "source_csv_xml_header_differences": [
+    {
+      "column": 10,
+      "csv": "Comments/Interpretation",
+      "xml": "Comment/Interpretation"
+    },
+    {
+      "column": 19,
+      "csv": "Elevation_2",
+      "xml": "Elevation"
+    },
+    {
+      "column": 20,
+      "csv": "Standoff_distance",
+      "xml": "Standoff"
+    },
+    {
+      "column": 25,
+      "csv": "Na2O_error",
+      "xml": "Na2O_err"
+    },
+    {
+      "column": 27,
+      "csv": "MgO_error",
+      "xml": "MgO_err"
+    },
+    {
+      "column": 29,
+      "csv": "Al2O3_error",
+      "xml": "Al2O3_err"
+    },
+    {
+      "column": 31,
+      "csv": "SiO2_error",
+      "xml": "SiO2_err"
+    },
+    {
+      "column": 33,
+      "csv": "P2O5_error",
+      "xml": "P2O5_err"
+    },
+    {
+      "column": 35,
+      "csv": "SO3_error",
+      "xml": "SO3_err"
+    },
+    {
+      "column": 37,
+      "csv": "Cl_error",
+      "xml": "Cl_err"
+    },
+    {
+      "column": 39,
+      "csv": "K2O_error",
+      "xml": "K2O_err"
+    },
+    {
+      "column": 41,
+      "csv": "CaO_error",
+      "xml": "CaO_err"
+    },
+    {
+      "column": 43,
+      "csv": "TiO2_error",
+      "xml": "TiO2_err"
+    },
+    {
+      "column": 45,
+      "csv": "Cr2O3_error",
+      "xml": "Cr2O3_err"
+    },
+    {
+      "column": 47,
+      "csv": "MnO_error",
+      "xml": "MnO_err"
+    },
+    {
+      "column": 49,
+      "csv": "FeO_error",
+      "xml": "FeO_err"
+    },
+    {
+      "column": 51,
+      "csv": "Ni_error",
+      "xml": "Ni_err"
+    },
+    {
+      "column": 53,
+      "csv": "Zn_error",
+      "xml": "Zn_err"
+    },
+    {
+      "column": 55,
+      "csv": "Br_error",
+      "xml": "Br_err"
+    }
+  ],
+  "source_text_encoding": "Windows-1252; source contains non-ASCII micro signs despite ASCII field declarations",
+  "summary": {
+    "source_measurement_rows": 712,
+    "in_footprint_measurement_rows": 104,
+    "unique_verbatim_target_names": 104,
+    "unique_coordinate_pairs": 30,
+    "finite_terrain_rows": 104,
+    "rows_matching_waypoint_coordinates_within_1cm": 104,
+    "in_footprint_waypoints": 113,
+    "review_flag_counts": {
+      "sample-handling-location-not-necessarily-original-sample-site": 9,
+      "source-flags-low-quality-spectrum": 5,
+      "source-flags-failed-preparation": 1
+    }
+  },
+  "limitations": [
+    "Spatial inclusion uses the prototype Mars coordinate interpretation, not independently validated absolute alignment.",
+    "PDS labels call these target coordinates, but repeated locations numerically match rover poses. Do not claim surveyed target footprints.",
+    "Rows are measurements, not distinct sites; raster repeats and sample dumps must be reviewed before display.",
+    "Element/oxide chemistry is not a mineral identification map. No abundances are converted or interpolated here.",
+    "Low-quality/failed records remain in this research inventory and are not approved for runtime use."
+  ],
+  "measurements": [
+    {
+      "source_csv_line": 134,
+      "target_name_verbatim": "Nova_RP",
+      "measurement_start_sol": 687,
+      "source_lon_lat_deg": [
+        137.3842363,
+        -4.656307658
+      ],
+      "projected_position_m": {
+        "x": -341.6415741144045,
+        "y": -276001.2280034044
+      },
+      "cell": {
+        "row": 19,
+        "col": 178
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "High-P apatite-bearing igneous composition",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "39_0",
+          "position_sol": 685,
+          "numerical_separation_m": 0.005928654776118825
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 135,
+      "target_name_verbatim": "South_Park_rp_apxs_twk",
+      "measurement_start_sol": 694,
+      "source_lon_lat_deg": [
+        137.3830464,
+        -4.658483612
+      ],
+      "projected_position_m": {
+        "x": -412.17253669654224,
+        "y": -276130.207018579
+      },
+      "cell": {
+        "row": 45,
+        "col": 164
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "39_1176",
+          "position_sol": 692,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 136,
+      "target_name_verbatim": "Wildrose_rp",
+      "measurement_start_sol": 696,
+      "source_lon_lat_deg": [
+        137.3829746,
+        -4.658823639
+      ],
+      "projected_position_m": {
+        "x": -416.42845997875247,
+        "y": -276150.3620161538
+      },
+      "cell": {
+        "row": 49,
+        "col": 163
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "39_1396",
+          "position_sol": 695,
+          "numerical_separation_m": 5.9274649781209506e-05
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 137,
+      "target_name_verbatim": "DumpPile_Windjana",
+      "measurement_start_sol": 704,
+      "source_lon_lat_deg": [
+        137.3828289,
+        -4.659818971
+      ],
+      "projected_position_m": {
+        "x": -425.06478340900526,
+        "y": -276209.360019389
+      },
+      "cell": {
+        "row": 61,
+        "col": 161
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "Postsieve",
+      "source_comments_verbatim": "Potassic basaltic endmember",
+      "review_flags": [
+        "sample-handling-location-not-necessarily-original-sample-site"
+      ],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "39_1888",
+          "position_sol": 703,
+          "numerical_separation_m": 5.927470242771669e-05
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 138,
+      "target_name_verbatim": "Thimble_1",
+      "measurement_start_sol": 706,
+      "source_lon_lat_deg": [
+        137.382845,
+        -4.659866158
+      ],
+      "projected_position_m": {
+        "x": -424.11046077825705,
+        "y": -276212.15701454104
+      },
+      "cell": {
+        "row": 61,
+        "col": 162
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "Low quality spectrum",
+      "review_flags": [
+        "source-flags-low-quality-spectrum"
+      ],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "40_0",
+          "position_sol": 705,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 139,
+      "target_name_verbatim": "Stirling_RP",
+      "measurement_start_sol": 707,
+      "source_lon_lat_deg": [
+        137.3826673,
+        -4.660075066
+      ],
+      "projected_position_m": {
+        "x": -434.64357452783617,
+        "y": -276224.5399730512
+      },
+      "cell": {
+        "row": 64,
+        "col": 160
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "40_200",
+          "position_sol": 706,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 140,
+      "target_name_verbatim": "BonanzaKing2_RP_raster1_DRT",
+      "measurement_start_sol": 722,
+      "source_lon_lat_deg": [
+        137.3827496,
+        -4.659958507
+      ],
+      "projected_position_m": {
+        "x": -429.7652669215179,
+        "y": -276217.6309735827
+      },
+      "cell": {
+        "row": 62,
+        "col": 161
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "Bradbury gp./Mt. Sharp gp. Contact",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "40_1378",
+          "position_sol": 719,
+          "numerical_separation_m": 0.00017782410728315007
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 141,
+      "target_name_verbatim": "BonanzaKing2_RP_raster2_DRT",
+      "measurement_start_sol": 722,
+      "source_lon_lat_deg": [
+        137.3827496,
+        -4.659958507
+      ],
+      "projected_position_m": {
+        "x": -429.7652669215179,
+        "y": -276217.6309735827
+      },
+      "cell": {
+        "row": 62,
+        "col": 161
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "40_1378",
+          "position_sol": 719,
+          "numerical_separation_m": 0.00017782410728315007
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 142,
+      "target_name_verbatim": "BonanzaKing2_RP_raster1_DRT_overnight",
+      "measurement_start_sol": 722,
+      "source_lon_lat_deg": [
+        137.3827496,
+        -4.659958507
+      ],
+      "projected_position_m": {
+        "x": -429.7652669215179,
+        "y": -276217.6309735827
+      },
+      "cell": {
+        "row": 62,
+        "col": 161
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "40_1378",
+          "position_sol": 719,
+          "numerical_separation_m": 0.00017782410728315007
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 143,
+      "target_name_verbatim": "Homewood_rp",
+      "measurement_start_sol": 742,
+      "source_lon_lat_deg": [
+        137.3795958,
+        -4.659319365
+      ],
+      "projected_position_m": {
+        "x": -616.7058079709282,
+        "y": -276179.7460248582
+      },
+      "cell": {
+        "row": 55,
+        "col": 123
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "41_838",
+          "position_sol": 740,
+          "numerical_separation_m": 0.005934874114225368
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 144,
+      "target_name_verbatim": "Maturango",
+      "measurement_start_sol": 755,
+      "source_lon_lat_deg": [
+        137.3774636,
+        -4.662699323
+      ],
+      "projected_position_m": {
+        "x": -743.0913180304459,
+        "y": -276380.0920129497
+      },
+      "cell": {
+        "row": 95,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "42_1020",
+          "position_sol": 753,
+          "numerical_separation_m": 0.00017782410728315007
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 145,
+      "target_name_verbatim": "Moenkopi_rp",
+      "measurement_start_sol": 758,
+      "source_lon_lat_deg": [
+        137.3774636,
+        -4.662699323
+      ],
+      "projected_position_m": {
+        "x": -743.0913180304459,
+        "y": -276380.0920129497
+      },
+      "cell": {
+        "row": 95,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "Mg-sulfate nodule",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "42_1020",
+          "position_sol": 753,
+          "numerical_separation_m": 0.00017782410728315007
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 146,
+      "target_name_verbatim": "Mammoth_rp",
+      "measurement_start_sol": 758,
+      "source_lon_lat_deg": [
+        137.3774636,
+        -4.662699323
+      ],
+      "projected_position_m": {
+        "x": -743.0913180304459,
+        "y": -276380.0920129497
+      },
+      "cell": {
+        "row": 95,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "Mg-sulfate nodule",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "42_1020",
+          "position_sol": 753,
+          "numerical_separation_m": 0.00017782410728315007
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 147,
+      "target_name_verbatim": "Confidence_Hills_minidrill",
+      "measurement_start_sol": 759,
+      "source_lon_lat_deg": [
+        137.3774636,
+        -4.662699323
+      ],
+      "projected_position_m": {
+        "x": -743.0913180304459,
+        "y": -276380.0920129497
+      },
+      "cell": {
+        "row": 95,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "MD",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "42_1020",
+          "position_sol": 753,
+          "numerical_separation_m": 0.00017782410728315007
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 148,
+      "target_name_verbatim": "Paradox_drillfines",
+      "measurement_start_sol": 762,
+      "source_lon_lat_deg": [
+        137.3774636,
+        -4.662699323
+      ],
+      "projected_position_m": {
+        "x": -743.0913180304459,
+        "y": -276380.0920129497
+      },
+      "cell": {
+        "row": 95,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "DT",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "42_1020",
+          "position_sol": 753,
+          "numerical_separation_m": 0.00017782410728315007
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 149,
+      "target_name_verbatim": "Morrison_DRT",
+      "measurement_start_sol": 767,
+      "source_lon_lat_deg": [
+        137.3774636,
+        -4.662699323
+      ],
+      "projected_position_m": {
+        "x": -743.0913180304459,
+        "y": -276380.0920129497
+      },
+      "cell": {
+        "row": 95,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "Low quality spectrum; Mg-sulfate nodule",
+      "review_flags": [
+        "source-flags-low-quality-spectrum"
+      ],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "42_1020",
+          "position_sol": 753,
+          "numerical_separation_m": 0.00017782410728315007
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 150,
+      "target_name_verbatim": "Confidence_Hills_fines_presieve_dump",
+      "measurement_start_sol": 767,
+      "source_lon_lat_deg": [
+        137.3774636,
+        -4.662699323
+      ],
+      "projected_position_m": {
+        "x": -743.0913180304459,
+        "y": -276380.0920129497
+      },
+      "cell": {
+        "row": 95,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "Presieve",
+      "source_comments_verbatim": "",
+      "review_flags": [
+        "sample-handling-location-not-necessarily-original-sample-site"
+      ],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "42_1020",
+          "position_sol": 753,
+          "numerical_separation_m": 0.00017782410728315007
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 151,
+      "target_name_verbatim": "Morrison_DRT_raster1",
+      "measurement_start_sol": 774,
+      "source_lon_lat_deg": [
+        137.3774636,
+        -4.662699323
+      ],
+      "projected_position_m": {
+        "x": -743.0913180304459,
+        "y": -276380.0920129497
+      },
+      "cell": {
+        "row": 95,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "Mg-sulfate nodule",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "42_1020",
+          "position_sol": 753,
+          "numerical_separation_m": 0.00017782410728315007
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 152,
+      "target_name_verbatim": "Morrison_DRT_raster2",
+      "measurement_start_sol": 774,
+      "source_lon_lat_deg": [
+        137.3774636,
+        -4.662699323
+      ],
+      "projected_position_m": {
+        "x": -743.0913180304459,
+        "y": -276380.0920129497
+      },
+      "cell": {
+        "row": 95,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "Mg-sulfate nodule",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "42_1020",
+          "position_sol": 753,
+          "numerical_separation_m": 0.00017782410728315007
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 153,
+      "target_name_verbatim": "Morrison_DRT_raster3",
+      "measurement_start_sol": 774,
+      "source_lon_lat_deg": [
+        137.3774636,
+        -4.662699323
+      ],
+      "projected_position_m": {
+        "x": -743.0913180304459,
+        "y": -276380.0920129497
+      },
+      "cell": {
+        "row": 95,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "Mg-sulfate nodule",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "42_1020",
+          "position_sol": 753,
+          "numerical_separation_m": 0.00017782410728315007
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 154,
+      "target_name_verbatim": "Morrison_DRT_raster4",
+      "measurement_start_sol": 774,
+      "source_lon_lat_deg": [
+        137.3774636,
+        -4.662699323
+      ],
+      "projected_position_m": {
+        "x": -743.0913180304459,
+        "y": -276380.0920129497
+      },
+      "cell": {
+        "row": 95,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "Mg-sulfate nodule",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "42_1020",
+          "position_sol": 753,
+          "numerical_separation_m": 0.00017782410728315007
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 155,
+      "target_name_verbatim": "Morrison_DRT_center",
+      "measurement_start_sol": 779,
+      "source_lon_lat_deg": [
+        137.3774636,
+        -4.662699323
+      ],
+      "projected_position_m": {
+        "x": -743.0913180304459,
+        "y": -276380.0920129497
+      },
+      "cell": {
+        "row": 95,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "Mg-sulfate nodule",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "42_1020",
+          "position_sol": 753,
+          "numerical_separation_m": 0.00017782410728315007
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 156,
+      "target_name_verbatim": "Confidence_Hills_fines_postsieve_dump",
+      "measurement_start_sol": 781,
+      "source_lon_lat_deg": [
+        137.3775537,
+        -4.662972711
+      ],
+      "projected_position_m": {
+        "x": -737.7506677839392,
+        "y": -276396.2970039562
+      },
+      "cell": {
+        "row": 98,
+        "col": 99
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "Postsieve",
+      "source_comments_verbatim": "",
+      "review_flags": [
+        "sample-handling-location-not-necessarily-original-sample-site"
+      ],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "43_216",
+          "position_sol": 780,
+          "numerical_separation_m": 5.927470242771669e-05
+        },
+        {
+          "rmc": "44_0",
+          "position_sol": 782,
+          "numerical_separation_m": 5.927470242771669e-05
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 157,
+      "target_name_verbatim": "Kelso",
+      "measurement_start_sol": 801,
+      "source_lon_lat_deg": [
+        137.3775185,
+        -4.662573519
+      ],
+      "projected_position_m": {
+        "x": -739.837137135872,
+        "y": -276372.6350189025
+      },
+      "cell": {
+        "row": 93,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "SD",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1140",
+          "position_sol": 799,
+          "numerical_separation_m": 5.9274649781209506e-05
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 158,
+      "target_name_verbatim": "Dumont",
+      "measurement_start_sol": 802,
+      "source_lon_lat_deg": [
+        137.3775185,
+        -4.662573519
+      ],
+      "projected_position_m": {
+        "x": -739.837137135872,
+        "y": -276372.6350189025
+      },
+      "cell": {
+        "row": 93,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "SU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1140",
+          "position_sol": 799,
+          "numerical_separation_m": 5.9274649781209506e-05
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 159,
+      "target_name_verbatim": "Ricardo_raster1",
+      "measurement_start_sol": 805,
+      "source_lon_lat_deg": [
+        137.3774847,
+        -4.66265993
+      ],
+      "projected_position_m": {
+        "x": -741.8406219128293,
+        "y": -276377.7570047902
+      },
+      "cell": {
+        "row": 94,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "Low quality spectrum",
+      "review_flags": [
+        "source-flags-low-quality-spectrum"
+      ],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1282",
+          "position_sol": 803,
+          "numerical_separation_m": 0.0
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 160,
+      "target_name_verbatim": "Ricardo_raster2",
+      "measurement_start_sol": 805,
+      "source_lon_lat_deg": [
+        137.3774847,
+        -4.66265993
+      ],
+      "projected_position_m": {
+        "x": -741.8406219128293,
+        "y": -276377.7570047902
+      },
+      "cell": {
+        "row": 94,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "Low quality spectrum",
+      "review_flags": [
+        "source-flags-low-quality-spectrum"
+      ],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1282",
+          "position_sol": 803,
+          "numerical_separation_m": 0.0
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 161,
+      "target_name_verbatim": "Pelona_DRT",
+      "measurement_start_sol": 805,
+      "source_lon_lat_deg": [
+        137.3774847,
+        -4.66265993
+      ],
+      "projected_position_m": {
+        "x": -741.8406219128293,
+        "y": -276377.7570047902
+      },
+      "cell": {
+        "row": 94,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1282",
+          "position_sol": 803,
+          "numerical_separation_m": 0.0
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 162,
+      "target_name_verbatim": "Ricardo_raster1_DRT",
+      "measurement_start_sol": 806,
+      "source_lon_lat_deg": [
+        137.3774847,
+        -4.66265993
+      ],
+      "projected_position_m": {
+        "x": -741.8406219128293,
+        "y": -276377.7570047902
+      },
+      "cell": {
+        "row": 94,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1282",
+          "position_sol": 803,
+          "numerical_separation_m": 0.0
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 163,
+      "target_name_verbatim": "Rosamond_DRT_raster1",
+      "measurement_start_sol": 808,
+      "source_lon_lat_deg": [
+        137.3774491,
+        -4.662885912
+      ],
+      "projected_position_m": {
+        "x": -743.9508011440485,
+        "y": -276391.1520194859
+      },
+      "cell": {
+        "row": 97,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "Mg-sulfate nodule",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1432",
+          "position_sol": 807,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 164,
+      "target_name_verbatim": "Rosamond_DRT_raster2",
+      "measurement_start_sol": 808,
+      "source_lon_lat_deg": [
+        137.3774491,
+        -4.662885912
+      ],
+      "projected_position_m": {
+        "x": -743.9508011440485,
+        "y": -276391.1520194859
+      },
+      "cell": {
+        "row": 97,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "Mg-sulfate nodule",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1432",
+          "position_sol": 807,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 165,
+      "target_name_verbatim": "Mojave_DRT_raster1",
+      "measurement_start_sol": 809,
+      "source_lon_lat_deg": [
+        137.3774491,
+        -4.662885912
+      ],
+      "projected_position_m": {
+        "x": -743.9508011440485,
+        "y": -276391.1520194859
+      },
+      "cell": {
+        "row": 97,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1432",
+          "position_sol": 807,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 166,
+      "target_name_verbatim": "Mojave_DRT_raster2",
+      "measurement_start_sol": 809,
+      "source_lon_lat_deg": [
+        137.3774491,
+        -4.662885912
+      ],
+      "projected_position_m": {
+        "x": -743.9508011440485,
+        "y": -276391.1520194859
+      },
+      "cell": {
+        "row": 97,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1432",
+          "position_sol": 807,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 167,
+      "target_name_verbatim": "Potatoe_raster1",
+      "measurement_start_sol": 810,
+      "source_lon_lat_deg": [
+        137.3774491,
+        -4.662885912
+      ],
+      "projected_position_m": {
+        "x": -743.9508011440485,
+        "y": -276391.1520194859
+      },
+      "cell": {
+        "row": 97,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "Mg-sulfate nodule",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1432",
+          "position_sol": 807,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 168,
+      "target_name_verbatim": "Potatoe_raster2",
+      "measurement_start_sol": 810,
+      "source_lon_lat_deg": [
+        137.3774491,
+        -4.662885912
+      ],
+      "projected_position_m": {
+        "x": -743.9508011440485,
+        "y": -276391.1520194859
+      },
+      "cell": {
+        "row": 97,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "Mg-sulfate nodule",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1432",
+          "position_sol": 807,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 169,
+      "target_name_verbatim": "Punchbowl_DRT_raster1",
+      "measurement_start_sol": 813,
+      "source_lon_lat_deg": [
+        137.3776348,
+        -4.662949514
+      ],
+      "projected_position_m": {
+        "x": -732.9434898137954,
+        "y": -276394.92200879776
+      },
+      "cell": {
+        "row": 98,
+        "col": 100
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1546",
+          "position_sol": 812,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 170,
+      "target_name_verbatim": "Punchbowl_DRT_raster2",
+      "measurement_start_sol": 813,
+      "source_lon_lat_deg": [
+        137.3776348,
+        -4.662949514
+      ],
+      "projected_position_m": {
+        "x": -732.9434898137954,
+        "y": -276394.92200879776
+      },
+      "cell": {
+        "row": 98,
+        "col": 100
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1546",
+          "position_sol": 812,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 171,
+      "target_name_verbatim": "Afton_Canyon_DRT_raster1",
+      "measurement_start_sol": 814,
+      "source_lon_lat_deg": [
+        137.3776348,
+        -4.662949514
+      ],
+      "projected_position_m": {
+        "x": -732.9434898137954,
+        "y": -276394.92200879776
+      },
+      "cell": {
+        "row": 98,
+        "col": 100
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1546",
+          "position_sol": 812,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 172,
+      "target_name_verbatim": "Afton_Canyon_DRT_raster2",
+      "measurement_start_sol": 814,
+      "source_lon_lat_deg": [
+        137.3776348,
+        -4.662949514
+      ],
+      "projected_position_m": {
+        "x": -732.9434898137954,
+        "y": -276394.92200879776
+      },
+      "cell": {
+        "row": 98,
+        "col": 100
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1546",
+          "position_sol": 812,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 173,
+      "target_name_verbatim": "Topanga_DRT_raster1",
+      "measurement_start_sol": 815,
+      "source_lon_lat_deg": [
+        137.3776348,
+        -4.662949514
+      ],
+      "projected_position_m": {
+        "x": -732.9434898137954,
+        "y": -276394.92200879776
+      },
+      "cell": {
+        "row": 98,
+        "col": 100
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1546",
+          "position_sol": 812,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 174,
+      "target_name_verbatim": "Topanga_DRT_raster2",
+      "measurement_start_sol": 815,
+      "source_lon_lat_deg": [
+        137.3776348,
+        -4.662949514
+      ],
+      "projected_position_m": {
+        "x": -732.9434898137954,
+        "y": -276394.92200879776
+      },
+      "cell": {
+        "row": 98,
+        "col": 100
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1546",
+          "position_sol": 812,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 175,
+      "target_name_verbatim": "Mescal_DRT_raster1",
+      "measurement_start_sol": 819,
+      "source_lon_lat_deg": [
+        137.3778762,
+        -4.663224285
+      ],
+      "projected_position_m": {
+        "x": -718.6345778320805,
+        "y": -276411.2089767109
+      },
+      "cell": {
+        "row": 101,
+        "col": 103
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1828",
+          "position_sol": 817,
+          "numerical_separation_m": 0.00029637345949207623
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 176,
+      "target_name_verbatim": "Mescal_DRT_raster2",
+      "measurement_start_sol": 820,
+      "source_lon_lat_deg": [
+        137.3778762,
+        -4.663224285
+      ],
+      "projected_position_m": {
+        "x": -718.6345778320805,
+        "y": -276411.2089767109
+      },
+      "cell": {
+        "row": 101,
+        "col": 103
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1828",
+          "position_sol": 817,
+          "numerical_separation_m": 0.00029637345949207623
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 177,
+      "target_name_verbatim": "Puente_DRT_raster1",
+      "measurement_start_sol": 824,
+      "source_lon_lat_deg": [
+        137.3778762,
+        -4.663224285
+      ],
+      "projected_position_m": {
+        "x": -718.6345778320805,
+        "y": -276411.2089767109
+      },
+      "cell": {
+        "row": 101,
+        "col": 103
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1828",
+          "position_sol": 817,
+          "numerical_separation_m": 0.00029637345949207623
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 178,
+      "target_name_verbatim": "Puente_DRT_raster2",
+      "measurement_start_sol": 824,
+      "source_lon_lat_deg": [
+        137.3778762,
+        -4.663224285
+      ],
+      "projected_position_m": {
+        "x": -718.6345778320805,
+        "y": -276411.2089767109
+      },
+      "cell": {
+        "row": 101,
+        "col": 103
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_1828",
+          "position_sol": 817,
+          "numerical_separation_m": 0.00029637345949207623
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 179,
+      "target_name_verbatim": "Pickhandle_DRT",
+      "measurement_start_sol": 828,
+      "source_lon_lat_deg": [
+        137.3777823,
+        -4.663379056
+      ],
+      "projected_position_m": {
+        "x": -724.2004719292809,
+        "y": -276420.3829809213
+      },
+      "cell": {
+        "row": 103,
+        "col": 102
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_2062",
+          "position_sol": 826,
+          "numerical_separation_m": 0.00023709875706435957
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 180,
+      "target_name_verbatim": "Goldstone_DRT_raster1",
+      "measurement_start_sol": 830,
+      "source_lon_lat_deg": [
+        137.3777823,
+        -4.663379056
+      ],
+      "projected_position_m": {
+        "x": -724.2004719292809,
+        "y": -276420.3829809213
+      },
+      "cell": {
+        "row": 103,
+        "col": 102
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_2062",
+          "position_sol": 826,
+          "numerical_separation_m": 0.00023709875706435957
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 181,
+      "target_name_verbatim": "Goldstone_DRT_raster2",
+      "measurement_start_sol": 831,
+      "source_lon_lat_deg": [
+        137.3777823,
+        -4.663379056
+      ],
+      "projected_position_m": {
+        "x": -724.2004719292809,
+        "y": -276420.3829809213
+      },
+      "cell": {
+        "row": 103,
+        "col": 102
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_2062",
+          "position_sol": 826,
+          "numerical_separation_m": 0.00023709875706435957
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 182,
+      "target_name_verbatim": "Tropico",
+      "measurement_start_sol": 833,
+      "source_lon_lat_deg": [
+        137.3777823,
+        -4.663379056
+      ],
+      "projected_position_m": {
+        "x": -724.2004719292809,
+        "y": -276420.3829809213
+      },
+      "cell": {
+        "row": 103,
+        "col": 102
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_2062",
+          "position_sol": 826,
+          "numerical_separation_m": 0.00023709875706435957
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 183,
+      "target_name_verbatim": "San_Andreas",
+      "measurement_start_sol": 842,
+      "source_lon_lat_deg": [
+        137.3774985,
+        -4.663582296
+      ],
+      "projected_position_m": {
+        "x": -741.0226310867143,
+        "y": -276432.429970446
+      },
+      "cell": {
+        "row": 105,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "Whale Rock",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_2414",
+          "position_sol": 837,
+          "numerical_separation_m": 0.00023709875706435957
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 184,
+      "target_name_verbatim": "Santa_Ana_DRT_raster1",
+      "measurement_start_sol": 844,
+      "source_lon_lat_deg": [
+        137.3774985,
+        -4.663582296
+      ],
+      "projected_position_m": {
+        "x": -741.0226310867143,
+        "y": -276432.429970446
+      },
+      "cell": {
+        "row": 105,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "Whale Rock",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_2414",
+          "position_sol": 837,
+          "numerical_separation_m": 0.00023709875706435957
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 185,
+      "target_name_verbatim": "Santa_Ana_DRT_raster2",
+      "measurement_start_sol": 844,
+      "source_lon_lat_deg": [
+        137.3774985,
+        -4.663582296
+      ],
+      "projected_position_m": {
+        "x": -741.0226310867143,
+        "y": -276432.429970446
+      },
+      "cell": {
+        "row": 105,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "Whale Rock",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_2414",
+          "position_sol": 837,
+          "numerical_separation_m": 0.00023709875706435957
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 186,
+      "target_name_verbatim": "Tecoya_DRT",
+      "measurement_start_sol": 853,
+      "source_lon_lat_deg": [
+        137.3774985,
+        -4.663582296
+      ],
+      "projected_position_m": {
+        "x": -741.0226310867143,
+        "y": -276432.429970446
+      },
+      "cell": {
+        "row": 105,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "Whale Rock",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_2414",
+          "position_sol": 837,
+          "numerical_separation_m": 0.00023709875706435957
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 187,
+      "target_name_verbatim": "Sierra_Nevada_raster1",
+      "measurement_start_sol": 854,
+      "source_lon_lat_deg": [
+        137.3774985,
+        -4.663582296
+      ],
+      "projected_position_m": {
+        "x": -741.0226310867143,
+        "y": -276432.429970446
+      },
+      "cell": {
+        "row": 105,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "Whale Rock",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_2414",
+          "position_sol": 837,
+          "numerical_separation_m": 0.00023709875706435957
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 188,
+      "target_name_verbatim": "Sierra_Nevada_raster2",
+      "measurement_start_sol": 854,
+      "source_lon_lat_deg": [
+        137.3774985,
+        -4.663582296
+      ],
+      "projected_position_m": {
+        "x": -741.0226310867143,
+        "y": -276432.429970446
+      },
+      "cell": {
+        "row": 105,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "Whale Rock",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "44_2414",
+          "position_sol": 837,
+          "numerical_separation_m": 0.00023709875706435957
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 189,
+      "target_name_verbatim": "Mojave_mini_drill",
+      "measurement_start_sol": 867,
+      "source_lon_lat_deg": [
+        137.3774498,
+        -4.662863727
+      ],
+      "projected_position_m": {
+        "x": -743.9093088565608,
+        "y": -276389.8370103213
+      },
+      "cell": {
+        "row": 97,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "MD",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_0",
+          "position_sol": 864,
+          "numerical_separation_m": 0.00017782405463664288
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 190,
+      "target_name_verbatim": "Mojave_chunk",
+      "measurement_start_sol": 871,
+      "source_lon_lat_deg": [
+        137.3774498,
+        -4.662863727
+      ],
+      "projected_position_m": {
+        "x": -743.9093088565608,
+        "y": -276389.8370103213
+      },
+      "cell": {
+        "row": 97,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "MD",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_0",
+          "position_sol": 864,
+          "numerical_separation_m": 0.00017782405463664288
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 191,
+      "target_name_verbatim": "Mojave2",
+      "measurement_start_sol": 880,
+      "source_lon_lat_deg": [
+        137.3774498,
+        -4.662863727
+      ],
+      "projected_position_m": {
+        "x": -743.9093088565608,
+        "y": -276389.8370103213
+      },
+      "cell": {
+        "row": 97,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_0",
+          "position_sol": 864,
+          "numerical_separation_m": 0.00017782405463664288
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 192,
+      "target_name_verbatim": "Mojave2_mini_drill",
+      "measurement_start_sol": 881,
+      "source_lon_lat_deg": [
+        137.3774498,
+        -4.662863727
+      ],
+      "projected_position_m": {
+        "x": -743.9093088565608,
+        "y": -276389.8370103213
+      },
+      "cell": {
+        "row": 97,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "MD",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_0",
+          "position_sol": 864,
+          "numerical_separation_m": 0.00017782405463664288
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 193,
+      "target_name_verbatim": "Mojave2_DTc_drilltailings",
+      "measurement_start_sol": 884,
+      "source_lon_lat_deg": [
+        137.3774498,
+        -4.662863727
+      ],
+      "projected_position_m": {
+        "x": -743.9093088565608,
+        "y": -276389.8370103213
+      },
+      "cell": {
+        "row": 97,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "DT",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_0",
+          "position_sol": 864,
+          "numerical_separation_m": 0.00017782405463664288
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 194,
+      "target_name_verbatim": "Mojave2_presieve_dump",
+      "measurement_start_sol": 888,
+      "source_lon_lat_deg": [
+        137.3774498,
+        -4.662863727
+      ],
+      "projected_position_m": {
+        "x": -743.9093088565608,
+        "y": -276389.8370103213
+      },
+      "cell": {
+        "row": 97,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "Presieve",
+      "source_comments_verbatim": "",
+      "review_flags": [
+        "sample-handling-location-not-necessarily-original-sample-site"
+      ],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_0",
+          "position_sol": 864,
+          "numerical_separation_m": 0.00017782405463664288
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 195,
+      "target_name_verbatim": "San_Francisquito_raster1",
+      "measurement_start_sol": 889,
+      "source_lon_lat_deg": [
+        137.3774498,
+        -4.662863727
+      ],
+      "projected_position_m": {
+        "x": -743.9093088565608,
+        "y": -276389.8370103213
+      },
+      "cell": {
+        "row": 97,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_0",
+          "position_sol": 864,
+          "numerical_separation_m": 0.00017782405463664288
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 196,
+      "target_name_verbatim": "San_Francisquito_raster2",
+      "measurement_start_sol": 889,
+      "source_lon_lat_deg": [
+        137.3774498,
+        -4.662863727
+      ],
+      "projected_position_m": {
+        "x": -743.9093088565608,
+        "y": -276389.8370103213
+      },
+      "cell": {
+        "row": 97,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_0",
+          "position_sol": 864,
+          "numerical_separation_m": 0.00017782405463664288
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 197,
+      "target_name_verbatim": "Mojave2_postsieve_dump",
+      "measurement_start_sol": 894,
+      "source_lon_lat_deg": [
+        137.3774498,
+        -4.662863727
+      ],
+      "projected_position_m": {
+        "x": -743.9093088565608,
+        "y": -276389.8370103213
+      },
+      "cell": {
+        "row": 97,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "Postsieve",
+      "source_comments_verbatim": "",
+      "review_flags": [
+        "sample-handling-location-not-necessarily-original-sample-site"
+      ],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_0",
+          "position_sol": 864,
+          "numerical_separation_m": 0.00017782405463664288
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 198,
+      "target_name_verbatim": "Telegraph_Peak_DRT_raster1",
+      "measurement_start_sol": 905,
+      "source_lon_lat_deg": [
+        137.3774523,
+        -4.663527332
+      ],
+      "projected_position_m": {
+        "x": -743.7611221131266,
+        "y": -276429.1719959713
+      },
+      "cell": {
+        "row": 105,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "Low quality spectrum",
+      "review_flags": [
+        "source-flags-low-quality-spectrum"
+      ],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_450",
+          "position_sol": 903,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 199,
+      "target_name_verbatim": "Telegraph_Peak_DRT_raster2",
+      "measurement_start_sol": 905,
+      "source_lon_lat_deg": [
+        137.3774523,
+        -4.663527332
+      ],
+      "projected_position_m": {
+        "x": -743.7611221131266,
+        "y": -276429.1719959713
+      },
+      "cell": {
+        "row": 105,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_450",
+          "position_sol": 903,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 200,
+      "target_name_verbatim": "Telegraph_Peak_DT",
+      "measurement_start_sol": 922,
+      "source_lon_lat_deg": [
+        137.3774523,
+        -4.663527332
+      ],
+      "projected_position_m": {
+        "x": -743.7611221131266,
+        "y": -276429.1719959713
+      },
+      "cell": {
+        "row": 105,
+        "col": 98
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "DT",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_450",
+          "position_sol": 903,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 201,
+      "target_name_verbatim": "Coalville",
+      "measurement_start_sol": 930,
+      "source_lon_lat_deg": [
+        137.3773474,
+        -4.663751694
+      ],
+      "projected_position_m": {
+        "x": -749.9790378831219,
+        "y": -276442.47098565695
+      },
+      "cell": {
+        "row": 107,
+        "col": 96
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "Garden City",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "High-Ca_ Mn vein",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_852",
+          "position_sol": 926,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 202,
+      "target_name_verbatim": "Alvord_Mountain_raster1",
+      "measurement_start_sol": 935,
+      "source_lon_lat_deg": [
+        137.3773474,
+        -4.663751694
+      ],
+      "projected_position_m": {
+        "x": -749.9790378831219,
+        "y": -276442.47098565695
+      },
+      "cell": {
+        "row": 107,
+        "col": 96
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "Garden City",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "High-Ca_ Mn vein",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_852",
+          "position_sol": 926,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 203,
+      "target_name_verbatim": "Alvord_Mountain_raster2",
+      "measurement_start_sol": 935,
+      "source_lon_lat_deg": [
+        137.3773474,
+        -4.663751694
+      ],
+      "projected_position_m": {
+        "x": -749.9790378831219,
+        "y": -276442.47098565695
+      },
+      "cell": {
+        "row": 107,
+        "col": 96
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "Garden City",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "High-Ca vein",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_852",
+          "position_sol": 926,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 204,
+      "target_name_verbatim": "Alvord_Mountain_raster3",
+      "measurement_start_sol": 935,
+      "source_lon_lat_deg": [
+        137.3773474,
+        -4.663751694
+      ],
+      "projected_position_m": {
+        "x": -749.9790378831219,
+        "y": -276442.47098565695
+      },
+      "cell": {
+        "row": 107,
+        "col": 96
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "Garden City",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "High-Ca_ Mn vein",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_852",
+          "position_sol": 926,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 205,
+      "target_name_verbatim": "Alvord_Mountain_raster4",
+      "measurement_start_sol": 935,
+      "source_lon_lat_deg": [
+        137.3773474,
+        -4.663751694
+      ],
+      "projected_position_m": {
+        "x": -749.9790378831219,
+        "y": -276442.47098565695
+      },
+      "cell": {
+        "row": 107,
+        "col": 96
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "Garden City",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "High-Ca vein",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_852",
+          "position_sol": 926,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 206,
+      "target_name_verbatim": "Indianola",
+      "measurement_start_sol": 935,
+      "source_lon_lat_deg": [
+        137.3773474,
+        -4.663751694
+      ],
+      "projected_position_m": {
+        "x": -749.9790378831219,
+        "y": -276442.47098565695
+      },
+      "cell": {
+        "row": 107,
+        "col": 96
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "Garden City",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "High-Ca vein",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_852",
+          "position_sol": 926,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 207,
+      "target_name_verbatim": "Hyrum_DRT",
+      "measurement_start_sol": 936,
+      "source_lon_lat_deg": [
+        137.3773474,
+        -4.663751694
+      ],
+      "projected_position_m": {
+        "x": -749.9790378831219,
+        "y": -276442.47098565695
+      },
+      "cell": {
+        "row": 107,
+        "col": 96
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_852",
+          "position_sol": 926,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 208,
+      "target_name_verbatim": "Live_Oak_Canyon",
+      "measurement_start_sol": 937,
+      "source_lon_lat_deg": [
+        137.3773474,
+        -4.663751694
+      ],
+      "projected_position_m": {
+        "x": -749.9790378831219,
+        "y": -276442.47098565695
+      },
+      "cell": {
+        "row": 107,
+        "col": 96
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "Garden City",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "High-Ca vein",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_852",
+          "position_sol": 926,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 209,
+      "target_name_verbatim": "Alvord_Mountain_raster5",
+      "measurement_start_sol": 937,
+      "source_lon_lat_deg": [
+        137.3773474,
+        -4.663751694
+      ],
+      "projected_position_m": {
+        "x": -749.9790378831219,
+        "y": -276442.47098565695
+      },
+      "cell": {
+        "row": 107,
+        "col": 96
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "Garden City",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "High-Ca vein",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_852",
+          "position_sol": 926,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 210,
+      "target_name_verbatim": "Alvord_Mountain_raster6",
+      "measurement_start_sol": 937,
+      "source_lon_lat_deg": [
+        137.3773474,
+        -4.663751694
+      ],
+      "projected_position_m": {
+        "x": -749.9790378831219,
+        "y": -276442.47098565695
+      },
+      "cell": {
+        "row": 107,
+        "col": 96
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "Garden City",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "High-Ca_ Mn vein",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_852",
+          "position_sol": 926,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 211,
+      "target_name_verbatim": "Alvord_Mountain_raster7",
+      "measurement_start_sol": 937,
+      "source_lon_lat_deg": [
+        137.3773474,
+        -4.663751694
+      ],
+      "projected_position_m": {
+        "x": -749.9790378831219,
+        "y": -276442.47098565695
+      },
+      "cell": {
+        "row": 107,
+        "col": 96
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "Garden City",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "High-Ca_ Mn vein",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_852",
+          "position_sol": 926,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 212,
+      "target_name_verbatim": "Little_Devil",
+      "measurement_start_sol": 942,
+      "source_lon_lat_deg": [
+        137.3772883,
+        -4.663883234
+      ],
+      "projected_position_m": {
+        "x": -753.4821725059912,
+        "y": -276450.2679793692
+      },
+      "cell": {
+        "row": 109,
+        "col": 96
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_996",
+          "position_sol": 940,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 213,
+      "target_name_verbatim": "Amboy",
+      "measurement_start_sol": 948,
+      "source_lon_lat_deg": [
+        137.3773276,
+        -4.663761361
+      ],
+      "projected_position_m": {
+        "x": -751.1526768934788,
+        "y": -276443.0439941579
+      },
+      "cell": {
+        "row": 108,
+        "col": 96
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "Garden City",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_1108",
+          "position_sol": 944,
+          "numerical_separation_m": 0.005927765766572839
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 214,
+      "target_name_verbatim": "Kern_Peak",
+      "measurement_start_sol": 948,
+      "source_lon_lat_deg": [
+        137.3773276,
+        -4.663761361
+      ],
+      "projected_position_m": {
+        "x": -751.1526768934788,
+        "y": -276443.0439941579
+      },
+      "cell": {
+        "row": 108,
+        "col": 96
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "Garden City",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "High-P vein-associated host rock",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "45_1108",
+          "position_sol": 944,
+          "numerical_separation_m": 0.005927765766572839
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 215,
+      "target_name_verbatim": "Telegraph_Peak_postsieve_dump",
+      "measurement_start_sol": 954,
+      "source_lon_lat_deg": [
+        137.3754274,
+        -4.665340534
+      ],
+      "projected_position_m": {
+        "x": -863.7864571269307,
+        "y": -276536.6489960699
+      },
+      "cell": {
+        "row": 126,
+        "col": 74
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "Postsieve",
+      "source_comments_verbatim": "",
+      "review_flags": [
+        "sample-handling-location-not-necessarily-original-sample-site"
+      ],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "46_0",
+          "position_sol": 952,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 216,
+      "target_name_verbatim": "La_Brea",
+      "measurement_start_sol": 955,
+      "source_lon_lat_deg": [
+        137.3754274,
+        -4.665340534
+      ],
+      "projected_position_m": {
+        "x": -863.7864571269307,
+        "y": -276536.6489960699
+      },
+      "cell": {
+        "row": 126,
+        "col": 74
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "46_0",
+          "position_sol": 952,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 217,
+      "target_name_verbatim": "Bigfork",
+      "measurement_start_sol": 974,
+      "source_lon_lat_deg": [
+        137.3701894,
+        -4.667310025
+      ],
+      "projected_position_m": {
+        "x": -1174.2673227551845,
+        "y": -276653.3899793698
+      },
+      "cell": {
+        "row": 150,
+        "col": 12
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "47_598",
+          "position_sol": 971,
+          "numerical_separation_m": 0.0002963735121385834
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 218,
+      "target_name_verbatim": "Albert",
+      "measurement_start_sol": 975,
+      "source_lon_lat_deg": [
+        137.3701894,
+        -4.667310025
+      ],
+      "projected_position_m": {
+        "x": -1174.2673227551845,
+        "y": -276653.3899793698
+      },
+      "cell": {
+        "row": 150,
+        "col": 12
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "47_598",
+          "position_sol": 971,
+          "numerical_separation_m": 0.0002963735121385834
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 219,
+      "target_name_verbatim": "Spokane",
+      "measurement_start_sol": 989,
+      "source_lon_lat_deg": [
+        137.3711941,
+        -4.66755303
+      ],
+      "projected_position_m": {
+        "x": -1114.7140341529282,
+        "y": -276667.7940272414
+      },
+      "cell": {
+        "row": 152,
+        "col": 24
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "48_448",
+          "position_sol": 987,
+          "numerical_separation_m": 0.0
+        },
+        {
+          "rmc": "48_458",
+          "position_sol": 987,
+          "numerical_separation_m": 0.0
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 220,
+      "target_name_verbatim": "Ronan_DRT_2",
+      "measurement_start_sol": 998,
+      "source_lon_lat_deg": [
+        137.3700203,
+        -4.668293194
+      ],
+      "projected_position_m": {
+        "x": -1184.2906741060024,
+        "y": -276711.6670244591
+      },
+      "cell": {
+        "row": 161,
+        "col": 10
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "48_1570",
+          "position_sol": 997,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 221,
+      "target_name_verbatim": "Wallace_DRT",
+      "measurement_start_sol": 999,
+      "source_lon_lat_deg": [
+        137.3700203,
+        -4.668293194
+      ],
+      "projected_position_m": {
+        "x": -1184.2906741060024,
+        "y": -276711.6670244591
+      },
+      "cell": {
+        "row": 161,
+        "col": 10
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "48_1570",
+          "position_sol": 997,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 222,
+      "target_name_verbatim": "Big_Arm_raster1",
+      "measurement_start_sol": 1028,
+      "source_lon_lat_deg": [
+        137.3700203,
+        -4.668293194
+      ],
+      "projected_position_m": {
+        "x": -1184.2906741060024,
+        "y": -276711.6670244591
+      },
+      "cell": {
+        "row": 161,
+        "col": 10
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "48_1570",
+          "position_sol": 997,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 223,
+      "target_name_verbatim": "Big_Arm_raster2",
+      "measurement_start_sol": 1028,
+      "source_lon_lat_deg": [
+        137.3700203,
+        -4.668293194
+      ],
+      "projected_position_m": {
+        "x": -1184.2906741060024,
+        "y": -276711.6670244591
+      },
+      "cell": {
+        "row": 161,
+        "col": 10
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "48_1570",
+          "position_sol": 997,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 224,
+      "target_name_verbatim": "Big_Arm_raster3",
+      "measurement_start_sol": 1028,
+      "source_lon_lat_deg": [
+        137.3700203,
+        -4.668293194
+      ],
+      "projected_position_m": {
+        "x": -1184.2906741060024,
+        "y": -276711.6670244591
+      },
+      "cell": {
+        "row": 161,
+        "col": 10
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "48_1570",
+          "position_sol": 997,
+          "numerical_separation_m": 0.00023709880971086675
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 225,
+      "target_name_verbatim": "Lumpry",
+      "measurement_start_sol": 1032,
+      "source_lon_lat_deg": [
+        137.3700253,
+        -4.66827639
+      ],
+      "projected_position_m": {
+        "x": -1183.9943006174497,
+        "y": -276710.6709724419
+      },
+      "cell": {
+        "row": 161,
+        "col": 10
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "48_1600",
+          "position_sol": 1030,
+          "numerical_separation_m": 0.0
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 226,
+      "target_name_verbatim": "Lamoose",
+      "measurement_start_sol": 1041,
+      "source_lon_lat_deg": [
+        137.3702117,
+        -4.66788948
+      ],
+      "projected_position_m": {
+        "x": -1172.945496999709,
+        "y": -276687.7369992232
+      },
+      "cell": {
+        "row": 156,
+        "col": 12
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "48_1970",
+          "position_sol": 1039,
+          "numerical_separation_m": 0.005927469400427553
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 227,
+      "target_name_verbatim": "Buckskin_DRT_raster1",
+      "measurement_start_sol": 1057,
+      "source_lon_lat_deg": [
+        137.3702986,
+        -4.668025052
+      ],
+      "projected_position_m": {
+        "x": -1167.794525784124,
+        "y": -276695.7729885158
+      },
+      "cell": {
+        "row": 158,
+        "col": 13
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "48_2542",
+          "position_sol": 1056,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 228,
+      "target_name_verbatim": "Buckskin_DRT_raster2",
+      "measurement_start_sol": 1057,
+      "source_lon_lat_deg": [
+        137.3702986,
+        -4.668025052
+      ],
+      "projected_position_m": {
+        "x": -1167.794525784124,
+        "y": -276695.7729885158
+      },
+      "cell": {
+        "row": 158,
+        "col": 13
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "48_2542",
+          "position_sol": 1056,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 229,
+      "target_name_verbatim": "Buckskin_mini_start_hole",
+      "measurement_start_sol": 1059,
+      "source_lon_lat_deg": [
+        137.3702986,
+        -4.668025052
+      ],
+      "projected_position_m": {
+        "x": -1167.794525784124,
+        "y": -276695.7729885158
+      },
+      "cell": {
+        "row": 158,
+        "col": 13
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "MD",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "48_2542",
+          "position_sol": 1056,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 230,
+      "target_name_verbatim": "Pellew",
+      "measurement_start_sol": 1061,
+      "source_lon_lat_deg": [
+        137.3702986,
+        -4.668025052
+      ],
+      "projected_position_m": {
+        "x": -1167.794525784124,
+        "y": -276695.7729885158
+      },
+      "cell": {
+        "row": 158,
+        "col": 13
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "48_2542",
+          "position_sol": 1056,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 231,
+      "target_name_verbatim": "Buckskin_Full_Drill_Tailings_APXS",
+      "measurement_start_sol": 1064,
+      "source_lon_lat_deg": [
+        137.3702986,
+        -4.668025052
+      ],
+      "projected_position_m": {
+        "x": -1167.794525784124,
+        "y": -276695.7729885158
+      },
+      "cell": {
+        "row": 158,
+        "col": 13
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "DT",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "48_2542",
+          "position_sol": 1056,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 232,
+      "target_name_verbatim": "Buckskin_presieve_dump",
+      "measurement_start_sol": 1065,
+      "source_lon_lat_deg": [
+        137.3702986,
+        -4.668025052
+      ],
+      "projected_position_m": {
+        "x": -1167.794525784124,
+        "y": -276695.7729885158
+      },
+      "cell": {
+        "row": 158,
+        "col": 13
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "Presieve",
+      "source_comments_verbatim": "",
+      "review_flags": [
+        "sample-handling-location-not-necessarily-original-sample-site"
+      ],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "48_2542",
+          "position_sol": 1056,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 234,
+      "target_name_verbatim": "Buckskin_post_sieve_dump_twk",
+      "measurement_start_sol": 1089,
+      "source_lon_lat_deg": [
+        137.3694005,
+        -4.671474922
+      ],
+      "projected_position_m": {
+        "x": -1221.029131629839,
+        "y": -276900.26298926055
+      },
+      "cell": {
+        "row": 199,
+        "col": 2
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "Failed",
+      "source_comments_verbatim": "",
+      "review_flags": [
+        "source-flags-failed-preparation",
+        "sample-handling-location-not-necessarily-original-sample-site"
+      ],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "49_1876",
+          "position_sol": 1087,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 235,
+      "target_name_verbatim": "Devon",
+      "measurement_start_sol": 1091,
+      "source_lon_lat_deg": [
+        137.3694005,
+        -4.671474922
+      ],
+      "projected_position_m": {
+        "x": -1221.029131629839,
+        "y": -276900.26298926055
+      },
+      "cell": {
+        "row": 199,
+        "col": 2
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "49_1876",
+          "position_sol": 1087,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 236,
+      "target_name_verbatim": "Buckskin_post_sieve_dump_twk_corrected",
+      "measurement_start_sol": 1092,
+      "source_lon_lat_deg": [
+        137.3694005,
+        -4.671474922
+      ],
+      "projected_position_m": {
+        "x": -1221.029131629839,
+        "y": -276900.26298926055
+      },
+      "cell": {
+        "row": 199,
+        "col": 2
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "Postsieve",
+      "source_comments_verbatim": "",
+      "review_flags": [
+        "sample-handling-location-not-necessarily-original-sample-site"
+      ],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "49_1876",
+          "position_sol": 1087,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 237,
+      "target_name_verbatim": "Ledger",
+      "measurement_start_sol": 1092,
+      "source_lon_lat_deg": [
+        137.3694005,
+        -4.671474922
+      ],
+      "projected_position_m": {
+        "x": -1221.029131629839,
+        "y": -276900.26298926055
+      },
+      "cell": {
+        "row": 199,
+        "col": 2
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RB",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "49_1876",
+          "position_sol": 1087,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    },
+    {
+      "source_csv_line": 238,
+      "target_name_verbatim": "Ivanhoe",
+      "measurement_start_sol": 1092,
+      "source_lon_lat_deg": [
+        137.3694005,
+        -4.671474922
+      ],
+      "projected_position_m": {
+        "x": -1221.029131629839,
+        "y": -276900.26298926055
+      },
+      "cell": {
+        "row": 199,
+        "col": 2
+      },
+      "finite_terrain_coverage": true,
+      "outcrop_field_verbatim": "",
+      "preparation_code_verbatim": "RU",
+      "source_comments_verbatim": "",
+      "review_flags": [],
+      "waypoint_coordinate_matches_within_1cm": [
+        {
+          "rmc": "49_1876",
+          "position_sol": 1087,
+          "numerical_separation_m": 0.00011854940485543338
+        }
+      ],
+      "status": "candidate-not-approved-for-runtime"
+    }
+  ]
+}

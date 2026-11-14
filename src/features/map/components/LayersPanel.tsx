@@ -3,6 +3,11 @@ import type { ReactNode } from 'react'
 import { Icon, type IconName } from '../../../components/ui/Icon'
 import type { ScienceTargetsState } from '../../science/useScienceTargets'
 import type { TerrainState } from '../useTerrainSource'
+import { MapLayerControls } from '../../mapLayers/MapLayerControls'
+import type { DisplayLayersController } from '../../mapLayers/useDisplayLayers'
+import type { SurfaceImageryController } from '../../mapLayers/useSurfaceImagery'
+import { SurfaceImageryControls } from '../../mapLayers/SurfaceImageryControls'
+import type { BasemapController } from '../useBasemapStatus'
 
 interface LayerRow {
   title: string
@@ -22,7 +27,9 @@ function targetsRow(
   showTargets: boolean,
   onShowTargetsChange: (on: boolean) => void,
 ): LayerRow {
-  const base = { title: 'Science targets', icon: 'pin' as const }
+  const onlyDrillProxies = real && state.status === 'ready' && state.collection.targets.length > 0
+    && state.collection.targets.every((target) => target.kind === 'drill-site' && target.position.basis === 'rover-position-proxy')
+  const base = { title: onlyDrillProxies ? 'Drill proxies' : 'Science targets', icon: 'pin' as const }
   switch (state.status) {
     case 'ready': {
       const { inside, outside, collection } = state
@@ -52,21 +59,16 @@ function targetsRow(
   }
 }
 
-function layerRows(state: TerrainState, targets: LayerRow): LayerRow[] {
+function layerRows(state: TerrainState, targets: LayerRow, colorActive: boolean, basemap: BasemapController): LayerRow[] {
   const ready = state.status === 'ready' ? state : null
   const real = ready !== null && !ready.terrain.manifest.synthetic
   return [
     {
       title: 'Surface imagery',
-      description: real ? 'HiRISE orthoimage' : 'Orbital image basemap',
+      description: real ? colorActive ? 'Enhanced RGB · registered prototype' : 'HiRISE orthoimage' : 'Orbital image basemap',
       icon: 'image',
-      loaded: real && ready.basemapUrl ? 'SHOWN ON MAP' : null,
-    },
-    {
-      title: 'Elevation and slope',
-      description: real ? '5 m grid from the HiRISE DTM' : 'Surface topography',
-      icon: 'mountain',
-      loaded: ready ? (real ? 'USED FOR ROUTING' : 'SYNTHETIC · ROUTING') : null,
+      loaded: real && basemap.status === 'ready' ? 'SHOWN ON MAP' : null,
+      pending: basemap.status === 'error' ? 'IMAGE LOAD FAILED' : basemap.status === 'loading' ? 'LOADING IMAGE' : undefined,
     },
     targets,
   ]
@@ -80,6 +82,9 @@ export function LayersPanel({
   showTargets,
   onShowTargetsChange,
   targetBrowser,
+  displayLayers,
+  surfaceImagery,
+  basemap,
 }: {
   showGrid: boolean
   onGridChange: (value: boolean) => void
@@ -89,15 +94,22 @@ export function LayersPanel({
   onShowTargetsChange: (value: boolean) => void
   /** Target list and details, shown under the layer list. */
   targetBrowser: ReactNode
+  displayLayers: DisplayLayersController
+  surfaceImagery: SurfaceImageryController
+  basemap: BasemapController
 }) {
   const [section, setSection] = useState<'layers' | 'datasets'>('layers')
   const realTerrain = terrainState.status === 'ready' && !terrainState.terrain.manifest.synthetic
   const rows = layerRows(
     terrainState,
     targetsRow(targetsState, realTerrain, showTargets, onShowTargetsChange),
+    surfaceImagery.mode === 'rgb' && surfaceImagery.state.status === 'ready',
+    basemap,
   )
   const realTargets = targetsState.status === 'ready' && !targetsState.collection.synthetic
   const activeCount = rows.filter((row) => row.loaded && (row.toggle?.on ?? true)).length
+    + (terrainState.status === 'ready' && displayLayers.settings.raster ? 1 : 0)
+    + (displayLayers.state.status === 'ready' ? Number(displayLayers.settings.apxs) + Number(displayLayers.settings.traverse) + Number(displayLayers.settings.minerals) : 0)
   const dataset = terrainState.status === 'none' ? null : terrainState.dataset
   const datasetLoaded = terrainState.status === 'ready' && dataset !== null
 
@@ -152,6 +164,7 @@ export function LayersPanel({
                   ) : (
                     <span className="unavailable">{layer.pending ?? 'AWAITING DATA'}</span>
                   )}
+                  {layer.title === 'Surface imagery' && <SurfaceImageryControls controller={surfaceImagery} />}
                 </div>
                 {layer.toggle ? (
                   <button
@@ -179,7 +192,17 @@ export function LayersPanel({
                 )}
               </div>
             ))}
+            <MapLayerControls terrain={terrainState.status === 'ready' ? terrainState.terrain : null} controller={displayLayers} />
           </div>
+          <details className="pending-layer-guide">
+            <summary>Layers awaiting validated data</summary>
+            <ul>
+              <li><strong>CRISM:</strong> select an overlapping mineral-indicator scene, inspect quality masks and verify its footprint.</li>
+              <li><strong>THEMIS:</strong> select a thermal product and retain its acquisition time, native scale and model assumptions.</li>
+              <li><strong>Geological units:</strong> find a georeferenced published map with suitable scale and documented contacts.</li>
+              <li><strong>Hazards:</strong> map visible obstacles with evidence; slope alone does not establish loose ground or safe traversal.</li>
+            </ul>
+          </details>
           {targetBrowser}
           <div className="section-heading overlay-heading">
             <h2>Display overlays</h2>
@@ -289,9 +312,10 @@ export function LayersPanel({
             <Icon name="plus" size={14} />
           </summary>
           <p>
-            This is the initial application shell. Pan and zoom the empty 2D
-            viewport, choose a region, or preview the 3D placeholder. Routing
-            and scientific measurements are not implemented.
+            Compare sourced imagery, elevation, slope and historical science
+            context. Display overlays do not change route costs. APXS research
+            observations and mineral findings retain their source and position
+            caveats. The 3D view remains a placeholder.
           </p>
         </details>
       </div>

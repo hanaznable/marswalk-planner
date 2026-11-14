@@ -204,29 +204,51 @@ Developer Y can build the application and test routing with clearly labeled synt
 
 ## 7. Current Status
 
-**Decided:**
+Updated 2026-11-15 (Developer B branch; science delivery awaits commit/PR).
+
+**Implemented:**
 - Gale Crater as the study region.
-- Pahrump Hills as the initial candidate area.
-- Approximately 1 × 1 km target coverage.
+- Pahrump Hills as the first real terrain package (`pahrump-hills-v1`).
+- Exact 1 × 1 km projected coverage, a 200 × 200 routing grid at 5 m,
+  elevation, conservative native-maximum slope and orbital basemap.
+- Terrain contract v1, real-data map integration, shortest and slope-aware
+  routes, waypoints, round trips, EVA estimates and report export.
+- Science contract v1 and Developer Y's target list/map/report integration.
+- User-selected main-map display layers: elevation, slope, drill proxies,
+  APXS research observations, historical traverse and a published mineral finding.
+  Context display does not change routing or approve candidate mission targets.
+- Optional HiRISE enhanced RGB basemap, empirically registered to the existing
+  ortho with separate validation/provenance. Partial color coverage and absolute
+  geolocation limitations remain explicit; grayscale is the default.
+- Developer B's three sourced drill-associated rover-position proxies:
+  Confidence Hills, Mojave 2 and Telegraph Peak, with separate provenance.
 - React, TypeScript, Vite, Leaflet.
 - Python-based NASA terrain processing.
 - A* routing.
 - Developer responsibilities.
 
 **Not yet finalized:**
-- Exact study-area coordinates.
-- Final DEM coverage and quality.
-- Exact terrain data format and coordinate contract.
-- Scientific observation points.
+- Absolute geolocation and image/DEM registration accuracy (the documented
+  prototype working convention is not an accuracy certification).
+- Exact drill-hole positions and source-stated positional uncertainties.
+- Additional observation-specific evidence and instrument analysis results.
+- A separate contract for the historical Curiosity traverse, if needed.
 - Final project name.
 - Whether 3D will be completed.
 
 ## 8. Immediate Next Steps
 
-**Developer B:** Validate the selected HiRISE DEM and corresponding imagery using QGIS/GDAL. Determine a suitable area with valid elevation coverage.
+**Developer B:** Review and submit the science collection delivery. Next, expand
+source-backed scientific descriptions only where evidence supports them; agree
+on a separate traverse overlay if it is needed. Keep optional 3D behind core
+data quality and demonstration work.
 
-**Developer Y:** Continue building the React application shell and Leaflet map infrastructure without hardcoding NASA coordinates or assuming finalized datasets.
+**Developer Y:** Review the registered science collection in the existing target
+UI, waypoint flow and exported reports. Review outstanding app audit findings
+in `docs/terrain/app-verification-2026-11-14.md`.
 
-**Both:** Agree on a shared terrain data interface before integrating the real datasets.
+**Both:** Merge the science delivery through a Pull Request and review the
+end-to-end real-data demonstration. Coordinate shared contract changes before
+expanding coverage or adding data types.
 
 **Core priority:** Build a working 2D Gale Crater map with real terrain-aware route planning before expanding to optional features.

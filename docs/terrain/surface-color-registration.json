@@ -1,0 +1,326 @@
+{
+  "status": "prototype-relative-registration-passed",
+  "method": "9 image-patch integer phase correlations after global displacement; least-squares affine displacement field; validation on 16 separate non-overlapping image patches",
+  "reference": "Existing grayscale orthoimage, resized to 1m only for relative image registration",
+  "terrainManifestSha256": "450ada2dc924b72e6188bedc476c6373f7776544d599c0c6402d8e3e6d05b5c5",
+  "source_sha256": "9e06aef5b32c130ce964a1a066adba5145eedda4cc54552871ed049e22f9b439",
+  "inspection_sha256": "adabcd0c98f03646e3c881f82f6c640aec313412aa7c2c930b81b8b4e7363a27",
+  "initial_translation_col_row_m": [
+    130,
+    -185
+  ],
+  "residual_shift_coefficients": [
+    [
+      3.944444444444443,
+      0.5000000000000014
+    ],
+    [
+      -0.002222222222222221,
+      -0.005
+    ],
+    [
+      -0.004999999999999998,
+      0.003333333333333332
+    ]
+  ],
+  "output_to_expanded_source_affine": [
+    1.0022222222222221,
+    0.004999999999999998,
+    266.05555555555554,
+    0.005,
+    0.9966666666666667,
+    584.5
+  ],
+  "training_patches": [
+    {
+      "centre_col_row": [
+        200,
+        200
+      ],
+      "moving_to_reference_shift_col_px": 3,
+      "moving_to_reference_shift_row_px": 0,
+      "zero_shift_correlation": 0.1308806087501837,
+      "diagnostic_shift_correlation": 0.8286402950920988,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        500,
+        200
+      ],
+      "moving_to_reference_shift_col_px": 2,
+      "moving_to_reference_shift_row_px": -1,
+      "zero_shift_correlation": 0.22450030196385404,
+      "diagnostic_shift_correlation": 0.8871576516868972,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        800,
+        200
+      ],
+      "moving_to_reference_shift_col_px": 1,
+      "moving_to_reference_shift_row_px": -3,
+      "zero_shift_correlation": -0.0013535552416758458,
+      "diagnostic_shift_correlation": 0.8464625648424456,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        200,
+        500
+      ],
+      "moving_to_reference_shift_col_px": 1,
+      "moving_to_reference_shift_row_px": 1,
+      "zero_shift_correlation": 0.6238204783395368,
+      "diagnostic_shift_correlation": 0.8874538557081724,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        500,
+        500
+      ],
+      "moving_to_reference_shift_col_px": 0,
+      "moving_to_reference_shift_row_px": 0,
+      "zero_shift_correlation": 0.9103158080005852,
+      "diagnostic_shift_correlation": 0.9103158080005852,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        800,
+        500
+      ],
+      "moving_to_reference_shift_col_px": -1,
+      "moving_to_reference_shift_row_px": -2,
+      "zero_shift_correlation": 0.4221511137695189,
+      "diagnostic_shift_correlation": 0.9170230303856268,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        200,
+        800
+      ],
+      "moving_to_reference_shift_col_px": -1,
+      "moving_to_reference_shift_row_px": 2,
+      "zero_shift_correlation": 0.1744970334070305,
+      "diagnostic_shift_correlation": 0.8638452669262765,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        500,
+        800
+      ],
+      "moving_to_reference_shift_col_px": -1,
+      "moving_to_reference_shift_row_px": 1,
+      "zero_shift_correlation": 0.5023846248874418,
+      "diagnostic_shift_correlation": 0.8910209373125937,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        800,
+        800
+      ],
+      "moving_to_reference_shift_col_px": -1,
+      "moving_to_reference_shift_row_px": -1,
+      "zero_shift_correlation": 0.6089228140509455,
+      "diagnostic_shift_correlation": 0.8636832558146328,
+      "search_boundary_peak": false
+    }
+  ],
+  "validation_patches": [
+    {
+      "centre_col_row": [
+        75,
+        75
+      ],
+      "moving_to_reference_shift_col_px": 1,
+      "moving_to_reference_shift_row_px": 1,
+      "zero_shift_correlation": 0.8184878774186704,
+      "diagnostic_shift_correlation": 0.8987405835805247,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        350,
+        75
+      ],
+      "moving_to_reference_shift_col_px": 0,
+      "moving_to_reference_shift_row_px": 0,
+      "zero_shift_correlation": 0.9041853010220408,
+      "diagnostic_shift_correlation": 0.9041853010220408,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        650,
+        75
+      ],
+      "moving_to_reference_shift_col_px": 1,
+      "moving_to_reference_shift_row_px": 0,
+      "zero_shift_correlation": 0.8491454926256804,
+      "diagnostic_shift_correlation": 0.9099992612711205,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        925,
+        75
+      ],
+      "moving_to_reference_shift_col_px": -1,
+      "moving_to_reference_shift_row_px": 0,
+      "zero_shift_correlation": 0.8087029929698318,
+      "diagnostic_shift_correlation": 0.9158556705272155,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        75,
+        350
+      ],
+      "moving_to_reference_shift_col_px": 0,
+      "moving_to_reference_shift_row_px": 0,
+      "zero_shift_correlation": 0.8704686431477429,
+      "diagnostic_shift_correlation": 0.8704686431477429,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        350,
+        350
+      ],
+      "moving_to_reference_shift_col_px": 0,
+      "moving_to_reference_shift_row_px": 0,
+      "zero_shift_correlation": 0.904927008199525,
+      "diagnostic_shift_correlation": 0.904927008199525,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        650,
+        350
+      ],
+      "moving_to_reference_shift_col_px": -1,
+      "moving_to_reference_shift_row_px": 0,
+      "zero_shift_correlation": 0.8451859724410757,
+      "diagnostic_shift_correlation": 0.9395322022948536,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        925,
+        350
+      ],
+      "moving_to_reference_shift_col_px": -1,
+      "moving_to_reference_shift_row_px": 0,
+      "zero_shift_correlation": 0.8264612849172577,
+      "diagnostic_shift_correlation": 0.9330786712721413,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        75,
+        650
+      ],
+      "moving_to_reference_shift_col_px": -1,
+      "moving_to_reference_shift_row_px": 0,
+      "zero_shift_correlation": 0.5874284324978863,
+      "diagnostic_shift_correlation": 0.891230091039086,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        350,
+        650
+      ],
+      "moving_to_reference_shift_col_px": -1,
+      "moving_to_reference_shift_row_px": 0,
+      "zero_shift_correlation": 0.8782004876179221,
+      "diagnostic_shift_correlation": 0.8800329659597992,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        650,
+        650
+      ],
+      "moving_to_reference_shift_col_px": 0,
+      "moving_to_reference_shift_row_px": 0,
+      "zero_shift_correlation": 0.9531378757578157,
+      "diagnostic_shift_correlation": 0.9531378757578157,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        925,
+        650
+      ],
+      "moving_to_reference_shift_col_px": -1,
+      "moving_to_reference_shift_row_px": 0,
+      "zero_shift_correlation": 0.8681968160229084,
+      "diagnostic_shift_correlation": 0.9545630475149307,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        75,
+        925
+      ],
+      "moving_to_reference_shift_col_px": 1,
+      "moving_to_reference_shift_row_px": 0,
+      "zero_shift_correlation": 0.8874954578879297,
+      "diagnostic_shift_correlation": 0.9589940125980987,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        350,
+        925
+      ],
+      "moving_to_reference_shift_col_px": 0,
+      "moving_to_reference_shift_row_px": 0,
+      "zero_shift_correlation": 0.923049216210461,
+      "diagnostic_shift_correlation": 0.923049216210461,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        650,
+        925
+      ],
+      "moving_to_reference_shift_col_px": 0,
+      "moving_to_reference_shift_row_px": 0,
+      "zero_shift_correlation": 0.8909027986757362,
+      "diagnostic_shift_correlation": 0.8909027986757362,
+      "search_boundary_peak": false
+    },
+    {
+      "centre_col_row": [
+        925,
+        925
+      ],
+      "moving_to_reference_shift_col_px": 0,
+      "moving_to_reference_shift_row_px": 0,
+      "zero_shift_correlation": 0.8977943750622152,
+      "diagnostic_shift_correlation": 0.8977943750622152,
+      "search_boundary_peak": false
+    }
+  ],
+  "max_integer_residual_m": 1.4142135623730951,
+  "minimum_validation_match_correlation": 0.8704686431477429,
+  "acceptance": {
+    "max_integer_residual_m": 2,
+    "min_validation_match_correlation": 0.6
+  },
+  "registered_preview_sha256": "de3e02c0f9cd6d45456930939db8b824cfeede3354e21deb23ce4a67f090aaac",
+  "limitations": [
+    "Relative empirical image registration, not camera-model orthorectification",
+    "Integer-pixel patch residuals are not a certified positional uncertainty",
+    "Absolute geolocation inherits the existing unverified prototype terrain convention",
+    "Enhanced RGB has a synthetic blue channel; no mineral abundance is inferred"
+  ]
+}

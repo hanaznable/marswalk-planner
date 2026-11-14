@@ -1640,6 +1640,11 @@ dd {
   background: #1c2836e8;
   border-color: #3d5a7a;
 }
+.map-stage { container-type: inline-size; }
+@container (max-width: 600px) {
+  .synthetic-banner { top: 58px; max-width: calc(100% - 24px); white-space: normal; text-align: center; line-height: 1.5; }
+}
+.report-observations { overflow-wrap: anywhere; }
 .terrain-status h2 {
   font-size: 18px;
 }

@@ -7,6 +7,10 @@ import { Icon } from '../../../components/ui/Icon'
 import type { ViewMode } from '../types'
 import type { TerrainState } from '../useTerrainSource'
 import { MapCanvas } from './MapCanvas'
+import type { DisplayLayersController } from '../../mapLayers/useDisplayLayers'
+import type { SurfaceImageryController } from '../../mapLayers/useSurfaceImagery'
+import type { BasemapController } from '../useBasemapStatus'
+import type { WaypointOrigin } from '../../datasets/waypointOrigin'
 
 interface MapViewportProps {
   region: MarsRegion
@@ -25,6 +29,10 @@ interface MapViewportProps {
   targets: readonly PlacedTarget[]
   selectedTargetId: string | null
   onTargetClick: (id: string) => void
+  onContextWaypoint: (point: MapPoint, label: string, origin: WaypointOrigin) => void
+  displayLayers: DisplayLayersController
+  surfaceImagery: SurfaceImageryController
+  basemap: BasemapController
 }
 
 export function MapViewport({
@@ -44,6 +52,10 @@ export function MapViewport({
   targets,
   selectedTargetId,
   onTargetClick,
+  onContextWaypoint,
+  displayLayers,
+  surfaceImagery,
+  basemap,
 }: MapViewportProps) {
   const terrain = terrainState.status === 'ready' ? terrainState.terrain : null
   const title = terrain ? terrain.manifest.title : region.name
@@ -84,11 +96,16 @@ export function MapViewport({
             onPlace={onPlace}
             onRelocate={onRelocate}
             routes={routes}
-            basemapUrl={terrainState.status === 'ready' ? terrainState.basemapUrl : null}
+            basemapUrl={basemap.url}
+            basemapStatus={basemap.status}
+            onBasemapStatus={basemap.report}
+            basemapLabel={surfaceImagery.mode === 'rgb' && surfaceImagery.state.status === 'ready' ? 'HiRISE enhanced RGB: relative registration, partial color coverage' : undefined}
             emptyState={<TerrainStatusPanel state={terrainState} regionName={region.name} />}
             targets={targets}
             selectedTargetId={selectedTargetId}
             onTargetClick={onTargetClick}
+            onContextWaypoint={onContextWaypoint}
+            displayLayers={displayLayers}
           />
         ) : (
           <TerrainPlaceholder />

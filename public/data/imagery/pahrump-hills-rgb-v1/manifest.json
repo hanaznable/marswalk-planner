@@ -1,0 +1,31 @@
+{
+  "contractVersion": 1,
+  "id": "pahrump-hills-rgb-v1",
+  "terrainPackageId": "pahrump-hills-v1",
+  "terrainManifestSha256": "450ada2dc924b72e6188bedc476c6373f7776544d599c0c6402d8e3e6d05b5c5",
+  "title": "HiRISE enhanced RGB",
+  "synthetic": false,
+  "image": {
+    "url": "rgb.jpg",
+    "width": 1000,
+    "height": 1000,
+    "geoTransform": [
+      -1234.7661867630893,
+      1,
+      0,
+      -275902.8681376489,
+      0,
+      -1
+    ],
+    "sha256": "b00753e103653780dce295f9abeb6b2d02fb6a052496eee3fe2dba55316d07ac"
+  },
+  "source": {
+    "productId": "ESP_039280_1755_MRGB",
+    "url": "https://www.uahirise.org/ESP_039280_1755",
+    "attribution": "NASA/JPL-Caltech/UArizona",
+    "acquired": "2014-12-13"
+  },
+  "registration": "Empirical relative image registration to the existing ortho; prototype, absolute position unverified",
+  "colorCoverage": "Partial color coverage: a grayscale strip from the merged source remains along the western edge",
+  "colorMeaning": "Enhanced RGB with synthetic blue; not exact human-eye color or mineral abundance"
+}

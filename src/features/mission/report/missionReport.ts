@@ -1,5 +1,6 @@
 import {
   cellCenterToMap,
+  mapToCell,
   cellSizeMeters,
   toLocalMetres,
   type MapPoint,
@@ -21,6 +22,7 @@ import type { EvaPlan } from '../../eva/useEvaPlan'
 import { waypointRoleLabel } from '../../map/waypointPlacement'
 import { describeFailure, type RouteResult, type RouteSummary, type Waypoint } from '../../routing'
 import type { RoutePlan } from '../../routing/useRoutePlan'
+import type { WaypointOrigin } from '../../datasets/waypointOrigin'
 
 /** Every user-set scenario input that shaped the plan. */
 export interface MissionAssumptions {
@@ -37,6 +39,7 @@ export interface MissionReportInput {
   /** Registry entry for real packages; null for synthetic terrain. */
   readonly dataset: DatasetMetadata | null
   readonly waypoints: readonly Waypoint[]
+  readonly waypointOrigins?: Readonly<Record<string, WaypointOrigin>>
   readonly plan: RoutePlan | null
   readonly eva: EvaPlan | null
   readonly assumptions: MissionAssumptions
@@ -116,6 +119,8 @@ export interface MissionReport {
     readonly elevationMeters: number | null
     /** Science target on this waypoint's cell, if any. */
     readonly scienceTargetId: string | null
+    /** Explicitly selected source record; independent of labels and snapped cells. */
+    readonly provenance?: WaypointOrigin & { readonly locationRelation: 'source-cell' | 'relocated' }
   }[]
   readonly scienceTargets: {
     readonly collectionId: string
@@ -204,6 +209,8 @@ export function buildMissionReport(input: MissionReportInput): MissionReport {
     waypoints: waypoints.map((waypoint, index) => {
       const sourceCrs = cellCenterToMap(raster, waypoint.cell)
       const local = toLocalMetres(raster, sourceCrs)
+      const origin = input.waypointOrigins?.[waypoint.id]
+      const originCell = origin ? mapToCell(raster, origin.position) : null
       return {
         order: index + 1,
         id: waypoint.id,
@@ -214,6 +221,10 @@ export function buildMissionReport(input: MissionReportInput): MissionReport {
         sourceCrs,
         elevationMeters: elevationAt(terrain, waypoint.cell),
         scienceTargetId: targetOnCell(waypoint.cell),
+        ...(origin ? { provenance: {
+          ...origin, position: { ...origin.position }, sources: origin.sources.map((item) => ({ ...item })), reviewFlags: [...origin.reviewFlags],
+          locationRelation: originCell && onCell(originCell, waypoint.cell) ? 'source-cell' as const : 'relocated' as const,
+        } } : {}),
       }
     }),
     scienceTargets: scienceTargets

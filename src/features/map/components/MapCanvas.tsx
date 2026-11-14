@@ -24,7 +24,12 @@ import type { TerrainPackage } from '../../datasets/terrainPackage'
 import type { RouteAlternatives, RouteResult, Waypoint } from '../../routing'
 import { kindLabel } from '../../science/targetDisplay'
 import { elevationToRgba } from '../terrainImage'
-import { fromLatLng, toLatLng, waypointRoleLabel } from '../waypointPlacement'
+import { fromLatLng, placeWaypoint, toLatLng, waypointRoleLabel } from '../waypointPlacement'
+import type { DisplayLayersController } from '../../mapLayers/useDisplayLayers'
+import { contextLayer, ensureDisplayPanes } from '../../mapLayers/contextLayers'
+import { rasterPixels } from '../../mapLayers/rasterDisplay'
+import type { BasemapStatus } from '../useBasemapStatus'
+import type { WaypointOrigin } from '../../datasets/waypointOrigin'
 
 interface MapCanvasProps {
   regionId: string
@@ -39,12 +44,17 @@ interface MapCanvasProps {
   routes: RouteAlternatives | null
   /** Real orthoimage for the terrain; null draws elevation shading (synthetic only). */
   basemapUrl: string | null
+  basemapLabel?: string
+  basemapStatus: BasemapStatus
+  onBasemapStatus: (status: BasemapStatus) => void
   /** Shown instead of the decorative empty state when there is no terrain. */
   emptyState?: ReactNode
   /** Science targets on covered cells to draw; empty when hidden. */
   targets: readonly PlacedTarget[]
   selectedTargetId: string | null
   onTargetClick: (id: string) => void
+  onContextWaypoint: (point: MapPoint, label: string, origin: WaypointOrigin) => void
+  displayLayers: DisplayLayersController
 }
 
 /**
@@ -61,27 +71,31 @@ export function MapCanvas({
   onRelocate,
   routes,
   basemapUrl,
+  basemapLabel,
+  basemapStatus,
+  onBasemapStatus,
   emptyState,
   targets,
   selectedTargetId,
   onTargetClick,
+  onContextWaypoint,
+  displayLayers,
 }: MapCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<LeafletMap | null>(null)
   const boundsRef = useRef<LatLngBounds | null>(null)
+  const fittedTerrainRef = useRef<TerrainPackage | null>(null)
   const markersRef = useRef<LayerGroup | null>(null)
   const routesRef = useRef<LayerGroup | null>(null)
   const targetsRef = useRef<LayerGroup | null>(null)
   const [zoom, setZoom] = useState(0)
   const [zoomRange, setZoomRange] = useState({ min: -2, max: 3 })
-  // Keyed by URL so a failure never sticks to a different basemap.
-  const [failedBasemap, setFailedBasemap] = useState<string | null>(null)
-  const basemapFailed = basemapUrl !== null && failedBasemap === basemapUrl
+  const basemapFailed = basemapUrl !== null && basemapStatus === 'error'
 
   // Latest values for Leaflet event handlers bound once.
-  const latest = useRef({ addMode, onPlace, onRelocate, onTargetClick, terrain })
+  const latest = useRef({ addMode, onPlace, onRelocate, onTargetClick, onContextWaypoint, terrain, waypoints })
   useEffect(() => {
-    latest.current = { addMode, onPlace, onRelocate, onTargetClick, terrain }
+    latest.current = { addMode, onPlace, onRelocate, onTargetClick, onContextWaypoint, terrain, waypoints }
   })
 
   useEffect(() => {
@@ -97,6 +111,7 @@ export function MapCanvas({
       attributionControl: false,
     })
     mapRef.current = map
+    ensureDisplayPanes(map)
     routesRef.current = layerGroup().addTo(map)
     // Targets sit under waypoint markers, so a waypoint on a target stays draggable.
     targetsRef.current = layerGroup().addTo(map)
@@ -115,8 +130,50 @@ export function MapCanvas({
       markersRef.current = null
       routesRef.current = null
       targetsRef.current = null
+      fittedTerrainRef.current = null
     }
   }, [])
+
+  // Display-only layers use the existing source-to-local coordinate adapter.
+  // Visibility changes never re-fit the map or alter the terrain arrays.
+  const activeRaster = displayLayers.settings.raster
+  const rasterOpacity = displayLayers.settings.opacity
+  const rasterImage = useRef<ReturnType<typeof imageOverlay> | null>(null)
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !terrain || !activeRaster) return
+    const { raster } = terrain.manifest
+    const extent = rasterBounds(raster)
+    const bounds = latLngBounds(toLatLng(raster, { x: extent.minX, y: extent.minY }), toLatLng(raster, { x: extent.maxX, y: extent.maxY }))
+    const canvas = document.createElement('canvas')
+    canvas.width = raster.width
+    canvas.height = raster.height
+    canvas.getContext('2d')?.putImageData(new ImageData(rasterPixels(terrain, activeRaster), raster.width, raster.height), 0, 0)
+    const overlay = imageOverlay(canvas.toDataURL('image/png'), bounds, { pane: 'dataRaster', interactive: false, className: 'map-raster-overlay', alt: `${activeRaster} data overlay` }).addTo(map)
+    rasterImage.current = overlay
+    return () => { overlay.remove(); rasterImage.current = null }
+  }, [terrain, activeRaster])
+  useEffect(() => { rasterImage.current?.setOpacity(rasterOpacity) }, [terrain, activeRaster, rasterOpacity])
+
+  const context = displayLayers.state.status === 'ready' ? displayLayers.state.context : null
+  const { apxs, traverse, minerals } = displayLayers.settings
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !terrain || !context) return
+    const groups = ([['apxs', apxs], ['traverse', traverse], ['minerals', minerals]] as const)
+      .filter(([, visible]) => visible)
+      .map(([kind]) => contextLayer(terrain, context, kind, {
+        existingAt: (point) => {
+          const placement = placeWaypoint(terrain, point)
+          if (!placement.ok) return null
+          return latest.current.waypoints.find((waypoint) => waypoint.cell.row === placement.cell.row && waypoint.cell.col === placement.cell.col)?.label ?? null
+        },
+        add: (point, label, origin) => {
+          if (latest.current.terrain === terrain) latest.current.onContextWaypoint(point, label, origin)
+        },
+      }).addTo(map))
+    return () => { for (const group of groups) group.remove() }
+  }, [terrain, context, apxs, traverse, minerals])
 
   // Science target markers (covered cells only; splitByCoverage drops the rest).
   useEffect(() => {
@@ -192,14 +249,20 @@ export function MapCanvas({
     boundsRef.current = bounds
 
     let image
+    let active = true
+    const loaded = () => { if (active) onBasemapStatus('ready') }
+    const failed = () => { if (active) onBasemapStatus('error') }
     if (basemapUrl && basemap) {
       // Real orthoimage on its own footprint (same as the grid, finer pixels).
       image = imageOverlay(basemapUrl, toBounds(rasterBounds(basemap)), {
+        pane: 'baseSurface',
         className: 'terrain-image basemap-image',
         interactive: false,
-        alt: `HiRISE orthoimage of ${terrain.manifest.title}`,
+        alt: basemapLabel ?? `HiRISE orthoimage of ${terrain.manifest.title}`,
       })
-      image.on('error', () => setFailedBasemap(basemapUrl))
+      onBasemapStatus('loading')
+      image.on('load', loaded)
+      image.on('error', failed)
     } else {
       // Synthetic fixture only: display-only elevation shading.
       const canvas = document.createElement('canvas')
@@ -213,6 +276,7 @@ export function MapCanvas({
           0,
         )
       image = imageOverlay(canvas.toDataURL(), bounds, {
+        pane: 'baseSurface',
         className: 'terrain-image',
         interactive: false,
       })
@@ -225,20 +289,26 @@ export function MapCanvas({
       interactive: false,
     }).addTo(map)
 
-    const fitted = map.getBoundsZoom(bounds)
-    map.setMinZoom(fitted - 1)
-    map.setMaxZoom(fitted + 4)
-    map.setMaxBounds(bounds.pad(0.5))
-    map.fitBounds(bounds, { animate: false })
-    setZoomRange({ min: fitted - 1, max: fitted + 4 })
-    setZoom(map.getZoom())
+    if (fittedTerrainRef.current !== terrain) {
+      const fitted = map.getBoundsZoom(bounds)
+      map.setMinZoom(fitted - 1)
+      map.setMaxZoom(fitted + 4)
+      map.setMaxBounds(bounds.pad(0.5))
+      map.fitBounds(bounds, { animate: false })
+      setZoomRange({ min: fitted - 1, max: fitted + 4 })
+      setZoom(map.getZoom())
+      fittedTerrainRef.current = terrain
+    }
 
     return () => {
+      active = false
+      image.off('load', loaded)
+      image.off('error', failed)
       image.remove()
       outline.remove()
       boundsRef.current = null
     }
-  }, [terrain, basemapUrl])
+  }, [terrain, basemapUrl, basemapLabel, onBasemapStatus])
 
   useEffect(() => {
     if (boundsRef.current) mapRef.current?.fitBounds(boundsRef.current, { animate: false })

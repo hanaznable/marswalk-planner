@@ -79,7 +79,8 @@ public/data/science/pahrump-hills-v1/
 ```
 
 Use `terrainPackageId: "pahrump-hills-v1"` and bind provenance to the exact terrain
-manifest hash. This location is proposed, not a collection already exported.
+manifest hash. Update 2026-11-15: this collection has now been exported and
+registered on Developer B's branch using the agreed science contract v1.
 Do not edit the existing terrain manifest/provenance to add the overlay.
 The recorded terrain output hashes can remain unchanged. Store a reviewed
 overlay URL separately through coordination in the registry or optional loader.
