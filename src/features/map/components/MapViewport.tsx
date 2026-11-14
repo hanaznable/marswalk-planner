@@ -1,7 +1,7 @@
 import type { MapPoint } from '../../datasets/terrainContract'
 import type { TerrainPackage } from '../../datasets/terrainPackage'
 import type { MarsRegion } from '../../datasets/types'
-import type { Waypoint } from '../../routing'
+import type { RouteAlternatives, Waypoint } from '../../routing'
 import { TerrainPlaceholder } from '../../terrain/components/TerrainPlaceholder'
 import { Icon } from '../../../components/ui/Icon'
 import type { ViewMode } from '../types'
@@ -20,6 +20,7 @@ interface MapViewportProps {
   notice: string | null
   onPlace: (point: MapPoint) => void
   onRelocate: (id: string, point: MapPoint) => boolean
+  routes: RouteAlternatives | null
 }
 
 export function MapViewport({
@@ -35,6 +36,7 @@ export function MapViewport({
   notice,
   onPlace,
   onRelocate,
+  routes,
 }: MapViewportProps) {
   return (
     <section
@@ -64,6 +66,7 @@ export function MapViewport({
             addMode={addMode}
             onPlace={onPlace}
             onRelocate={onRelocate}
+            routes={routes}
           />
         ) : (
           <TerrainPlaceholder />

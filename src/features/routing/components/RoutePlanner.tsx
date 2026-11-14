@@ -6,6 +6,8 @@ import {
 } from '../../datasets/terrainContract'
 import { waypointRoleLabel } from '../../map/waypointPlacement'
 import type { Waypoint } from '../model/types'
+import type { RoutePlan } from '../useRoutePlan'
+import { RouteComparison } from './RouteComparison'
 
 interface RoutePlannerProps {
   /** Null until a terrain package is loaded. */
@@ -16,6 +18,11 @@ interface RoutePlannerProps {
   onRemove: (id: string) => void
   onReorder: (id: string, toIndex: number) => void
   onClear: () => void
+  plan: RoutePlan | null
+  maxSlopeDegrees: number
+  onMaxSlopeChange: (degrees: number) => void
+  returnToStart: boolean
+  onReturnToStartChange: (value: boolean) => void
 }
 
 export function RoutePlanner({
@@ -26,6 +33,11 @@ export function RoutePlanner({
   onRemove,
   onReorder,
   onClear,
+  plan,
+  maxSlopeDegrees,
+  onMaxSlopeChange,
+  returnToStart,
+  onReturnToStartChange,
 }: RoutePlannerProps) {
   return (
     <div className="route-planner">
@@ -120,27 +132,39 @@ export function RoutePlanner({
         </button>
       )}
 
-      <div className="route-summary">
-        <span className="eyebrow">ROUTE SUMMARY</span>
-        <dl>
-          <div>
-            <dt>Waypoints</dt>
-            <dd>{waypoints.length || '—'}</dd>
-          </div>
-          <div>
-            <dt>Total distance</dt>
-            <dd>—</dd>
-          </div>
-          <div>
-            <dt>Estimated duration</dt>
-            <dd>—</dd>
-          </div>
-        </dl>
-        <div className="summary-note">
-          <Icon name="info" size={13} />
-          <span>Route calculation is not connected yet.</span>
-        </div>
+      <div className="route-settings">
+        <span className="eyebrow">PLANNING ASSUMPTIONS</span>
+        <label className="setting-row">
+          <span>Max slope</span>
+          <input
+            type="range"
+            min={5}
+            max={45}
+            step={1}
+            value={maxSlopeDegrees}
+            onChange={(event) => onMaxSlopeChange(Number(event.target.value))}
+            aria-describedby="slope-hint"
+          />
+          <output>{maxSlopeDegrees}°</output>
+        </label>
+        <p id="slope-hint" className="setting-hint">
+          Scenario assumption, not a certified astronaut safety limit.
+        </p>
+        <label className="setting-row checkbox">
+          <input
+            type="checkbox"
+            checked={returnToStart}
+            onChange={(event) => onReturnToStartChange(event.target.checked)}
+          />
+          <span>Return to start</span>
+        </label>
       </div>
+
+      <RouteComparison
+        plan={plan}
+        waypoints={waypoints}
+        maxSlopeDegrees={maxSlopeDegrees}
+      />
     </div>
   )
 }
