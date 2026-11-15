@@ -1,256 +1,143 @@
-# Mars EVA Planner — Project Roadmap
-
-## 1. Project Overview
-
-We are developing a web application for the **NASA Space Apps Challenge 2026**, based on the *Interplanetary Survival Guide: Martian Map* challenge.
-
-The application will help users plan scientific exploration routes for human astronauts on Mars using real NASA mission datasets.
-
-**Study region:** Gale Crater, Mars — primarily Pahrump Hills and its surroundings.
-
-**Target area:** Approximately 1 × 1 km. Exact coordinates will be determined after validating the available terrain data.
-
-**Project name:** Temporary and subject to change.
-
-### Main Goal
-
-Create an interactive map where users can:
-
-- Explore real Martian terrain.
-- View elevation, slope, and scientific information.
-- Select starting points, destinations, and scientific stops.
-- Calculate and compare shortest-distance and terrain-aware routes.
-- Review route distance, elevation changes, and estimated EVA walking time.
-- Optionally explore the same terrain in 3D.
-
-The application is a prototype for exploration planning, not an operationally validated astronaut navigation system.
-
-## 2. Technology Stack
-
-- **Frontend:** React, TypeScript, Vite
-- **2D Map:** Leaflet
-- **Routing:** A* pathfinding
-- **Data Processing:** Python, Rasterio, NumPy, GDAL
-- **3D Visualization (optional):** Three.js / React Three Fiber
-- **Collaboration:** Git and GitHub
-- **Code Quality:** ESLint
-
-No backend, database, or authentication is planned for the initial version.
-
-These are our current technology choices and may be revised with team agreement.
-
-## 3. Team Responsibilities
-
-### Developer B — NASA Data & Terrain
-
-Responsible for:
-
-- Finding and selecting real NASA datasets.
-- Processing Gale Crater orbital imagery and elevation models (DEM).
-- Checking geographic coverage, resolution, and data validity.
-- Preparing aligned terrain images and elevation grids.
-- Calculating terrain slope and optional hillshade.
-- Preparing verified scientific points of interest.
-- Developing optional 3D terrain visualization.
-
-Main working directories:
-
-- `scripts/terrain/`
-- `public/data/gale/`
-- `docs/data-sources.md`
-- `src/features/terrain3d/` (later)
-
-### Developer Y — Frontend & Route Planning
-
-Responsible for:
-
-- React application structure and user interface.
-- Interactive Leaflet map.
-- Map layers, controls, and markers.
-- Start/destination/waypoint selection.
-- A* routing and route comparison.
-- EVA mission planning and estimated walking time.
-- Connecting Developer B's processed datasets to the frontend.
-- Application integration and usability.
-
-Main working directories:
-
-- `src/app/`
-- `src/features/map/`
-- `src/features/routing/`
-- `src/features/eva/`
-- `src/features/science-ui/`
-
-Shared types, configuration files, and dependencies should be changed with coordination.
-
-## 4. NASA Data Sources
-
-### Initial Dataset Candidates
-
-**HiRISE Digital Terrain Model:**
-`DTEEC_040770_1755_039280_1755_A01`
-
-https://www.uahirise.org/dtm/dtm.php?ID=ESP_040770_1755
-
-**Orbital imagery:** Corresponding HiRISE orthorectified image.
-
-**Additional sources:**
-- https://trek.nasa.gov/mars/
-- https://ode.rsl.wustl.edu/mars/
-- https://pds.nasa.gov/
-- https://jmars.asu.edu/
-- https://science.nasa.gov/mission/msl-curiosity/location-map/
-
-The selected products and study-area boundaries are provisional until coverage and data quality are verified.
-
-Do not invent scientific measurements, NASA coordinates, or observations.
-
-## 5. Development Phases
-
-### Phase 1 — Project Setup and Application Shell
-
-**Developer B:**
-- Research and validate the Pahrump Hills DEM and orbital imagery.
-- Identify a suitable study area.
-- Inspect dataset metadata, resolution, and geographic coverage.
-
-**Developer Y:**
-- Build the React application layout.
-- Create the map viewport, layer sidebar, and route/EVA panel.
-- Set up a modular frontend architecture.
-
-**Shared milestone:** Agree on the terrain data format and coordinate conventions.
-
-### Phase 2 — 2D Map and Terrain Data
-
-**Developer B:**
-- Download and crop the selected DEM and imagery.
-- Align the datasets to a shared raster grid.
-- Export web-compatible elevation and image files.
-- Document source metadata and coordinate transformations.
-
-**Developer Y:**
-- Implement Leaflet map interaction.
-- Add zoom, pan, layer controls, and markers.
-- Prepare a reusable data-loading interface.
-
-**Milestone:** Display real Gale Crater terrain in the web application.
-
-### Phase 3 — Terrain Analysis and Routing
-
-**Developer B:**
-- Calculate slope and optional hillshade.
-- Validate elevation values and invalid terrain cells.
-- Prepare terrain layers for routing and visualization.
-
-**Developer Y:**
-- Implement A* pathfinding.
-- Add shortest-distance and slope-aware route options.
-- Draw routes on the map.
-- Show distance and elevation profiles.
-
-**Milestone:** Calculate routes using real Gale Crater elevation data.
-
-### Phase 4 — Scientific Exploration and EVA Planning
-
-**Developer B:**
-- Find and prepare verified Curiosity scientific observation locations.
-- Add scientific descriptions and source references.
-
-**Developer Y:**
-- Display scientific points of interest.
-- Allow users to add waypoints.
-- Implement round-trip planning.
-- Calculate estimated walking time and mission summaries.
-
-**Milestone:** Plan an EVA route visiting scientific targets.
-
-### Phase 5 — Optional 3D Visualization
-
-**Developer B:**
-- Build a 3D terrain viewer from the processed DEM.
-- Add camera controls and, if feasible, orbital image textures.
-
-**Developer Y:**
-- Help integrate the viewer into the application.
-- Provide route coordinates for 3D visualization.
-
-**Milestone:** Display the same terrain and route in 2D and 3D.
-
-This phase is optional and must not delay the core application.
-
-### Phase 6 — Testing and Deployment
-
-**Both developers:**
-- Integrate completed features.
-- Check coordinate and terrain alignment.
-- Test routing and interface behavior.
-- Fix errors and performance issues.
-- Prepare the deployed application and hackathon demonstration.
-
-## 6. Collaboration Rules
-
-- Use a shared GitHub repository.
-- Develop features in separate branches.
-- Merge completed features through Pull Requests.
-- Avoid editing each other's owned directories without coordination.
-- Keep changes small and independently testable.
-- Read `AGENTS.md` and this roadmap before starting a new task.
-- Update the roadmap when team decisions or priorities change.
-
-**Important:** Neither developer should wait unnecessarily for the other.
-
-Developer Y can build the application and test routing with clearly labeled synthetic development data while Developer B prepares the real NASA datasets.
-
-## 7. Current Status
-
-Updated 2026-11-15 (Developer B branch; 2D baseline committed and clean-checkout
-verified, PR preparation complete; merge remains pending).
-
-**Implemented:**
-- Gale Crater as the study region.
-- Pahrump Hills as the first real terrain package (`pahrump-hills-v1`).
-- Exact 1 × 1 km projected coverage, a 200 × 200 routing grid at 5 m,
-  elevation, conservative native-maximum slope and orbital basemap.
-- Terrain contract v1, real-data map integration, shortest and slope-aware
-  routes, waypoints, round trips, EVA estimates and report export.
-- Science contract v1 and Developer Y's target list/map/report integration.
-- User-selected main-map display layers: elevation, slope, drill proxies,
-  APXS research observations, historical traverse and a published mineral finding.
-  Context display does not change routing or approve candidate mission targets.
-- Optional HiRISE enhanced RGB basemap, empirically registered to the existing
-  ortho with separate validation/provenance. Partial color coverage and absolute
-  geolocation limitations remain explicit; grayscale is the default.
-- Developer B's three sourced drill-associated rover-position proxies:
-  Confidence Hills, Mojave 2 and Telegraph Peak, with separate provenance.
-- React, TypeScript, Vite, Leaflet.
-- Python-based NASA terrain processing.
-- A* routing.
-- Developer responsibilities.
-
-**Not yet finalized:**
-- Absolute geolocation and image/DEM registration accuracy (the documented
-  prototype working convention is not an accuracy certification).
-- Exact drill-hole positions and source-stated positional uncertainties.
-- Additional observation-specific evidence and instrument analysis results.
-- A separate contract for the historical Curiosity traverse, if needed.
-- Final project name.
-- Final shared 3D scene/selection contract and UI redesign specification.
-
-## 8. Immediate Next Steps
-
-**Developer B:** Merge the verified 2D baseline through its PR, then create a
-fresh branch from updated main for the independent 3D terrain viewer. Agree on
-scene axes, metric scale, vertical display offset, imagery UV/grid mapping and
-NoData behavior before projecting existing routes/targets into 3D.
-
-**Developer Y:** Frontend integration review is complete per the user. After the
-baseline merge, start the UI redesign from the same updated main, preserving
-source caveats, selection/waypoint flows, report exports and loading/error states.
-
-**Both:** Use the completed pre-merge verification in
-`docs/terrain/premerge-verification-2026-11-15.md`. Merge the baseline before the
-larger 3D/UI changes; agree on a small shared view/selection contract and retain
-one routing implementation. Coordinate additional scientific data/coverage work.
-
-**Core priority:** Build a working 2D Gale Crater map with real terrain-aware route planning before expanding to optional features.
+# POLARIS Module — Project Roadmap
+
+Updated 2026-11-15 against the merged application baseline (`6a290bb`).
+This document describes current status and agreed priorities; older dated review
+reports describe their own checkouts, not the latest application.
+
+## 1. Project overview
+
+POLARIS Module is a Mars scientific exploration route-planning prototype for our
+NASA Space Apps Challenge 2026 project. It uses real mission data and user-entered
+planning assumptions. It is not an operationally validated navigation or astronaut
+safety system.
+
+**Current region:** Pahrump Hills and surroundings in Gale Crater.
+**Coverage:** exactly 1000 × 1000 projected metres, with a 200 × 200 grid at 5 m.
+**Terrain package:** `pahrump-hills-v1`.
+Jezero has no package; the separately labelled synthetic region is for development.
+
+The current flow is: inspect terrain/science layers → select start, stops and
+destination → compare distance and slope-aware routes → review duration/profile
+and return leg → save a named mission or export a report.
+
+The next product increment adds scientific objectives, equipment selections and
+source-backed suggested activities to that flow. Historical evidence and our
+suggested follow-up activities must remain distinguishable.
+
+## 2. Current technology
+
+- React + TypeScript + Vite; Leaflet for 2D.
+- Pure TypeScript A* routing, independent of React and renderers.
+- Three.js for a lazy-loaded, read-only 3D terrain view; React Three Fiber is not used.
+- Python terrain preparation using NumPy and Pillow; QGIS/GDAL for source inspection.
+  Rasterio is not a current pipeline dependency.
+- Static, versioned data packages and browser-local mission storage.
+- Vitest and ESLint; GitHub branches and pull requests.
+- No backend, server database, authentication, or live mission telemetry.
+
+Run the app with `npm run dev`; Windows PowerShell can use `npm.cmd run dev`.
+Committed processed assets are sufficient: QGIS, Python and raw downloads are not
+required to view the demo. See [README.md](README.md) for setup and checks.
+
+## 3. Team responsibilities
+
+**Developer B (Batuhan):** NASA sources, DEM preprocessing, terrain analysis,
+scientific evidence, candidate activities and provenance. Main areas:
+`scripts/terrain/`, `public/data/`, `docs/data-sources.md` and terrain/science docs.
+
+**Developer Y (Yusuf):** frontend, Leaflet integration, route/EVA planning,
+mission library and UI. Yusuf also implemented the 3D demo and now owns its
+frontend development; Developer B reviews data and coordinate conventions.
+Main areas: `src/features/map/`, `routing/`, `eva/`, `mission/`, `missions/`,
+`science/`, `terrain3d/` and application layout.
+
+Shared contracts in `src/features/datasets/`, display integration and scientific
+activity interfaces require coordination. Use separate branches and focused PRs.
+Read applicable `AGENTS.md` instructions if present; none is currently tracked.
+
+## 4. Implemented phases
+
+| Phase | Status | Delivered behavior |
+| --- | --- | --- |
+| 1. Setup and shell | Implemented | Modular React application and desktop-first responsive workspace |
+| 2. Real 2D terrain | Implemented prototype | HiRISE basemap, elevation, data loading, pan/zoom, source attribution and explicit failure/empty states |
+| 3. Terrain analysis and routing | Implemented prototype | Pipeline slope, A*, distance/slope-aware alternatives, ordered editable waypoints, route statistics and elevation profiles |
+| 4. Historical science and basic EVA | Implemented baseline | Drill proxies, APXS context, traverse, Buckskin finding, science-to-waypoint selection, round trips and scenario-based durations |
+| 5. Optional 3D | Implemented | Same terrain, imagery, routes, waypoints and context; orbit/reset controls, 1× default scale, labelled exaggeration and 2D fallback |
+| 6. Testing and delivery | In progress | Local automated/browser checks exist; submission preparation and deployed-demo verification remain |
+
+Additional completed goals: grayscale/enhanced-RGB selection, POLARIS Module
+branding and blue map-focused UI, named browser-local missions with JSON
+import/export, and JSON/printable reports retaining selected observation provenance.
+Waypoints are edited in 2D. Saved missions store inputs; routes are recalculated
+on reopening. This is not a locked/final approval workflow or a cloud library.
+
+The terrain baseline was merged in PR #15, 3D in #16, mission library in #17,
+and UI redesign in #19. Historical pre-merge reports must not be treated as
+outstanding merge instructions. The UI-review baseline passed 224 tests, lint,
+build and documented browser regressions; those results do not certify scientific
+accuracy or represent hosted CI.
+
+## 5. Data and model boundaries
+
+See [the current source guide](docs/data-sources.md) for products, runtime locations,
+processing, and unresolved validation. The original full rasters remain local.
+
+- Elevation is an area-weighted native DEM mean per 5 m cell. Slope is the maximum
+  native Horn slope overlapping each cell, not a derivative of the coarse DEM.
+- Absolute geolocation and image/DEM accuracy remain unverified under the
+  documented prototype working-origin convention.
+- Three drill markers and APXS observation positions are rover-position proxies.
+  Exact target/drill-hole coordinates and source-stated uncertainty are unavailable.
+- APXS has 104 records at 30 coordinate pairs; these are not 104 separate sites.
+  Runtime context does not yet provide chemical-abundance analysis tools.
+- The traverse is historical geometry clipped spatially, without per-feature sols;
+  it is neither a time-filtered campaign route nor a suggested EVA route.
+- The published Buckskin mineral finding is a sample-level observation, not a
+  continuous mineral map. APXS chemistry does not identify minerals directly.
+- Enhanced RGB is empirically registered, partly grayscale and includes synthetic
+  blue. It is not exact human-eye color or mineral abundance.
+- Routing uses slope/no-data rules, not a real hazard mask. Its distance profile
+  has no slope cutoff. Distances are projected grid-path lengths, not 3D walking
+  surface lengths. Slope penalties are planning heuristics, not energy costs.
+- EVA time uses user-entered speed and stop duration. There is no physiology,
+  fatigue, life-support or resource-consumption model.
+
+## 6. Next increments
+
+1. **Documentation and wording — completed on `feature/science-activities`:**
+   current guides and status claims reconciled, historical reviews labelled,
+   source guide updated and contradictory layer wording corrected. The broader
+   visitor-facing content pass remains item 4.
+2. **Science activity contract and content:** review Developer Y's draft on
+   `yusuf/activity-contract-proposal`; agree objectives, equipment, position/quality
+   rules and review criteria. Developer B prepares 3–5 sourced activities with
+   provenance. No runtime activity collection is currently delivered.
+3. **Activity integration:** Developer Y adds parsing/coverage checks, objective
+   and equipment selection, activity cards, add-to-route, distinct evidence/activity
+   report sections and mission-file support. Coordinate on shared contracts first.
+4. **Visitor-facing content and cleanup:** finish copy review, remove confirmed
+   obsolete code, preserve preprocessing tools and historical evidence.
+5. **Submission:** complete the dataset/method catalogue, demo narrative, deployment
+   checks and recorded limitations. Source documentation grows with each dataset.
+
+Activities should use explainable rules, reviewed evidence and explicit equipment
+assumptions. Do not invent findings, durations, safety guarantees or science scores.
+
+## 7. Later work and optional expansion
+
+- Mission-duration limits, oxygen/energy budgets, reserves and warnings need
+  documented models or explicit scenario inputs before implementation.
+- CRISM mineral indicators, THEMIS thermal context, geological units and surface
+  hazards need independently reviewed data; they remain unavailable. Follow
+  [pending-layer steps](docs/terrain/pending-layer-next-steps.md).
+- Science/route trade-offs, activity-specific timing and previous-route comparison
+  remain future work. Waypoint/settings changes already trigger recalculation.
+- Wider Gale coverage and additional regions come after the core science-planning
+  flow. Package-driven rendering exists, but large-area tiling, cross-package
+  routing and global coverage are not implemented.
+- Rover planning, live environmental updates and advanced multi-objective route
+  optimization remain optional, separately scoped features.
+
+Preserve the current 2D planner while extending independent modules. Do not
+implement every later feature at once or claim unavailable data is integrated.

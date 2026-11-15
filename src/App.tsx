@@ -216,8 +216,6 @@ function App() {
       <AppHeader regionId={regionId} onRegionChange={setRegionId} />
       <main className="workspace" aria-label="Mars exploration workspace">
         <LayersPanel
-          showGrid={showGrid}
-          onGridChange={setShowGrid}
           terrainState={terrainState}
           targetsState={targets}
           showTargets={showTargets}
@@ -238,6 +236,7 @@ function App() {
         <MapViewport
           region={region}
           viewMode={viewMode}
+          onGridChange={setShowGrid}
           onViewModeChange={setViewMode}
           showGrid={showGrid}
           expanded={expanded}

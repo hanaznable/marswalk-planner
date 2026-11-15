@@ -137,8 +137,8 @@ export function MissionLibrary(props: MissionLibraryProps) {
                   {isActive && <span className="mission-open-tag">OPEN</span>}
                 </div>
                 <div className="mission-item-meta">
-                  {record.terrain.title} · {record.waypoints.length} waypoint
-                  {record.waypoints.length === 1 ? '' : 's'} · saved {savedLabel(record.savedAt)}
+                  {record.terrain.title} - {record.waypoints.length} waypoint
+                  {record.waypoints.length === 1 ? '' : 's'} - saved {savedLabel(record.savedAt)}
                 </div>
                 <div className="mission-item-actions">
                   <button onClick={() => open(record)} disabled={props.opening}>

@@ -1,5 +1,9 @@
 # Science collection delivery validation
 
+**Historical delivery record:** this collection is now integrated. The traverse
+was subsequently delivered as a separate context layer. Statements and test
+counts below describe the original delivery stage, not the latest application.
+
 Validated 2026-11-15 on Developer B's branch after merging `origin/main`
 (`3fbbb99`). This delivery implements the agreed science target contract without
 changing frontend components or the schema. The dataset registry's existing

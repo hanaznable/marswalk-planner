@@ -1,7 +1,7 @@
 # Pahrump Hills — real terrain package, contract v1
 
-This is the current Developer B delivery for Developer Y integration. It uses
-the existing `TerrainManifest` contract without shared-code/schema changes.
+This is the real terrain package integrated into the default 2D/3D planner.
+It uses the existing `TerrainManifest` contract.
 It is a prototype with unverified absolute geolocation and image/DEM accuracy.
 
 | File | Content |
@@ -49,28 +49,26 @@ python -m unittest discover -s scripts/terrain -p "test_*.py"
 npm test
 ```
 
-## Frontend handoff
+## Runtime integration
 
 With Vite running at its default base URL, the manifest is served at:
 `/data/gale/pahrump-hills-v1/manifest.json`.
 
-Developer Y should:
+`loadTerrainPackage.ts` validates the manifest, resolves relative URLs, decodes
+the binary layers and creates a `TerrainPackage`. `useTerrainSource` selects it
+from the region registry with explicit loading/error/retry states. Synthetic
+terrain is available only through a separate labelled development selection.
 
-1. Fetch and validate the JSON using existing `parseTerrainManifest`.
-2. Resolve each asset URL relative to the manifest URL; fetch the binary layers
-   and decode with `decodeRaster(buffer, manifest.raster)`.
-3. Build `createTerrainPackage(manifest, { elevation, slope })` and replace the
-   synthetic fixture through a loader with explicit loading/error handling.
-4. Display `basemap.jpg` using its actual extent/local-metre mapping. Current
-   `MapCanvas` draws elevation grayscale and does not yet render this basemap.
-5. Pass the package into the existing waypoint/routing hooks. Expose real-data
-   attribution and prototype accuracy/terrain-model caveats in the interface.
+`MapCanvas` displays the actual basemap at its manifest footprint and uses the
+package in shared waypoint/routing hooks. The lazy-loaded 3D renderer consumes
+the same package and route results. Source and accuracy limitations remain
+visible. Additional science/context and RGB assets live in separate packages;
+see [the source guide](../../../../docs/data-sources.md).
 
 Do not re-derive slope in the browser or assume the basemap has the same pixel
 dimensions as the routing grid. Its footprint is the same; its resolution differs.
 Do not interpret Mars projected coordinates as Earth EPSG:4326.
 
-The package was tested against the unchanged TypeScript parser, decoder,
-coordinate helpers, routing adapter and round-trip planner. This does not verify
-browser integration: `App.tsx` still selects the synthetic fixture. No frontend
-components were modified by the data export task.
+Package/coordinate checks and browser integration are recorded separately in
+[the baseline verification](../../../../docs/terrain/premerge-verification-2026-11-15.md).
+Those checks do not certify absolute positioning or operational traversal safety.

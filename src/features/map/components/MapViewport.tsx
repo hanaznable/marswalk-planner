@@ -2,6 +2,7 @@ import type { PlacedTarget } from '../../datasets/scienceTargets'
 import type { MapPoint } from '../../datasets/terrainContract'
 import type { MarsRegion } from '../../datasets/types'
 import type { RouteAlternatives, Waypoint } from '../../routing'
+import { gridSpacing } from '../mapGrid'
 import { useState } from 'react'
 import { Terrain3DPanel } from '../../terrain3d/Terrain3DPanel'
 import { Icon } from '../../../components/ui/Icon'
@@ -18,6 +19,7 @@ interface MapViewportProps {
   viewMode: ViewMode
   onViewModeChange: (mode: ViewMode) => void
   showGrid: boolean
+  onGridChange: (value: boolean) => void
   expanded: boolean
   onExpand: () => void
   terrainState: TerrainState
@@ -41,6 +43,7 @@ export function MapViewport({
   viewMode,
   onViewModeChange,
   showGrid,
+  onGridChange,
   expanded,
   onExpand,
   terrainState,
@@ -78,8 +81,8 @@ export function MapViewport({
   const caveat =
     terrainState.status === 'ready'
       ? terrainState.terrain.manifest.synthetic
-        ? { tone: 'warning', text: 'Synthetic terrain · not NASA data' }
-        : { tone: 'note', text: 'Prototype data · position not verified' }
+        ? { tone: 'warning', text: 'Synthetic terrain - not NASA data' }
+        : { tone: 'note', text: 'Prototype data - position not verified' }
       : terrainState.status === 'loading'
         ? { tone: 'note', text: 'Loading terrain…' }
         : terrainState.status === 'error'
@@ -102,6 +105,12 @@ export function MapViewport({
           </span>
         </div>
         <div className="viewport-actions">
+          {viewMode === '2d' && showGrid && terrain && <span className="grid-spacing" title="Coordinates are local metres east and north from the terrain's south-west corner.">
+            Grid: {gridSpacing(terrain.manifest.raster)} m / Routing: {terrain.manifest.raster.geoTransform[1]} m
+          </span>}
+          {viewMode === '2d' && <button className="icon-button" aria-label="Viewport grid" aria-pressed={showGrid} disabled={!terrain} onClick={() => onGridChange(!showGrid)} title="Grid">
+            <Icon name="grid" size={16} />
+          </button>}
           <div className="view-switcher segmented" role="group" aria-label="Viewport mode">
             <button
               aria-pressed={viewMode === '2d'}

@@ -1,8 +1,8 @@
 # Display context and selected-waypoint provenance
 
-The user approved frontend integration and requested pre-merge provenance work.
-The existing terrain contract, science-target contract and routing algorithms
-are unchanged. The additive interfaces live in `features/mapLayers/` and
+These interfaces are integrated into the planner, reports and browser-local
+mission library. They extend display/selection metadata without changing the
+terrain contract, science-target contract or routing algorithms. They live in `features/mapLayers/` and
 `features/datasets/waypointOrigin.ts`.
 
 Display context is registered per terrain package, with an exact terrain
@@ -16,6 +16,8 @@ An explicit popup action stores `WaypointOrigin` in a waypoint-ID sidecar in
 record. Routing still consumes only ordered waypoints/cells and terrain data.
 Removing/clearing waypoints removes the associated metadata; reordering preserves
 it. Region scoping follows the existing waypoint state.
+Saved missions retain these explicit origins and restore them when opened on a
+compatible terrain grid; this is independent of recalculating the route.
 
 Mission-report v1 exports an optional `waypoints[].provenance` object for these
 explicit selections. It contains kind, stable source record identity, name,

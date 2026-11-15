@@ -132,7 +132,7 @@ export default function Terrain3DView(props: Terrain3DViewProps) {
         </p>
         <p>
           {props.imageLabel}
-          {verticalScale !== 1 && ` · heights exaggerated ${verticalScale}× for display only`}
+          {verticalScale !== 1 && ` - heights exaggerated ${verticalScale}× for display only`}
         </p>
         {imageFailed !== null && imageFailed === imageUrl && (
           <p className="terrain3d-warning" role="alert">
@@ -141,9 +141,9 @@ export default function Terrain3DView(props: Terrain3DViewProps) {
         )}
         <p className="terrain3d-readout" aria-live="off">
           {readout
-            ? `E ${number(readout.east, 0)} m · N ${number(readout.north, 0)} m · ${
+            ? `E ${number(readout.east, 0)} m - N ${number(readout.north, 0)} m - ${
                 readout.elevation === null ? 'no elevation data' : `${number(readout.elevation, 1)} m`
-              } · slope ${readout.slope === null ? '—' : `${number(readout.slope, 1)}°`}`
+              } - slope ${readout.slope === null ? '—' : `${number(readout.slope, 1)}°`}`
             : 'Point at the terrain to read elevation and slope.'}
         </p>
       </div>

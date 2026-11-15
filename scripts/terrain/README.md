@@ -32,8 +32,8 @@ Elevation is an area-weighted native-pixel mean; slope is maximum native Horn
 slope over each routing cell, not slope of the coarse averaged DEM. Unknown
 contributors become NaN; a real source halo prevents invented edge gradients.
 The image is resampled to precisely match the output extent. Read the package
-README and provenance for limitations and Developer Y integration instructions.
-No shared schema or frontend files were changed.
+README and provenance for limitations and current runtime integration. The
+exporter does not modify shared schemas or frontend components.
 
 ## Region-independent preparation step
 
@@ -77,9 +77,14 @@ is slightly larger than 1000 m on each side. No resampling to an artificial
 1 m resolution is performed. All positions refer to upper-left pixel corners;
 centres are offset by half a cell. Rows increase southwards, columns eastwards.
 
-The plan still has `frontend_ready: false` because the frontend contract requires
-coordination with Developer Y. A separate, explicitly provisional image preview
-can now be exported using the documented origin decision:
+The saved `docs/terrain/pahrump-hills-package-plan.json` is an earlier review
+artifact. Its `frontend_ready: false` and proposed source-grid origin describe
+that planning stage, not the integrated runtime package. The current v1 manifest
+and provenance are authoritative for the exported grid. Do not use the old plan
+as an application-readiness flag.
+
+The separate, earlier image-only preview can still be reproduced using the
+documented origin decision:
 
 ```text
 python scripts/terrain/export_map_preview.py --config scripts/terrain/regions/pahrump-hills.json --output-dir public/data/gale/pahrump-hills
@@ -110,4 +115,17 @@ runtime TypeScript API. Coordinate integration before changing shared types.
   approve alignment or change the region configuration. Requires QGIS GDAL
   bindings and must be runtime-checked there; only syntax is checked locally.
 
-See `docs/terrain/README.md` for source downloads and the candidate study area.
+## Science and imagery preparation
+
+- `record_science_provenance.py` and `export_science_targets.py`: reviewed
+  drill-site/rover-pose associations and the science target collection.
+- `inventory_apxs_observations.py`: source-table validation and covered records.
+- `export_layer_lab.py`: APXS, clipped traverse and published mineral context,
+  used by the main planner as well as Layer Lab.
+- `inspect_surface_color.py` and `register_surface_color.py`: enhanced-RGB
+  source inspection and empirical relative registration with held-out checks.
+
+See [the source guide](../../docs/data-sources.md) for runtime packages and
+[terrain research](../../docs/terrain/README.md) for source downloads and the AOI.
+These tools do not create mission recommendations, thermal/mineral rasters or
+validated hazard maps.

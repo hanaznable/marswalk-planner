@@ -1,7 +1,7 @@
-# Marswalk Planner
+# POLARIS Module
 
 A modular Mars exploration prototype for a NASA Space Apps Challenge
-2026 project. The project name is provisional. Built with React, TypeScript,
+2026 project. Formerly named Marswalk Planner. Built with React, TypeScript,
 Vite, and Leaflet, with pure TypeScript route planning and an optional,
 lazy-loaded Three.js terrain view. There is no backend, database, or
 authentication.
@@ -16,8 +16,9 @@ terrain package (HiRISE DTM); a labeled synthetic terrain remains as a developme
 option. Other planned capabilities should not be inferred to be implemented.
 
 See [Project scope and phased roadmap (Turkish)](SCOPE.md) for the MVP, later
-phases, data requirements, acceptance criteria, and open decisions. Rover planning,
-live replanning, and 3D rendering are outside the initial MVP.
+phases, data requirements, acceptance criteria, and open decisions, and
+[ROADMAP.md](ROADMAP.md) for current status and team priorities. The optional 3D
+view is implemented; rover planning and live environmental updates are not.
 
 ## Run locally
 
@@ -71,13 +72,13 @@ layer-lab.html                    Independent local layer comparison page
 
 ## Current behavior
 
-- Gale Crater · Pahrump Hills (default) loads the real terrain package with
+- Gale Crater - Pahrump Hills (default) loads the real terrain package with
   explicit loading and error states (with retry); it never falls back to
   synthetic terrain. Jezero Crater has no package and shows an explicit empty
   state. A labeled synthetic development terrain can be selected explicitly.
 - Pan and zoom the HiRISE basemap with keyboard or pointer controls; reset the
   view and expand or restore the viewport.
-- Toggle the visual viewport grid, inspect the data sources (source,
+- Toggle the zoom-linked metric grid above the map, inspect the data sources (source,
   attribution, grid and prototype limitations), and switch between the route
   planner, saved missions and plan context.
 - Switch to a read-only 3D terrain view (Three.js, loaded on demand) showing the
@@ -124,12 +125,14 @@ basemap tiles or interpret projected Mars metres as Earth coordinates.
 
 Keep NASA asset provenance and reference-system metadata in `features/datasets`.
 Perform Python preprocessing outside the browser; serve validated outputs from
-`public/data`. Future route algorithms should consume validated data without
+`public/data`. Route algorithms consume validated data without
 depending on React or Leaflet. Three.js rendering lives in
 `features/terrain3d` and loads on demand. Neither the datasets
 boundary nor route algorithms should import a renderer.
 
 The UI uses optional Google Fonts with local system fallbacks. Dataset requests
 load local static assets. Raw downloads and processing outputs are described in
-[terrain documentation](docs/terrain/README.md). The main app never needs an
+[terrain documentation](docs/terrain/README.md). See the
+[current source guide](docs/data-sources.md) for all integrated source groups and
+remaining data work. The main app never needs an
 external NASA server to display the committed demo assets.

@@ -6,7 +6,7 @@ import type { TerrainState } from '../useTerrainSource'
 import { MapLayerControls } from '../../mapLayers/MapLayerControls'
 import type { DisplayLayersController } from '../../mapLayers/useDisplayLayers'
 import type { SurfaceImageryController } from '../../mapLayers/useSurfaceImagery'
-import { SurfaceImageryControls } from '../../mapLayers/SurfaceImageryControls'
+import { SurfaceImageryControls, SurfaceImageryDetails } from '../../mapLayers/SurfaceImageryControls'
 import type { BasemapController } from '../useBasemapStatus'
 
 interface LayerRow {
@@ -35,11 +35,11 @@ function targetsRow(
       const { inside, outside, collection } = state
       return {
         ...base,
-        description: `${inside.length} on this terrain${outside.length ? ` · ${outside.length} outside` : ''}`,
+        description: onlyDrillProxies ? 'Drill-associated rover positions' : `${inside.length} on this terrain${outside.length ? ` - ${outside.length} outside` : ''}`,
         loaded: collection.synthetic
           ? showTargets
-            ? 'SYNTHETIC · SHOWN ON MAP'
-            : 'SYNTHETIC · HIDDEN'
+            ? 'SYNTHETIC - SHOWN ON MAP'
+            : 'SYNTHETIC - HIDDEN'
           : showTargets
             ? 'SHOWN ON MAP'
             : 'HIDDEN',
@@ -65,7 +65,7 @@ function layerRows(state: TerrainState, targets: LayerRow, colorActive: boolean,
   return [
     {
       title: 'Surface imagery',
-      description: real ? colorActive ? 'Enhanced RGB · registered prototype' : 'HiRISE orthoimage' : 'Orbital image basemap',
+      description: real ? colorActive ? 'Enhanced RGB - registered prototype' : 'HiRISE orthoimage' : 'Orbital image basemap',
       icon: 'image',
       loaded: real && basemap.status === 'ready' ? 'SHOWN ON MAP' : null,
       pending: basemap.status === 'error' ? 'IMAGE LOAD FAILED' : basemap.status === 'loading' ? 'LOADING IMAGE' : undefined,
@@ -75,8 +75,6 @@ function layerRows(state: TerrainState, targets: LayerRow, colorActive: boolean,
 }
 
 export function LayersPanel({
-  showGrid,
-  onGridChange,
   terrainState,
   targetsState,
   showTargets,
@@ -86,8 +84,6 @@ export function LayersPanel({
   surfaceImagery,
   basemap,
 }: {
-  showGrid: boolean
-  onGridChange: (value: boolean) => void
   terrainState: TerrainState
   targetsState: ScienceTargetsState
   showTargets: boolean
@@ -143,7 +139,7 @@ export function LayersPanel({
           </div>
           <div className="layer-list">
             {rows.map((layer) => (
-              <div className="layer-row" key={layer.title}>
+              <div className={`layer-row${layer.title !== 'Surface imagery' ? ' target-layer-row' : ''}`} key={layer.title}>
                 <span className="layer-icon">
                   <Icon name={layer.icon} />
                 </span>
@@ -151,7 +147,7 @@ export function LayersPanel({
                   <h3>{layer.title}</h3>
                   <p>{layer.description}</p>
                   {layer.loaded ? (
-                    <span className="layer-loaded">{layer.loaded}</span>
+                    <span className={`layer-loaded${layer.toggle && !layer.toggle.on ? ' layer-hidden' : ''}`}>{layer.loaded}</span>
                   ) : (
                     <span className="unavailable">{layer.pending ?? 'AWAITING DATA'}</span>
                   )}
@@ -181,45 +177,23 @@ export function LayersPanel({
                     </button>
                   )
                 )}
+                {layer.title !== 'Surface imagery' && showTargets && targetsState.status !== 'none' && (
+                  <details className="target-filter">
+                    <summary>{layer.title === 'Drill proxies' ? 'Drill sites' : 'Browse targets'}</summary>
+                    {targetBrowser}
+                  </details>
+                )}
               </div>
             ))}
             <MapLayerControls terrain={terrainState.status === 'ready' ? terrainState.terrain : null} controller={displayLayers} />
           </div>
-          <details className="pending-layer-guide">
-            <summary>Layers awaiting validated data</summary>
-            <ul>
-              <li><strong>CRISM:</strong> select an overlapping mineral-indicator scene, inspect quality masks and verify its footprint.</li>
-              <li><strong>THEMIS:</strong> select a thermal product and retain its acquisition time, native scale and model assumptions.</li>
-              <li><strong>Geological units:</strong> find a georeferenced published map with suitable scale and documented contacts.</li>
-              <li><strong>Hazards:</strong> map visible obstacles with evidence; slope alone does not establish loose ground or safe traversal.</li>
-            </ul>
-          </details>
-          {targetBrowser}
-          <div className="section-heading overlay-heading">
-            <h2>Display</h2>
-          </div>
-          <div className="grid-row">
-            <Icon name="grid" />
-            <div>
-              <h3>Viewport grid</h3>
-              <p>Visual guide · no coordinates</p>
-            </div>
-            <button
-              className={`switch${showGrid ? ' on' : ''}`}
-              role="switch"
-              aria-checked={showGrid}
-              aria-label="Viewport grid"
-              onClick={() => onGridChange(!showGrid)}
-            >
-              <span />
-            </button>
-          </div>
+
         </>
       ) : (
         <div className="catalog-view">
           <div className="section-heading">
             <h2>Data sources</h2>
-            <span className="small-label">{datasetLoaded ? 1 : 0} loaded</span>
+            <span className="small-label">{datasetLoaded ? '1 terrain package' : '0 terrain packages'}</span>
           </div>
           {dataset && terrainState.status === 'ready' ? (
             <div className="catalog-entry">
@@ -256,6 +230,13 @@ export function LayersPanel({
                   <li key={limitation}>{limitation}</li>
                 ))}
               </ul>
+              <h4>Imagery and observations</h4>
+              <SurfaceImageryDetails controller={surfaceImagery} />
+              {displayLayers.state.status === 'ready' && <p className="panel-description">
+                APXS: {displayLayers.state.context.observations.length} historical records.
+                Repeated positions are grouped; orange markers indicate source review flags.
+                Positions are rover proxies. Open observations for their sources and limitations.
+              </p>}
             </div>
           ) : (
             <>
@@ -278,6 +259,16 @@ export function LayersPanel({
               </p>
             </>
           )}
+          <details className="pending-layer-guide">
+            <summary>Layers awaiting validated data</summary>
+            <ul>
+              <li><strong>CRISM:</strong> orbital mineral indicators.</li>
+              <li><strong>THEMIS:</strong> thermal context.</li>
+              <li><strong>Geological units:</strong> mapped rock units and contacts.</li>
+              <li><strong>Hazards:</strong> documented surface obstacles.</li>
+            </ul>
+            <p>These layers are planned and unavailable for this region.</p>
+          </details>
         </div>
       )}
     </aside>

@@ -284,8 +284,9 @@ h3 {
 }
 .unavailable {
   display: inline-block;
-  font: 10px var(--mono);
-  letter-spacing: 0.5px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--faint);
   margin-top: 6px;
 }
@@ -390,12 +391,7 @@ h3 {
   z-index: 0;
   background: transparent;
 }
-.map-canvas.with-grid {
-  background-image:
-    linear-gradient(#ffffff0a 1px, transparent 1px),
-    linear-gradient(90deg, #ffffff0a 1px, transparent 1px);
-  background-size: 48px 48px;
-}
+
 .map-canvas.leaflet-container {
   font-family: inherit;
   background: var(--bg);
@@ -1041,9 +1037,19 @@ dd {
   pointer-events: auto;
 }
 .layer-loaded {
-  font: 10px var(--mono);
-  letter-spacing: 0.6px;
+  display: inline-block;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-transform: lowercase;
   color: var(--positive-text);
+}
+.layer-loaded::first-letter {
+  text-transform: uppercase;
+}
+.layer-loaded.layer-hidden {
+  color: var(--warning-text);
 }
 .catalog-entry {
   text-align: left;
@@ -1104,6 +1110,27 @@ dd {
 .layers-panel .target-status {
   margin: 0 18px 8px;
   font-size: 12px;
+}
+.target-layer-row {
+  flex-wrap: wrap;
+}
+.target-layer-row > div {
+  flex: 1;
+  min-width: 0;
+}
+.target-filter {
+  flex-basis: 100%;
+  min-width: 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+.target-filter > summary {
+  padding: 4px 0;
+  cursor: pointer;
+}
+.target-filter .target-browser,
+.target-filter .target-status {
+  margin: 8px 0 0;
 }
 .target-status {
   color: var(--muted);
@@ -1665,3 +1692,15 @@ dd {
     break-inside: avoid;
   }
 }
+
+.viewport-actions .icon-button[aria-pressed="true"] { color: var(--accent-text); background: var(--accent-soft); border-color: var(--accent); }
+
+.grid-spacing { font-size: 12px; color: var(--text-secondary); }
+.viewport-actions { flex-wrap: wrap; max-width: 100%; }
+.map-coordinate-labels { position: absolute; inset: 0; z-index: 450; pointer-events: none; overflow: hidden; }
+.coordinate-label { position: absolute; padding: 2px 5px; border-radius: 3px; background: var(--overlay); color: var(--text); font-size: 11px; white-space: nowrap; }
+.coordinate-east { transform: translateX(-50%); }
+.coordinate-north { transform: translateY(-50%); }
+.map-canvas .leaflet-control-scale { margin-bottom: 32px; margin-left: 12px; pointer-events: none; }
+.map-canvas .leaflet-control-scale-line { background: var(--overlay); border-color: var(--text-secondary); color: var(--text); text-shadow: none; font-family: inherit; }
+@media (max-width: 700px) { .grid-spacing { flex-basis: 100%; } }

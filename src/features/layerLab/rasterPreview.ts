@@ -50,7 +50,7 @@ export function previewValues(terrain: TerrainPackage, kind: RasterPreview): Pre
   let min = Infinity, max = -Infinity
   for (const value of values) if (Number.isFinite(value)) { min = Math.min(min, value); max = Math.max(max, value) }
   if (kind === 'coverage' || kind === 'hillshade') { min = 0; max = 1 }
-  return { values, min, max, unit: kind === 'slope' ? 'degrees' : kind === 'coverage' ? '0 missing · 1 covered' : kind === 'hillshade' ? 'relative illumination' : 'm' }
+  return { values, min, max, unit: kind === 'slope' ? 'degrees' : kind === 'coverage' ? '0 missing - 1 covered' : kind === 'hillshade' ? 'relative illumination' : 'm' }
 }
 
 export function previewRgba(value: number, min: number, max: number, kind: RasterPreview): [number, number, number, number] {

@@ -57,11 +57,11 @@ export function MissionReportDialog({ report, onClose, onDownloadJson }: Mission
 
         <article className="report-page">
           <header>
-            <p className="report-eyebrow">MARSWALK PLANNER · MISSION REPORT</p>
+            <p className="report-eyebrow">MARSWALK PLANNER - MISSION REPORT</p>
             <h1 id="report-title">{terrain.title}</h1>
             <p className="report-meta">
               Generated {generated.toUTCString()}
-              {terrain.synthetic && <strong> · SYNTHETIC TERRAIN, NOT NASA DATA</strong>}
+              {terrain.synthetic && <strong> - SYNTHETIC TERRAIN, NOT NASA DATA</strong>}
             </p>
           </header>
 
@@ -137,7 +137,7 @@ export function MissionReportDialog({ report, onClose, onDownloadJson }: Mission
                     <td>{waypoint.role}</td>
                     <td>
                       {waypoint.label}
-                      {waypoint.scienceTargetId && <span className="report-tag"> · science target</span>}
+                      {waypoint.scienceTargetId && <span className="report-tag"> - science target</span>}
                     </td>
                     <td>
                       {Math.round(waypoint.localMetres.east)} / {Math.round(waypoint.localMetres.north)}
@@ -219,15 +219,15 @@ function SelectedObservations({ waypoints }: { waypoints: MissionReport['waypoin
     {selected.map((waypoint) => {
       const origin = waypoint.provenance!
       return <div key={waypoint.id} className="report-target">
-        <h3>{origin.name} · waypoint {waypoint.order}</h3>
-        <p>{origin.kind} · {origin.mission}{origin.measurementSol !== null ? ` · measurement sol ${origin.measurementSol}` : ''}</p>
+        <h3>{origin.name} - waypoint {waypoint.order}</h3>
+        <p>{origin.kind} - {origin.mission}{origin.measurementSol !== null ? ` - measurement sol ${origin.measurementSol}` : ''}</p>
         <p>{origin.description}</p>
         <p>Source rover-position proxy: {coordinate(origin.position.x)}, {coordinate(origin.position.y)} m in the terrain CRS. Positional uncertainty not stated.</p>
         {origin.locationRelation === 'relocated' && <p><strong>This waypoint was moved from the source cell; these references describe the original observation, not its new location.</strong></p>}
         {origin.reviewFlags.length > 0 && <p>Source review flags: {origin.reviewFlags.join('; ')}</p>}
         <p>Source record: {origin.recordId}</p>
         {origin.sourceSha256 && <p>Source snapshot SHA-256: {origin.sourceSha256}</p>}
-        <ul>{origin.sources.map((source) => <li key={source.url + source.provides}><a href={source.url}>{source.attribution}</a> · {source.provides}</li>)}</ul>
+        <ul>{origin.sources.map((source) => <li key={source.url + source.provides}><a href={source.url}>{source.attribution}</a> - {source.provides}</li>)}</ul>
       </div>
     })}
   </section>
@@ -259,7 +259,7 @@ function ScienceTargetsSection({ targets }: { targets: NonNullable<MissionReport
                   {target.name}{' '}
                   <span className="report-tag">
                     {kindLabel(target.kind)}
-                    {target.mission ? ` · ${target.mission}` : ''} · waypoint{' '}
+                    {target.mission ? ` - ${target.mission}` : ''} - waypoint{' '}
                     {target.visitedByWaypoints.join(', ')}
                   </span>
                 </h3>

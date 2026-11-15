@@ -1,4 +1,62 @@
-# Gale / Pahrump Hills: candidate terrain validation
+# POLARIS Module — integrated data and source guide
+
+Updated 2026-11-15. The planner loads the real Pahrump Hills prototype by default.
+This guide covers integrated source groups; per-file hashes and processing
+evidence remain in their original manifests/provenance and linked reviews.
+
+## Current runtime assets
+
+| Content | Runtime location under `public/data/` | Source and meaning |
+| --- | --- | --- |
+| Elevation and slope | `gale/pahrump-hills-v1/` | [HiRISE DTM DTEEC_040770_1755_039280_1755_A01](https://www.uahirise.org/dtm/dtm.php?ID=ESP_040770_1755), NASA/JPL-Caltech/UArizona; 200 × 200 cells, 5 m spacing over 1000 × 1000 projected metres |
+| Grayscale basemap | `gale/pahrump-hills-v1/basemap.jpg` | Matching ESP_039280_1755 RED orthoimage; resampled to the terrain footprint, 989 × 989 display pixels |
+| Enhanced RGB | `imagery/pahrump-hills-rgb-v1/` | [ESP_039280_1755 MRGB](https://www.uahirise.org/ESP_039280_1755), NASA/JPL-Caltech/UArizona; 1000 × 1000 display pixels at 1 m, derived from 0.5 m source imagery, with empirical relative registration |
+| Three drill-associated rover proxies | `science/pahrump-hills-v1/` | Confidence Hills, Mojave 2 and Telegraph Peak; NASA [waypoints](https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json) joined to published site/drive associations; [science review](terrain/science-target-review.md) records the sources |
+| APXS observations | `layer-lab/pahrump-hills-v1/context.json` | [Berger 2020 PDS supplement, sols 0–2301](https://pds-geosciences.wustl.edu/msl/urn-nasa-pds-msl_apxs_supplement_sols_0_2301/), DOI 10.17189/1519050; 104 measurement records at 30 coordinate pairs inside the footprint |
+| Historical traverse | Same `context.json` | NASA [MSL_traverse.json](https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_traverse.json), clipped spatially to the loaded footprint; no per-feature sol filter |
+| Buckskin mineral finding | Same `context.json` | Published [CheMin tridymite finding](https://www.jpl.nasa.gov/news/nasa-scientists-discover-unexpected-mineral-on-mars/), NASA/JPL-Caltech; one sample-associated rover-position proxy |
+
+The context file serves both the main planner and the separate Layer Lab despite
+its directory name. It is display/science context, not a route-cost raster.
+Raw NASA files are ignored local inputs; a normal checkout needs none of them.
+The older `gale/pahrump-hills/` image-only preview is not the active terrain API.
+
+## Methods, provenance and limits
+
+- [Terrain package](../public/data/gale/pahrump-hills-v1/README.md): Float32
+  elevation is an area-weighted source-pixel mean. Slope is maximum native Horn
+  slope per 5 m cell. Elevations are metres relative to the label's Mars 2000
+  equipotential surface; negative values are expected here.
+- [Georeferencing review](terrain/georeferencing-review.md): the prototype uses
+  a spherical Mars Equirectangular source frame (radius 3396190 m, central
+  meridian 137.39°E). Absolute positioning and image/DEM accuracy remain unverified.
+- [Science positions](terrain/science-positions-provenance.json): activity and
+  position-record sols remain distinct. Rover proxies are not exact holes or rock
+  targets; source-stated uncertainty is unavailable. No raster-origin pixel
+  shift is added to vector positions.
+- [APXS inventory/research](terrain/science-expansion-research.md): source row
+  identities and quality flags are retained. The UI shows observation metadata,
+  not chemical-abundance analysis; APXS chemistry is not direct mineral identification.
+- [RGB review](terrain/surface-color-review.md): partial color, synthetic blue,
+  and empirical relative registration; not exact human-eye color, an abundance
+  map or an accuracy certification. Display resampling adds no native detail.
+- [Context and provenance contract](display-context-contract.md): source records
+  survive explicit waypoint selection, relocation, mission saving and reports.
+- [Processing tools](../scripts/terrain/README.md): region configuration,
+  exporters and source checks. Terrain, science and RGB have separate lifecycles;
+  adding context does not require rewriting the terrain package.
+
+There is no validated CRISM mineral raster, thermal layer, geological unit map
+or real hazard mask in the application. A point mineral finding is not a
+continuous mineral layer. Historical traverse is not a suggested EVA route or
+a time-filtered Pahrump Hills campaign trace. See
+[pending layers](terrain/pending-layer-next-steps.md) before selecting more data.
+
+The Data sources panel currently summarises the terrain package. Imagery and
+observation details provide additional references; a unified visitor-facing
+catalogue of all sources/methods remains submission work.
+
+## Terrain selection and validation record
 
 Status: initial metadata inspection followed by a source-based candidate AOI.
 A 1000 x 1000 projected-metre square has now been selected using NASA Curiosity
@@ -11,8 +69,8 @@ rasters are unchanged. A native-pixel ortho crop and metadata manifest are now
 available under `public/data/gale/pahrump-hills`. The subsequent contract-v1
 delivery under `public/data/gale/pahrump-hills-v1` now includes 5 m elevation,
 conservatively aggregated slope, a same-footprint JPEG, manifest and provenance.
-These are not integrated into the application yet. See the v1 package README
-for processing methods and Developer Y handoff instructions.
+These are integrated through the package loader and the main 2D/3D views.
+See the v1 package README for processing methods and runtime integration.
 
 ## Candidate source products
 

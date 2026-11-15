@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { describePosition, type PlacedTarget } from '../../datasets/scienceTargets'
+import type { PlacedTarget } from '../../datasets/scienceTargets'
 import type { Waypoint } from '../../routing'
 import { kindLabel, outsideReason, solSummary, waypointAtCell } from '../targetDisplay'
 import type { ScienceTargetsState } from '../useScienceTargets'
@@ -45,7 +45,7 @@ export function ScienceTargetBrowser({
     <div className="target-browser">
       {collection.synthetic && (
         <p className="target-synthetic" role="note">
-          SYNTHETIC TARGETS · NOT NASA DATA
+          SYNTHETIC TARGETS - NOT NASA DATA
         </p>
       )}
       {inside.length === 0 ? (
@@ -70,7 +70,6 @@ export function ScienceTargetBrowser({
       {selected && (
         <TargetDetails
           placed={selected}
-          synthetic={collection.synthetic}
           existing={waypointAtCell(waypoints, selected.cell)}
           onAddWaypoint={() => onAddWaypoint(selected)}
         />
@@ -95,12 +94,10 @@ export function ScienceTargetBrowser({
 
 function TargetDetails({
   placed,
-  synthetic,
   existing,
   onAddWaypoint,
 }: {
   placed: PlacedTarget
-  synthetic: boolean
   existing: Waypoint | null
   onAddWaypoint: () => void
 }) {
@@ -109,6 +106,8 @@ function TargetDetails({
   const ref = useRef<HTMLElement>(null)
   // A target picked on the map may have its card below the panel's fold.
   useEffect(() => {
+    const filter = ref.current?.closest<HTMLDetailsElement>('details.target-filter')
+    if (filter) filter.open = true
     ref.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
   }, [target.id])
   return (
@@ -116,14 +115,10 @@ function TargetDetails({
       <h3>{target.name}</h3>
       <p className="target-kind">
         {kindLabel(target.kind)}
-        {target.mission ? ` · ${target.mission}` : ''}
+        {target.mission ? ` - ${target.mission}` : ''}
       </p>
-      <p className="target-caveat">{describePosition(target)}.</p>
-      {!synthetic && (
-        <p className="target-caveat">The terrain's absolute geolocation is unverified.</p>
-      )}
       {sols && <p className="target-meta">{sols}</p>}
-      <p className="target-description">{target.description}</p>
+      <p className="target-description">{target.description.replace(' This marker uses an associated rover position, not the exact drill-hole location.', '')}</p>
       {target.sources.length > 0 && (
         <>
           <h4>Sources</h4>
@@ -132,8 +127,7 @@ function TargetDetails({
               <li key={`${source.url}#${source.provides}`}>
                 <a href={source.url} target="_blank" rel="noreferrer">
                   {source.attribution}
-                </a>{' '}
-                · {source.provides}
+                </a>
               </li>
             ))}
           </ul>

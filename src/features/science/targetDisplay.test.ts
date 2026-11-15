@@ -18,7 +18,7 @@ const base: ScienceTarget = {
 describe('solSummary', () => {
   it('keeps activity and position sols apart', () => {
     expect(solSummary({ ...base, activitySol: 780, positionSol: 779 })).toBe(
-      'Activity: Sol 780 · position recorded: Sol 779',
+      'Activity: Sol 780 - position recorded: Sol 779',
     )
   })
 
@@ -29,8 +29,8 @@ describe('solSummary', () => {
   })
 
   it('says which sol is missing', () => {
-    expect(solSummary({ ...base, activitySol: 780 })).toBe('Activity: Sol 780 · position sol not stated')
-    expect(solSummary({ ...base, positionSol: 0 })).toBe('Position recorded: Sol 0 · activity sol not stated')
+    expect(solSummary({ ...base, activitySol: 780 })).toBe('Activity: Sol 780 - position sol not stated')
+    expect(solSummary({ ...base, positionSol: 0 })).toBe('Position recorded: Sol 0 - activity sol not stated')
   })
 
   it('is null when no sol is known', () => {

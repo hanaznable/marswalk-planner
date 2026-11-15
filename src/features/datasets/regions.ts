@@ -5,7 +5,7 @@ import type { MarsRegion } from './types'
 export const regions: readonly MarsRegion[] = [
   {
     id: 'gale-pahrump-hills',
-    name: 'Gale Crater · Pahrump Hills',
+    name: 'Gale Crater - Pahrump Hills',
     terrain: { kind: 'package', datasetId: 'pahrump-hills-v1' },
   },
   { id: 'jezero', name: 'Jezero Crater', terrain: null },

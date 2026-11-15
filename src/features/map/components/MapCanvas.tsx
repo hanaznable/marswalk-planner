@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import {
   CRS,
+  control,
   divIcon,
   imageOverlay,
   latLngBounds,
@@ -13,6 +14,7 @@ import {
 } from 'leaflet'
 import type { LatLngBounds, LayerGroup, Map as LeafletMap } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import { gridSpacing } from '../mapGrid'
 import { Icon } from '../../../components/ui/Icon'
 import {
   cellCenterToMap,
@@ -207,7 +209,6 @@ export function MapCanvas({
   }, [terrain, targets, selectedTargetId])
 
   useEffect(() => {
-    containerRef.current?.classList.toggle('with-grid', showGrid)
     containerRef.current?.classList.toggle('adding', addMode)
   }, [showGrid, addMode])
 
@@ -311,6 +312,63 @@ export function MapCanvas({
     if (boundsRef.current) mapRef.current?.fitBounds(boundsRef.current, { animate: false })
   }, [regionId])
 
+  // Metric lines live in Leaflet's projected frame and scale/pan with terrain.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !terrain || !showGrid) return
+    if (!map.getPane('coordinateGrid')) {
+      map.createPane('coordinateGrid').style.zIndex = '375'
+      map.getPane('coordinateGrid')!.style.pointerEvents = 'none'
+    }
+    const group = layerGroup().addTo(map)
+    const raster = terrain.manifest.raster
+    const bounds = rasterBounds(raster)
+    const spacing = gridSpacing(raster)
+    const draw = (a: MapPoint, b: MapPoint) => polyline([toLatLng(raster, a), toLatLng(raster, b)], {
+      pane: 'coordinateGrid', className: 'terrain-grid-line', color: '#c8d8ec', opacity: 0.35, weight: 1, interactive: false,
+    }).addTo(group)
+    for (let x = bounds.minX; x <= bounds.maxX; x += spacing) draw({ x, y: bounds.minY }, { x, y: bounds.maxY })
+    for (let y = bounds.minY; y <= bounds.maxY; y += spacing) draw({ x: bounds.minX, y }, { x: bounds.maxX, y })
+    const labels = document.createElement('div')
+    labels.className = 'map-coordinate-labels'
+    labels.setAttribute('aria-hidden', 'true')
+    map.getContainer().append(labels)
+    const updateLabels = () => {
+      labels.replaceChildren()
+      const size = map.getSize()
+      const step = Math.max(1, Math.ceil(90 / (spacing * map.getZoomScale(map.getZoom(), 0))))
+      const label = (text: string, axis: string, x: number, y: number) => {
+        const item = document.createElement('span')
+        item.className = `coordinate-label coordinate-${axis}`
+        item.textContent = text
+        item.style.left = `${x}px`
+        item.style.top = `${y}px`
+        labels.append(item)
+      }
+      let index = 0
+      for (let x = bounds.minX; x <= bounds.maxX; x += spacing, index++) {
+        const pt = map.latLngToContainerPoint(toLatLng(raster, { x, y: bounds.minY }))
+        if (index % step === 0 && pt.x > 70 && pt.x < size.x - 45) label(`E ${Math.round(x - bounds.minX)} m`, 'east', pt.x, 6)
+      }
+      index = 0
+      for (let y = bounds.minY; y <= bounds.maxY; y += spacing, index++) {
+        const pt = map.latLngToContainerPoint(toLatLng(raster, { x: bounds.minX, y }))
+        if (index % step === 0 && pt.y > 40 && pt.y < size.y - 90) label(`N ${Math.round(y - bounds.minY)} m`, 'north', 6, pt.y)
+      }
+    }
+    map.on('move zoom resize', updateLabels)
+    updateLabels()
+    return () => { map.off('move zoom resize', updateLabels); labels.remove(); group.remove() }
+  }, [terrain, showGrid])
+
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !terrain) return
+    // CRS.Simple.distance is Euclidean in our local metre frame, not Earth geodesy.
+    const scale = control.scale({ imperial: false, metric: true, maxWidth: 120, position: 'bottomleft' }).addTo(map)
+    return () => { scale.remove() }
+  }, [terrain])
+
   // Waypoint markers: rebuilt whenever the list changes.
   useEffect(() => {
     const group = markersRef.current
@@ -411,8 +469,8 @@ export function MapCanvas({
       <div className="map-attribution">
         {terrain
           ? terrain.manifest.synthetic
-            ? 'SYNTHETIC GRID · LOCAL METRES'
-            : `HIRISE ${terrain.manifest.source?.productId} · ${terrain.manifest.source?.attribution} · LOCAL METRES`
+            ? 'SYNTHETIC GRID - LOCAL METRES'
+            : `HIRISE ${terrain.manifest.source?.productId} - ${terrain.manifest.source?.attribution} - LOCAL METRES`
           : 'NO TERRAIN LOADED'}
       </div>
     </>

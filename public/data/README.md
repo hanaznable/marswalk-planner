@@ -1,13 +1,23 @@
 # Processed mission assets
 
-`gale/pahrump-hills-v1/` is the current real contract-v1 terrain package: 5 m
-Float32 elevation and slope grids, same-footprint JPEG, manifest and provenance.
-The documented origin interpretation is a prototype working convention; exact
-registration and absolute accuracy are unverified. There is no validated hazard
-or precomputed EVA route layer.
+The default planner loads `gale/pahrump-hills-v1/`: a real contract-v1 terrain
+package with 5 m Float32 elevation/slope grids, a same-footprint HiRISE JPEG,
+manifest and provenance. Absolute geolocation and image/DEM registration
+accuracy remain unverified. No validated hazard or precomputed EVA route layer
+is supplied; routes are calculated in the browser.
 
-`gale/pahrump-hills/` is the older image-only PNG preview, not a v1 runtime package.
+Separate runtime assets:
 
-These real files are prepared, not loaded by the UI: `App.tsx` still chooses a
-synthetic fixture. Coordinate the loader and basemap integration with Developer Y.
+- `science/pahrump-hills-v1/`: three sourced drill-associated rover-position proxies.
+- `layer-lab/pahrump-hills-v1/context.json`: APXS observations, spatially clipped
+  historical traverse and a published Buckskin mineral finding; used by both
+  the planner and Layer Lab.
+- `imagery/pahrump-hills-rgb-v1/`: empirically registered enhanced RGB, with
+  partial color coverage and synthetic blue. It is not a mineral map.
+
+`gale/pahrump-hills/` is the older image-only research preview, not the runtime
+terrain API. Other region labels do not imply available data.
+
+See [the source guide](../../docs/data-sources.md) for processing and limitations.
+Raw downloads stay outside Git and are unnecessary for running the application.
 Never put credentials or private files here: Vite serves this directory publicly.

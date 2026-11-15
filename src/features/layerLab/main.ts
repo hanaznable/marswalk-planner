@@ -36,21 +36,21 @@ interface LayerEntry {
 const base = import.meta.env.BASE_URL
 const root = document.querySelector<HTMLDivElement>('#layer-lab')!
 root.innerHTML = `
-  <header><div><span class="eyebrow">DEVELOPER B · LOCAL DATA REVIEW</span><h1>Marswalk <span>Layer Lab</span></h1></div><a class="app-link">Open planner ↗</a></header>
-  <div class="lab-layout"><aside><p class="intro">Pahrump Hills · 1 × 1 km<br>Compare layers and send feedback. Previews do not change routing or approved targets.</p>
+  <header><div><span class="eyebrow">DEVELOPER B - LOCAL DATA REVIEW</span><h1>Marswalk <span>Layer Lab</span></h1></div><a class="app-link">Open planner ↗</a></header>
+  <div class="lab-layout"><aside><p class="intro">Pahrump Hills - 1 × 1 km<br>Compare layers and send feedback. Previews do not change routing or approved targets.</p>
     <p id="load-status" role="status">Loading terrain and research context…</p><div id="layer-controls"></div>
     <section class="feedback"><h2>Your feedback</h2><label for="feedback-notes">Which layers help? What looks wrong or unclear?</label><textarea id="feedback-notes" rows="4" placeholder="Layer name, preferred opacity, observations…"></textarea><button id="download-feedback" disabled>Download feedback JSON</button><p>Saved locally with layer settings and the terrain version.</p></section>
   </aside><main><div class="map-wrap"><div id="lab-map" aria-label="Layer comparison map"></div><button id="fit-map">Fit study area</button></div>
     <div id="inspect" role="status">Move over the map to inspect the 5 m terrain cells.</div>
-    <div class="notice">Research preview · absolute geolocation unverified. Color scales show measurements or declared terrain derivatives, not natural surface colors. No layer here certifies safe traversal.</div>
-    <details><summary>Sources and review limitations</summary><ul id="limitations"></ul><p><a href="https://www.uahirise.org/dtm/dtm.php?ID=ESP_040770_1755" target="_blank" rel="noreferrer">HiRISE terrain · NASA/JPL-Caltech/UArizona</a></p></details>
+    <div class="notice">Research preview - absolute geolocation unverified. Color scales show measurements or declared terrain derivatives, not natural surface colors. No layer here certifies safe traversal.</div>
+    <details><summary>Sources and review limitations</summary><ul id="limitations"></ul><p><a href="https://www.uahirise.org/dtm/dtm.php?ID=ESP_040770_1755" target="_blank" rel="noreferrer">HiRISE terrain - NASA/JPL-Caltech/UArizona</a></p></details>
   </main></div>`
 root.querySelector<HTMLAnchorElement>('.app-link')!.href = base
 const loadStatus = document.querySelector<HTMLParagraphElement>('#load-status')!
 const controls = document.querySelector<HTMLDivElement>('#layer-controls')!
 const feedbackButton = document.querySelector<HTMLButtonElement>('#download-feedback')!
 const map = createMap('lab-map', { crs: CRS.Simple, minZoom: -4, maxZoom: 3, zoomSnap: 0.5, attributionControl: true })
-map.attributionControl.addAttribution('NASA/JPL-Caltech/UArizona · NASA PDS · research previews')
+map.attributionControl.addAttribution('NASA/JPL-Caltech/UArizona - NASA PDS - research previews')
 map.setView([0, 0], 0)
 const resize = new ResizeObserver(() => map.invalidateSize())
 resize.observe(document.querySelector('#lab-map')!)
@@ -136,9 +136,9 @@ async function start() {
   }
   for (const group of grouped.values()) {
     const popup = document.createElement('div')
-    popup.append(textElement('strong', `${group.length} APXS measurement record(s)`), textElement('p', 'Research candidates · rover-position proxies. Repeats and handled samples are not separate mission sites.'))
+    popup.append(textElement('strong', `${group.length} APXS measurement record(s)`), textElement('p', 'Research candidates - rover-position proxies. Repeats and handled samples are not separate mission sites.'))
     const list = document.createElement('ul')
-    for (const observation of group) list.append(textElement('li', `${observation.name} · sol ${observation.sol} · CSV row ${observation.sourceLine}${observation.flags.length ? ' · ' + observation.flags.join('; ') : ''}`))
+    for (const observation of group) list.append(textElement('li', `${observation.name} - sol ${observation.sol} - CSV row ${observation.sourceLine}${observation.flags.length ? ' - ' + observation.flags.join('; ') : ''}`))
     popup.append(list)
     const link = textElement('a', 'Published APXS table')
     link.href = context.apxsSource.table_url; link.target = '_blank'; link.rel = 'noreferrer'; popup.append(link)
@@ -217,7 +217,7 @@ async function start() {
     const inspect = document.querySelector('#inspect')!
     if (!cell) { inspect.textContent = 'Outside the delivered terrain footprint.'; return }
     const index = cell.row * raster.width + cell.col
-    inspect.textContent = `Cell ${cell.row}, ${cell.col} · elevation ${terrain.elevation[index].toFixed(2)} m · native-maximum slope ${terrain.slope[index].toFixed(2)}°`
+    inspect.textContent = `Cell ${cell.row}, ${cell.col} - elevation ${terrain.elevation[index].toFixed(2)} m - native-maximum slope ${terrain.slope[index].toFixed(2)}°`
   })
   feedbackButton.disabled = false
   feedbackButton.addEventListener('click', () => {
@@ -226,7 +226,7 @@ async function start() {
     const link = document.createElement('a'); link.href = url; link.download = 'marswalk-layer-feedback.json'; link.click()
     setTimeout(() => URL.revokeObjectURL(url), 1000)
   })
-  loadStatus.textContent = `${entries.filter((entry) => entry.layer || entry.raster).length} testable layers · ${entries.filter((entry) => !entry.layer && !entry.raster).length} awaiting data/processing. No route inputs changed.`
+  loadStatus.textContent = `${entries.filter((entry) => entry.layer || entry.raster).length} testable layers - ${entries.filter((entry) => !entry.layer && !entry.raster).length} awaiting data/processing. No route inputs changed.`
 }
 
 start().catch((error: unknown) => {

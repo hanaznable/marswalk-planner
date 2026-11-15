@@ -38,10 +38,10 @@ export function solSummary(target: Pick<ScienceTarget, 'activitySol' | 'position
   if (activity && position) {
     return target.activitySol === target.positionSol
       ? `Activity and position: ${activity}`
-      : `Activity: ${activity} · position recorded: ${position}`
+      : `Activity: ${activity} - position recorded: ${position}`
   }
-  if (activity) return `Activity: ${activity} · position sol not stated`
-  if (position) return `Position recorded: ${position} · activity sol not stated`
+  if (activity) return `Activity: ${activity} - position sol not stated`
+  if (position) return `Position recorded: ${position} - activity sol not stated`
   return null
 }
 

@@ -1,7 +1,9 @@
-# Marswalk Planner — Proje kapsamı
+# POLARIS Module — Proje kapsamı
 
-Durum: Planlanan ürün kapsamı. Bu belge özelliklerin uygulanmış olduğunu göstermez.
-Proje adı geçicidir. Kapsam, NASA Space Apps Challenge 2026 proje çalışması için
+Güncelleme: 2026-11-15. Bu belge ürün kapsamını ve aşamaları tanımlar; aşağıdaki
+mevcut durum bölümü dışında planlanan özellikler uygulanmış sayılmaz. Güncel
+öncelikler ve ekip sorumlulukları [ROADMAP.md](ROADMAP.md) içindedir.
+Kapsam, NASA Space Apps Challenge 2026 proje çalışması için
 hazırlanmıştır; resmî görev planlama veya astronot güvenliği onayı anlamına gelmez.
 
 ## Amaç ve temel kullanıcı akışı
@@ -20,15 +22,25 @@ inceleyebileceği etkileşimli bir web uygulaması geliştirmek.
 
 ## Mevcut uygulama
 
-React + TypeScript + Vite uygulama kabuğu, boş Leaflet görünümü, bölge seçimi,
-katman ve görev panelleri, görüntüleme kontrolleri ve 3D yer tutucusu bulunur.
-NASA veri entegrasyonu, rota algoritmaları, bilimsel öneriler ve kaynak tüketimi
-hesapları henüz yoktur. Bölge adları veri kapsamı veya görev konumu sağlamaz.
+Gerçek Pahrump Hills verisiyle 1 × 1 km harita ve 5 m rota ağı entegredir.
+Yükseklik, eğim, gri/iyileştirilmiş RGB görüntü, üç sondaj ilişkili rover konum
+vekili, APXS kayıtları, tarihsel Curiosity izi ve Buckskin mineral bulgusu gösterilir.
+Başlangıç/ara durak/hedef düzenleme, A* mesafe ve eğim odaklı rota karşılaştırması,
+dönüş bacağı, yükseklik profili, senaryo hız/durak süresiyle tahmin, JSON ve
+yazdırılabilir rapor çalışır. İsimli görevler tarayıcıda saklanabilir, açılabilir
+ve JSON olarak içe/dışa aktarılabilir. Three.js tabanlı salt okunur 3D görünüm ve
+POLARIS Module mavi arayüzü uygulanmıştır; noktalar 2D görünümde düzenlenir.
+
+Bilimsel faaliyet önerileri, amaç/ekipman seçimi, bütçeler ve gerçek tehlike
+katmanı henüz uygulanmamıştır. CRISM, termal ve jeoloji katmanları beklemektedir.
+Mutlak konum ve görüntü/DEM doğruluğu doğrulanmış değildir; prototip yöntem ve
+konum sınırlamaları geçerlidir. Jezero seçeneğinde veri yoktur; sentetik bölge
+ayrı etiketlenir. Gerçek tehlike verisi ve tam ziyaretçi kaynak kataloğu eksiktir.
 
 ## Aşama 1 — İlk çalışan sürüm (MVP)
 
-MVP tek bir bölgenin doğrulanmış veri kapsamıyla sınırlandırılır. Bölge seçimi,
-uygun veri bulunabilirliği ve işlenebilirliği incelendikten sonra kesinleştirilir.
+MVP tek bir bölgenin incelenmiş veri kapsamıyla sınırlandırılır. İlk bölge
+Pahrump Hills olarak belirlenmiştir; yeni bölgeler ayrıca veri incelemesi gerektirir.
 
 | Özellik | İlk sürüm davranışı | Bağımlılık / sınır |
 | --- | --- | --- |
@@ -46,7 +58,7 @@ uygun veri bulunabilirliği ve işlenebilirliği incelendikten sonra kesinleşti
 | Yürüyüş hızı ve süre | Kullanıcı girdisi olan hız ve durak süreleriyle tahmin üretme | Basit planlama tahmini olarak etiketlenir; fizyolojik model değildir |
 | Arazi tehlikeleri | Verinin desteklediği tehlike alanlarını ve eksik kapsamı gösterme | Tüm tehlikelerin algılandığı iddia edilmez |
 | Rota özeti | Noktalar, bacaklar, mesafe, süre, dönüş, kısıtlar ve veri eksiklerini listeleme | Hesaplanamayan alanlar boş bırakılır; sıfırla doldurulmaz |
-| NASA kaynakları | Kullanılan gerçek varlıkların kaynaklarını ve işleme geçmişini listeleme | Henüz seçilmiş veya entegre edilmiş NASA veri kümesi yok |
+| NASA kaynakları | Kullanılan gerçek varlıkların kaynaklarını ve işleme geçmişini listeleme | Arazi ve ayrı bilim/görüntü kaynakları entegredir; tam ziyaretçi kataloğu henüz eksiktir |
 | Dışarı aktarma | Rota ve raporu JSON ve yazdırılabilir görünüm olarak sunma | Kaynaklar, referans sistemi, varsayımlar ve uyarılar eklenir |
 
 ### Rota modelinin sınırları
@@ -120,7 +132,7 @@ Dünya koordinatı bekleyen bir biçime sessiz dönüşüm yapılmaz.
 
 | Konu | Önerilen kapsam kararı | Uygulamaya geçiş koşulu |
 | --- | --- | --- |
-| 3D arazi | İlk sürüm dışında; mevcut anahtar yer tutucu olarak kalır | Gerçek yükseklik verisi, 2D ile tutarlı konumlar ve yeterli tarayıcı performansı |
+| 3D arazi | İsteğe bağlı salt okunur görünüm uygulandı; rota düzenleme 2D içinde kalır | Aynı yükseklik/görüntü ve planlama durumu kullanılır; abartı yalnızca görseldir, WebGL yoksa 2D sunulur |
 | Rover | İlk sürüm astronot odaklı; rover ayrı hareket profili olarak değerlendirilecek | Araç özellikleri, enerji modeli ve geçilebilirlik sınırlarının doğrulanması |
 | Dinamik rota | Önce kullanıcı değişikliğine bağlı yeniden hesaplama; canlı güncelleme sonraki kapsam | Güvenilir güncelleme kaynağı, zaman damgaları ve eski verinin yönetimi |
 | Gelişmiş alternatifler | Çok ölçütlü rota seçenekleri | Belgelenmiş risk, bilimsel değer ve kaynak modelleri |
@@ -131,9 +143,12 @@ algoritmasının bağımlılığı olmaz; aynı doğrulanmış verinin başka bi
 
 ## NASA veri kaynakları ve izlenebilirlik
 
-Kaynak seçimi henüz yapılmamıştır. NASA veri kaynağı listesi, doğrulanmış
-varlıklar belirlendikçe `src/features/datasets/registry.ts` üzerinden tutulacak.
-Bu belge herhangi bir ürünün seçili bölgede kullanılabilir olduğunu varsaymaz.
+HiRISE arazi/görüntü ürünleri, Curiosity konumları, APXS gözlem kayıtları ve
+yayımlanmış bir CheMin mineral bulgusu entegredir. Güncel ürünler ve işleme
+sınırlamaları [docs/data-sources.md](docs/data-sources.md) içinde listelenir.
+`src/features/datasets/registry.ts` arazi ve hedef koleksiyonunu kaydeder;
+bağlam/RGB kayıtları `src/features/mapLayers/` içinde ayrıdır. Yeni kaynağın
+seçili bölgeyi kapsadığı ve kullanılabilirliği ayrıca doğrulanmalıdır.
 
 Her kaynak için en az şu bilgiler kaydedilmeli:
 
@@ -152,12 +167,12 @@ sonuçları veya hassas konumlar tahmin edilerek eklenmez.
 
 - React + TypeScript + Vite; 2D görünüm Leaflet içinde kalır.
 - NASA kaynakları ve veri hazırlama, harita bileşenlerinden bağımsızdır.
-- Python ön işleme betikleri `scripts/preprocessing` altında geliştirilir.
+- Python ön işleme betikleri `scripts/terrain/` içindedir; `scripts/preprocessing/` bu uygulamaya yönlendirir.
 - Rota algoritmaları saf TypeScript modülleri olarak hazırlanır; React, Leaflet
   veya Three.js nesnelerine bağımlı olmaz.
 - Bilimsel hedefler, geçmiş görevler, ekipman, bütçeler ve dışa aktarma ihtiyaç
   doğdukça ayrı özellik modüllerine ayrılır; boş modüller şimdiden çoğaltılmaz.
-- 3D eklenirse Three.js / React Three Fiber ayrı ve isteğe bağlı yüklenir.
+- Uygulanan 3D görünüm Three.js kullanır ve isteğe bağlı yüklenir; React Three Fiber kullanılmaz.
 - İlk aşamada backend, veritabanı, kimlik doğrulama ve ekip içi eşzamanlı çalışma
   servisi yoktur. Veri ve rota işlemleri tarayıcı ile ön işleme arasında bölünür.
 - NASA verisi veya hesap modeli hazır değilse özellik açık yer tutucu olarak
@@ -180,11 +195,11 @@ sonuçları veya hassas konumlar tahmin edilerek eklenmez.
 
 ## Kesinleştirilecek kararlar
 
-- İlk veri entegrasyonu için hangi bölge ve hangi doğrulanmış ürünler seçilecek?
-- Eğim ve arazi kısıtları hangi kaynak veya senaryo varsayımına dayanacak?
-- İlk bilimsel hedefler ve ekipman seti neler olacak?
+- İlk önerilen bilimsel faaliyetler, bilimsel amaçlar ve ekipman varsayımları neler olacak?
+- Tehlike ve ek bilimsel katmanlar için hangi ürünler kapsama/kalite incelemesini geçecek?
 - Bütçe hesapları için doğrulanabilir tüketim modeli bulunabilecek mi?
-- Rover ve 3D, temel rota akışı tamamlandıktan sonra programa alınacak mı?
+- Rover, gelişmiş alternatifler ve daha geniş harita kapsamı hangi aşamada ele alınacak?
 
-Bu belgede aşama dağılımı bir geliştirme önerisidir; rover, 3D ve canlı
-yeniden planlama için kesin uygulama kararı verilmiş değildir.
+Rover ve canlı çevre verisine dayalı yeniden planlama gelecekte ayrıca
+kapsamlandırılacaktır. Kullanıcı nokta/parametre değişiklikleriyle rota yeniden
+hesaplama ve isteğe bağlı 3D görünüm mevcut uygulamanın parçasıdır.

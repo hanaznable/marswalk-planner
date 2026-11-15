@@ -86,12 +86,12 @@ export function RoutePlanner({
                 <span className={`waypoint-role role-${role.split(' ')[0].toLowerCase()}`}>
                   {role}
                   {waypointName(waypoint) && (
-                    <span className="waypoint-name"> · {waypointName(waypoint)}</span>
+                    <span className="waypoint-name"> - {waypointName(waypoint)}</span>
                   )}
                 </span>
                 <span className="waypoint-position">
                   {local
-                    ? `E ${Math.round(local.x)} m · N ${Math.round(local.y)} m`
+                    ? `E ${Math.round(local.x)} m - N ${Math.round(local.y)} m`
                     : `Cell ${waypoint.cell.row}, ${waypoint.cell.col}`}
                 </span>
                 <span className="waypoint-actions">

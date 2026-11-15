@@ -4,8 +4,8 @@ A read-only 3D view of the active terrain package, with the planner's
 waypoints, routes, science targets and selected context layers. It reuses the
 loaded `TerrainPackage`, the image URL the 2D map already resolved (orthoimage
 or validated enhanced RGB), the route results from `useRoutePlan` and the
-display-layer state. It fetches no data of its own and runs no routing,
-slope or EVA calculation.
+display-layer state. It loads textures from the resolved image URLs but does not
+load a separate terrain package or run routing, slope or EVA calculations.
 
 ## Files
 

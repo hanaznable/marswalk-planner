@@ -1,5 +1,10 @@
 # Pre-merge verification: 2D baseline
 
+**Historical record:** PR #15 has since been merged; 3D, the mission library
+and UI redesign are now implemented. The counts, layout assertions and follow-up
+instructions below belong to this earlier checkout. See
+[ROADMAP.md](../../ROADMAP.md) for current status.
+
 Completed 2026-11-15. Implementation commit: `6ff83e5` on
 `batuhan/terrain-validation`. The user confirmed frontend review is complete.
 This report records local verification; it does not claim a merge or a hosted

@@ -69,7 +69,7 @@ export function RouteComparison({
             <th scope="col">
               <span className="legend-swatch slope-limited" aria-hidden="true" /> Slope-aware
               <span className="column-detail">
-                ≤ {maxSlopeDegrees}° · penalty {slopePenalty}
+                ≤ {maxSlopeDegrees}° - penalty {slopePenalty}
               </span>
             </th>
           </tr>

@@ -17,7 +17,7 @@ science targets, shown only within the loaded terrain's coverage, never invented
 | Uncertainty | `uncertaintyMeters` stays `null`: the sources state none. |
 | Sols | Activity sol and position-record sol are kept separately. |
 | Location | Separate collection: `public/data/science/pahrump-hills-v1/targets.json` plus `provenance.json`. The terrain package files stay unchanged. |
-| Traverse | **Not part of v1.** Later as a separate historical line overlay. The downloaded traverse has no per-feature sol, so a spatial subset must not be shown as a time-filtered campaign route. |
+| Traverse | **Not part of the point contract v1.** Implemented separately in the [display context](display-context-contract.md) collection. The downloaded traverse has no per-feature sol, so its spatial subset is not a time-filtered campaign route. |
 
 ## Shape
 

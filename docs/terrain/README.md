@@ -1,15 +1,17 @@
-# Pahrump Hills: source-based candidate study area
+# Pahrump Hills: study-area selection and terrain research
 
 This folder records the source-based study-area selection and earlier image-only
 preview. The current **contract-v1 terrain delivery** is documented in
 [`public/data/gale/pahrump-hills-v1/README.md`](../../public/data/gale/pahrump-hills-v1/README.md).
 It includes real 5 m elevation/slope layers and a same-footprint basemap.
-Original rasters, frontend code, and routing algorithms are unchanged.
+The package is integrated into the 2D/3D planner. Original rasters remain
+unchanged; see [the current source guide](../data-sources.md) for runtime data.
 
-The next preparation step now uses the region-independent
+The reusable preparation pipeline uses the region-independent
 [terrain planner](../../scripts/terrain/README.md) with a separate region config.
 Its [package plan](pahrump-hills-package-plan.json) records the native grid,
-source verification, and outstanding review items. The
+source verification, and review items at that earlier stage. It is not a current
+frontend-readiness or runtime-grid record. The
 [contract proposal](package-contract-proposal.md) is historical; the canonical
 contract is [`docs/terrain-data-contract.md`](../terrain-data-contract.md).
 

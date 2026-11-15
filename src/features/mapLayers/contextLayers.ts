@@ -62,16 +62,36 @@ export function contextLayer(terrain: TerrainPackage, context: MapContext, kind:
     for (const points of grouped.values()) {
       circleMarker(toLatLng(raster, points[0]), { pane: 'historyContext', className: 'apxs-marker', bubblingMouseEvents: false, radius: 6, color: points.some((point) => point.flags.length) ? '#fb9d6b' : '#bda1ff', weight: 2, fillOpacity: 0.85 }).bindPopup(() => {
         const popup = document.createElement('div')
-        popup.append(node('strong', `${points.length} APXS measurement record(s)`), node('p', 'Research observations at associated rover positions, not exact rock footprints. Repeat measurements and handled samples are not separate mission sites.'))
+        popup.className = 'apxs-popup'
+        popup.append(node('strong', points.length === 1 ? points[0].name : `${points.length} APXS observations`))
         const list = document.createElement('ul')
+        list.className = 'apxs-records'
         for (const point of points) {
-          const item = node('li', `${point.name} · sol ${point.sol} · CSV row ${point.sourceLine}${point.flags.length ? ' · ' + point.flags.join('; ') : ''}`)
+          const item = document.createElement('li')
+          if (points.length > 1) item.append(node('h4', point.name))
+          const fields = document.createElement('dl')
+          for (const [label, value] of [
+            ['Target', point.name],
+            ['Mission', 'NASA Curiosity'],
+            ['Instrument', 'APXS - Alpha Particle X-ray Spectrometer'],
+            ['Experiment', 'Elemental composition measurement'],
+            ['Mission day', `Sol ${point.sol}`],
+            ['Map position', 'Associated rover position'],
+          ]) {
+            fields.append(node('dt', label), node('dd', value))
+          }
+          item.append(fields)
+          if (point.flags.length) item.append(node('p', `Source review flags: ${point.flags.join('; ')}`))
           item.append(waypointButton(point, `APXS: ${point.name} (rover proxy)`, actions, popup, observationOrigin(context, point)))
+          const source = document.createElement('details')
+          source.append(node('summary', 'Source record'))
+          source.append(node('p', `Table row: ${point.sourceLine}. This identifies the measurement's row in the published CSV data table.`), sourceLink(context.apxsSource.table_url))
+          item.append(source)
           list.append(item)
         }
-        popup.append(list, sourceLink(context.apxsSource.table_url), node('p', 'Waypoints snap to the routing grid; the source position uncertainty remains unstated.'))
+        popup.append(list)
         return popup
-      }, { maxHeight: 300 }).addTo(group)
+      }, { className: 'apxs-observation-popup', minWidth: 280, maxWidth: 320, maxHeight: 380 }).addTo(group)
     }
   } else if (kind === 'traverse') {
     for (const segment of context.traverseSegments) polyline(segment.map(([x, y]) => toLatLng(raster, { x, y })), { pane: 'historyContext', className: 'historical-traverse', color: '#f6cf69', weight: 2, interactive: false }).addTo(group)

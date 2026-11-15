@@ -159,7 +159,7 @@ export function MissionPanel({
         </dl>
         <p className="info-notice">
           {terrainState.status === 'ready' && !terrainState.terrain.manifest.synthetic
-            ? 'Prototype HiRISE terrain: positions are not verified to absolute accuracy, and routes are not safety assessments. See Data sources for all limitations.'
+            ? 'Prototype HiRISE terrain: absolute positions are unverified, and routes are not safety assessments. See Data sources and individual observations for limitations.'
             : 'No mission observations, verified coordinates, or safety assessments are available.'}
         </p>
       </div>

@@ -1,5 +1,11 @@
 # Local app verification — 14 November 2026
 
+**Historical audit:** the four findings below were addressed before baseline
+PR #15 was merged. Later work also added 3D, mission saving and the UI redesign.
+This report retains the original evidence and test counts; it is not a current
+defect list. See [the baseline follow-up](premerge-verification-2026-11-15.md)
+and [ROADMAP.md](../../ROADMAP.md).
+
 Reviewed checkout: `37c69ed`, including real-terrain/EVA integration from `b5589ff`.
 This is implementation and data-transformation verification, not independent
 scientific ground truth, astronaut safety certification, or datum validation.

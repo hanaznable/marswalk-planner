@@ -29,7 +29,7 @@ export function AppHeader({ regionId, onRegionChange }: AppHeaderProps) {
           <Icon name="chevron" size={12} />
         </span>
       </label>
-      <p className="header-context">Prototype · NASA Space Apps Challenge 2026</p>
+      <p className="header-context">Prototype - NASA Space Apps Challenge 2026</p>
     </header>
   )
 }

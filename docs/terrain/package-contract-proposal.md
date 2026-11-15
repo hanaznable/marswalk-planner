@@ -3,7 +3,8 @@
 Status: historical Developer B proposal, superseded by the existing
 [`docs/terrain-data-contract.md`](../terrain-data-contract.md). Do not implement
 a second schema from this document. The real v1 package is now under
-`public/data/gale/pahrump-hills-v1`; frontend loader integration remains pending.
+`public/data/gale/pahrump-hills-v1` and is integrated in the 2D/3D planner.
+The proposed fields below remain historical and must not replace the live schema.
 
 ## Separation
 

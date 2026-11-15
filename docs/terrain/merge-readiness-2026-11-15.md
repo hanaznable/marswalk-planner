@@ -2,7 +2,12 @@
 
 Initial assessment and completion update, 2026-11-15.
 
-## Latest status: ready for the baseline PR
+**Historical record:** baseline PR #15 was merged as `2c8e193`. The 3D view,
+mission library and UI redesign were subsequently merged in PRs #16, #17 and #19.
+Repository/branch state and next steps below describe the pre-merge checkout,
+not current work. See [ROADMAP.md](../../ROADMAP.md) for current priorities.
+
+## Pre-merge status: ready for the baseline PR
 
 The user confirmed frontend review is complete. The image-status issues,
 report-provenance gap and narrow-map banner collision are fixed in implementation
@@ -10,7 +15,7 @@ commit `6ff83e5`. A detached, clean checkout passed build, lint, 193 TypeScript
 tests, 23 Python tests and 39 production-browser checks, with no raw NASA files.
 See [completed verification](premerge-verification-2026-11-15.md). The remaining
 sections preserve the original assessment/checklist; they are not a request to
-repeat frontend review. The actual merge has not been performed.
+repeat frontend review. The actual merge had not been performed at that review.
 
 ## Repository state
 

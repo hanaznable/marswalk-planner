@@ -8,6 +8,23 @@
 .map-canvas .leaflet-popup-content { color: #182b31; font: 12px/1.5 system-ui, sans-serif; }
 .map-canvas .leaflet-popup-content ul { padding-left: 17px; }
 .map-canvas .leaflet-popup-content a { color: #23566d; text-decoration: underline; }
+/* Leaflet measures popup content before assigning its inline width. A grid with
+   a flexible value column otherwise measures too narrowly and wraps every word.
+   Keep a readable width while allowing the card to fit narrow viewports. */
+.map-canvas .apxs-observation-popup .leaflet-popup-content {
+  min-width: min(300px, calc(100vw - 88px));
+  max-width: calc(100vw - 88px);
+}
+.map-canvas .apxs-popup { overflow-wrap: break-word; }
+.map-canvas .apxs-popup > strong { font-size: 15px; }
+.map-canvas .apxs-popup .apxs-records { list-style: none; padding: 0; margin: 12px 0; }
+.apxs-records > li + li { border-top: 1px solid #d2dce0; margin-top: 12px; padding-top: 12px; }
+.apxs-records h4 { margin: 0 0 8px; }
+.apxs-records dl { display: grid; grid-template-columns: 80px minmax(0, 1fr); gap: 6px 10px; margin: 0; }
+.apxs-records dt { color: #52656a; }
+.apxs-records dd { min-width: 0; color: #182b31; overflow-wrap: break-word; word-break: normal; }
+.apxs-records details { margin: 8px 0 12px; }
+.apxs-records summary { cursor: pointer; color: #23566d; }
 .context-add-waypoint { display: block; margin: 6px 0 12px; padding: 7px 10px; border: 1px solid #718d94; border-radius: 4px; background: #e5edef; color: #183b43; font: inherit; cursor: pointer; }
 .context-add-waypoint:disabled { cursor: default; color: #52656a; background: #eef2f3; }
 .pending-layer-guide { margin: 8px 16px 12px; font-size: 12px; line-height: 1.6; color: var(--muted); }

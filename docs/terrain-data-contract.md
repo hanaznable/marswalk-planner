@@ -1,8 +1,10 @@
 # Terrain Data Contract (v1)
 
 **Status:** Agreed conventions between Developer B (data pipeline) and Developer Y
-(frontend). The final raster metadata is not verified yet; the values below are
-implementation targets, not claims about processed datasets. The shared code in
+(frontend), implemented by the current package loader and Pahrump Hills delivery.
+The JSON example below is illustrative; actual metadata is in
+`public/data/gale/pahrump-hills-v1/manifest.json`. Absolute positional accuracy
+remains unverified. The shared code in
 `src/features/datasets/` is jointly owned: coordinate breaking schema changes.
 Code: `src/features/datasets/terrainContract.ts`.
 
@@ -14,9 +16,9 @@ coordinates, raster sizes, or elevations are assumed.
 
 | Topic | Decision |
 |---|---|
-| CRS | The candidate HiRISE DTM uses an equirectangular Mars projection (exact parameters to be confirmed in QGIS/GDAL). The original CRS and transform are preserved in the manifest; the frontend works in local metres derived from the raster. No Earth EPSG:4326 coordinates. |
-| Resolution | Source DTM ~1.01 m/pixel. Routing grid target: **5 m/cell, about 200 × 200 cells** for the ~1 × 1 km area. The full-resolution DEM is kept for later use. |
-| Slope | Computed by the pipeline in degrees (Python/Rasterio/NumPy). **Required layer**; the frontend does not derive slope. |
+| CRS | The delivered HiRISE DTM uses spherical Mars Equirectangular, radius 3396190 m, central meridian 137.39°E, standard parallel 0°. The source WKT and working transform are preserved in the manifest; the 2D frontend works in local metres derived from the raster. No Earth EPSG:4326 coordinates. |
+| Resolution | Source DTM ~1.01 m/pixel. Delivered routing grid: **5 m/cell, 200 × 200 cells**, exactly 1000 × 1000 projected metres. These are package values, not schema constants. The original DEM remains in ignored raw storage. |
+| Slope | Computed by the Python/NumPy pipeline in degrees: maximum native Horn slope per output cell. **Required layer**; the frontend does not derive slope. |
 | Hazard | No validated hazard dataset. **Not part of v1.** Routing uses distance, slope and no-data handling only. Slope limits are planning assumptions, not certified safety thresholds. |
 | Basemap | JPEG, at most about 2048 × 2048 px, same footprint as the routing grid, with its own pixel-to-map transform. |
 | Ownership | `src/features/datasets/` is jointly owned by B and Y. |
@@ -86,8 +88,9 @@ extent to within half a basemap pixel, or the package is rejected.
 }
 ```
 
-The values above are placeholders, not real data. Each `geoTransform` is exactly
-what GDAL's `GetGeoTransform()` returns. Development fixtures set
+The values above are placeholders, not real data. Each `geoTransform` follows
+GDAL's six-value convention and describes the exported grid; preprocessing may
+crop or resample the original source grid. Development fixtures set
 `"synthetic": true` and `"source": null`; the UI labels them as synthetic and
 never presents them as NASA data.
 
@@ -98,3 +101,5 @@ never presents them as NASA data.
 - Leaflet (`CRS.Simple`) displays the package in local metres. Over a ~1 km area
   this needs no projection library.
 - Clicks become grid cells with `mapToCell`; routes are drawn with `cellCenterToMap`.
+- The independent 3D renderer uses the same terrain package and route results,
+  with its own documented [scene frame](../src/features/terrain3d/README.md).

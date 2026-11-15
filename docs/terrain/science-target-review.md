@@ -1,7 +1,11 @@
 # Developer B review of Developer Y's proposed science-target contract
 
-Status: review based on the supplied proposal summary; no shared TypeScript
-schema changed, and no runtime science collection exported yet.
+Status: historical review of the supplied proposal summary. The agreed
+[point contract](../science-target-contract.md) and runtime collection at
+`public/data/science/pahrump-hills-v1/` are now integrated. The historical
+traverse is delivered separately through [display context](../display-context-contract.md).
+The source/frame reasoning below remains applicable; future-tense handoff notes
+record the original review, not outstanding implementation work.
 
 ## 1. Position sources and frame
 
