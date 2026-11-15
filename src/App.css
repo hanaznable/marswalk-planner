@@ -513,12 +513,17 @@ h3 {
   line-height: 1.6;
   color: var(--muted);
 }
+.add-waypoint-row {
+  display: flex;
+  gap: 8px;
+}
 .add-waypoint {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   padding: 9px 12px;
   border: 1px solid var(--accent-strong);
   border-radius: 6px;
@@ -851,15 +856,62 @@ dd {
   background: var(--accent-soft);
 }
 .clear-waypoints {
-  display: block;
-  margin: 10px auto 0;
-  background: transparent;
-  color: var(--muted);
-  font-size: 12px;
-  text-decoration: underline;
-}
-.clear-waypoints:hover {
+  display: grid;
+  place-items: center;
+  flex: 0 0 40px;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  background: var(--surface-raised);
   color: var(--text-secondary);
+}
+.clear-waypoints:not(:disabled):hover {
+  color: var(--danger-text);
+  border-color: var(--danger-border);
+  background: var(--danger-bg);
+}
+.clear-waypoints:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.clear-confirm {
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid var(--danger-border);
+  border-radius: 6px;
+  background: var(--danger-bg);
+  color: var(--text);
+  font-size: 13px;
+}
+.clear-confirm strong {
+  color: var(--danger-text);
+}
+.clear-confirm p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+.clear-confirm-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.clear-confirm-actions button {
+  flex: 1;
+  padding: 7px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  background: var(--surface-raised);
+  color: var(--text);
+  font-size: 12px;
+}
+.clear-confirm-actions button:hover {
+  background: var(--surface-hover);
+}
+.clear-confirm-actions button.danger {
+  border-color: var(--danger-border);
+  background: var(--danger-bg);
+  color: var(--danger-text);
 }
 
 /* Route lines, legend, settings and comparison */

@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { Icon } from '../../../components/ui/Icon'
 import {
   cellCenterToMap,
@@ -60,6 +61,18 @@ export function RoutePlanner({
   onOpenReport,
   onDownloadJson,
 }: RoutePlannerProps) {
+  // Clearing every waypoint asks first. The prompt closes by itself if the list
+  // empties some other way (removing the last point, switching region).
+  const [confirmingClear, setConfirmingClear] = useState(false)
+  if (confirmingClear && waypoints.length === 0) setConfirmingClear(false)
+  const clearButton = useRef<HTMLButtonElement>(null)
+  const addButton = useRef<HTMLButtonElement>(null)
+  const cancelButton = useRef<HTMLButtonElement>(null)
+  useEffect(() => {
+    if (confirmingClear) cancelButton.current?.focus()
+  }, [confirmingClear])
+  const count = waypoints.length
+
   return (
     <div className="route-planner">
       <div className="section-heading">
@@ -122,20 +135,72 @@ export function RoutePlanner({
         </ol>
       )}
 
-      <button
-        className={`add-waypoint${addMode ? ' active' : ''}`}
-        disabled={!raster}
-        aria-pressed={addMode}
-        onClick={onToggleAddMode}
-      >
-        <Icon name={addMode ? 'check' : 'plus'} size={16} />
-        {addMode
-          ? 'Done placing'
-          : waypoints.length === 0
-            ? 'Add first waypoint'
-            : 'Add waypoints'}
-        <Icon name={raster ? 'pin' : 'lock'} size={13} />
-      </button>
+      <div className="add-waypoint-row">
+        <button
+          ref={addButton}
+          className={`add-waypoint${addMode ? ' active' : ''}`}
+          disabled={!raster}
+          aria-pressed={addMode}
+          onClick={onToggleAddMode}
+        >
+          <Icon name={addMode ? 'check' : 'plus'} size={16} />
+          {addMode
+            ? 'Done placing'
+            : waypoints.length === 0
+              ? 'Add first waypoint'
+              : 'Add waypoints'}
+          <Icon name={raster ? 'pin' : 'lock'} size={13} />
+        </button>
+        <button
+          ref={clearButton}
+          className="clear-waypoints"
+          aria-label="Clear all waypoints"
+          title={count === 0 ? 'No waypoints to clear' : 'Clear all waypoints'}
+          disabled={count === 0}
+          aria-expanded={confirmingClear}
+          onClick={() => setConfirmingClear(true)}
+        >
+          <Icon name="trash" size={17} />
+        </button>
+      </div>
+      {confirmingClear && (
+        <div
+          className="clear-confirm"
+          role="alertdialog"
+          aria-labelledby="clear-confirm-title"
+          aria-describedby="clear-confirm-text"
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') {
+              setConfirmingClear(false)
+              clearButton.current?.focus()
+            }
+          }}
+        >
+          <strong id="clear-confirm-title">
+            {count === 1 ? 'Delete the waypoint?' : `Delete all ${count} waypoints?`}
+          </strong>
+          <p id="clear-confirm-text">
+            The routes and estimates for them are cleared too. Saved missions are
+            not affected.
+          </p>
+          <div className="clear-confirm-actions">
+            <button
+              className="danger"
+              onClick={() => {
+                onClear()
+                setConfirmingClear(false)
+                // The trash button is disabled once the list is empty.
+                addButton.current?.focus()
+              }}
+            >
+              {count === 1 ? 'Delete' : 'Delete all'}
+            </button>
+            <button ref={cancelButton} onClick={() => { setConfirmingClear(false); clearButton.current?.focus() }}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
       <p className="availability-note">
         {!raster
           ? 'Available once terrain is loaded'
@@ -143,11 +208,6 @@ export function RoutePlanner({
             ? 'Click the map to place points. Drag markers to move them.'
             : 'Drag markers on the map to adjust them.'}
       </p>
-      {waypoints.length > 0 && (
-        <button className="clear-waypoints" onClick={onClear}>
-          Clear all waypoints
-        </button>
-      )}
 
       <div className="route-settings">
         <span className="eyebrow">PLANNING ASSUMPTIONS</span>

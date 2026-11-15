@@ -84,6 +84,11 @@ const paths = {
     </>
   ),
   check: <path d="m5 12 4 4L19 6" />,
+  trash: (
+    <>
+      <path d="M4 7h16M10 7V4.5h4V7M6 7l1 13h10l1-13M10 11v6M14 11v6" />
+    </>
+  ),
 } as const
 
 export type IconName = keyof typeof paths
