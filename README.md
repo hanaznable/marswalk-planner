@@ -48,6 +48,11 @@ Open the local URL Vite prints. The repository includes the processed data, so
 the app needs no Python, GIS software or NASA downloads. On Windows PowerShell
 with script execution disabled, use `npm.cmd ci` and `npm.cmd run dev`.
 
+To serve the production build, the same files a web host would publish, run
+`npm run build` and then `npm run preview`. The build uses relative paths, so
+the `dist/` folder also works from any sub-folder of a static host. A manual
+GitHub Pages workflow is in [`.github/workflows/pages.yml`](.github/workflows/pages.yml).
+
 **Two-minute walkthrough**
 
 1. The app opens on **Gale Crater - Pahrump Hills**. The scale bar shows
