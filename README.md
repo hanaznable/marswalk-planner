@@ -2,8 +2,8 @@
 
 **A Mars EVA route planner built on real HiRISE terrain.**
 Plan a walking traverse across a 1 × 1 km patch of Gale Crater, compare a
-shortest route with a slope-aware one, connect stops to sourced Curiosity
-science, and export the plan as a mission report.
+shortest route with a slope-aware one, add science activities backed by
+Curiosity's findings, and export the plan as a mission report.
 
 Built for the *Interplanetary Survival Guide: Martian Map* challenge of the
 2026 NASA Space Apps Challenge. Prototype, not an operational navigation or
@@ -34,9 +34,10 @@ coordinate systems. POLARIS Module brings them onto one map for one site.
 | **Real terrain** | 1 × 1 km of Pahrump Hills, Gale Crater: HiRISE elevation, slope and orbital imagery on a 5 m planning grid. |
 | **Two route options** | A* routing between ordered waypoints. *Shortest* finds the shortest path over terrain with data. *Slope-aware* refuses cells steeper than your slope limit and prefers gentler ground. |
 | **Science on the map** | Curiosity drill sites, APXS chemistry measurements, the historical rover traverse and a published mineral finding, each with its sources. Add them to the route as waypoints. |
+| **Science suggestions** | Pick an objective (rock textures, past water activity or mineral diversity) and the equipment you carry. The Science tab suggests 14 sourced activities: photography and sample-context stops, two orbital imaging candidates and four proposed rock-chip samples. Each card explains why the stop matters and links its evidence; one click adds it to the route. |
 | **EVA estimate** | Distance, elevation gain and loss, an elevation profile and an estimated duration from your walking speed and time per stop. Optional return to start. |
 | **3D terrain view** | The same terrain, imagery, routes and markers in 3D, at true vertical scale by default. |
-| **Missions and reports** | Save named missions in the browser, export or import them as JSON, and export a printable or JSON mission report with sources, assumptions and limitations. |
+| **Missions and reports** | Save named missions in the browser, export or import them as JSON, and export a printable or JSON mission report with sources, assumptions and limitations. Missions and reports keep the chosen science activities and their evidence. |
 
 ![The same plan in the 3D terrain view, with heights exaggerated 2× for display](docs/images/polaris-3d-terrain.png)
 
@@ -67,7 +68,8 @@ workflow"); it is redeployed only when someone runs it.
 **Two-minute walkthrough**
 
 1. The app opens on **Gale Crater - Pahrump Hills**. The scale bar shows
-   distance; the grid button in the map toolbar adds local east/north labels.
+   distance; the grid button in the map toolbar adds a metric grid with local
+   east/north labels.
 2. In the left panel, open **Drill sites** under **Drill proxies**, select
    **Confidence Hills** and choose **Add as waypoint**. Its card shows the drill
    sols and sources.
@@ -75,9 +77,14 @@ workflow"); it is redeployed only when someone runs it.
 4. Compare **Shortest** (dashed) and **Slope-aware** (solid). Move the
    **Max slope** slider and watch the slope-aware route change, or fail with
    a reason. The planner notes that only the slope-aware route applies the limit.
-5. Turn on **Historical traverse** or **APXS observations** in the left panel.
-6. Switch to **3D terrain** and orbit around the route.
-7. Open the **Missions** tab to save the plan, or choose **Mission report** to
+5. Open the **Science** tab. Choose the objective **Investigate past water
+   activity**, tick the equipment you carry, open **Why this stop?** on a card
+   and choose **Add to route**. A card that needs equipment you have not ticked
+   shows it as missing and cannot be added.
+6. Turn on **Historical traverse**, **APXS observations** or **Science
+   missions** in the left panel to see the evidence on the map.
+7. Switch to **3D terrain** and orbit around the route.
+8. Open the **Missions** tab to save the plan, or choose **Mission report** to
    print it.
 
 ## How it works
@@ -85,13 +92,15 @@ workflow"); it is redeployed only when someone runs it.
 ```mermaid
 flowchart LR
   A["HiRISE DTM and orthoimage<br/>(NASA PDS, UArizona)"] --> B["Python preprocessing<br/>crop, 5 m grid, slope"]
-  C["Curiosity waypoints, traverse<br/>APXS table, mission sources"] --> D["Reviewed science and<br/>context collections"]
+  C["Curiosity waypoints, traverse<br/>APXS table, mission sources"] --> D["Reviewed science, context<br/>and activity collections"]
   B --> E["Versioned terrain package<br/>manifest + hashes"]
   D --> F["Static JSON in public/data"]
   E --> G["React app"]
   F --> G
   G --> H["A* routing<br/>2 profiles"]
   G --> I["2D map (Leaflet)<br/>3D view (Three.js)"]
+  G --> K["Science suggestions<br/>objective + equipment"]
+  K --> H
   H --> J["EVA estimate, profile,<br/>mission report"]
 ```
 
@@ -100,14 +109,19 @@ flowchart LR
   is the area-weighted mean of the source pixels. Slope is computed at the
   source's 1 m resolution (Horn method) and the steepest value in each 5 m cell
   is kept, so the grid never hides a steep patch.
-- **Contracts.** Terrain, science targets, context layers and imagery are
-  separate, versioned files with SHA-256 hashes. Each one names the terrain
+- **Contracts.** Terrain, science targets, science activities, context layers
+  and imagery are separate, versioned files with SHA-256 hashes. Each one names the terrain
   package it was prepared for, and the app validates it and refuses one made
   for a different package. The context layers and the colour image also check
   the exact terrain version by hash.
 - **Routing (TypeScript).** A* on the 5 m grid with 8-neighbour moves and no
   corner cutting. Cells without data are never crossed. When a leg is
   impossible, the planner says why instead of relaxing the limits.
+- **Science suggestions.** Activities are filtered by objective, and one can
+  be added only when its required equipment is ticked. Activities at the same
+  place share one route stop, so the time per stop is counted once. Removing an
+  activity removes its stop only if nothing else uses it. Routing costs and the
+  EVA arithmetic do not change.
 - **Display.** Leaflet shows the 2D map in local metres. Three.js shows the
   terrain in 3D and loads only when that view is opened.
 - **No backend.** Everything runs in the browser from static files. Missions
@@ -124,6 +138,9 @@ flowchart LR
 | Drill activities | [NASA presentation (2020), slide 5](https://assets.science.nasa.gov/content/dam/science/cds/researchers/nac/pac/2020/06-Meyer-PAC-Mars_Science_8-2020_v9_Tagged.pdf) and [JPL PIA21709](https://www.jpl.nasa.gov/images/pia21709-key-locations-studied-at-pahrump-hills-on-mars/) | Confidence Hills, Mojave 2, Telegraph Peak |
 | APXS measurements | Berger (2020), *Overview of MSL APXS Targets from Sol 0 to 2301*, [doi:10.17189/1519050](https://doi.org/10.17189/1519050) | 104 measurement records at 30 positions |
 | Mineral finding | [NASA/JPL: tridymite found at Buckskin](https://www.jpl.nasa.gov/news/nasa-scientists-discover-unexpected-mineral-on-mars/) | Buckskin sample marker |
+| Rock textures | McBride et al. (2015), [LPSC abstract 2855](https://www.hou.usra.edu/meetings/lpsc2015/pdf/2855.pdf) | Photography activities at Pelona, Punchbowl and Pickhandle |
+| Past water and mineralogy | [NASA/JPL: Garden City veins](https://www.jpl.nasa.gov/news/upgrade-helps-nasa-study-mineral-veins-on-mars/); Rampe et al. (2015), [NASA NTRS 20150019443](https://ntrs.nasa.gov/api/citations/20150019443/downloads/20150019443.pdf); [JPL PIA21146](https://www.jpl.nasa.gov/images/pia21146-mudstone-mineralogy-from-curiositys-chemin-2013-to-2016/) | Water and mineral-diversity activities |
+| Sampling methods | [NASA Spacewalking Tools](https://www.nasa.gov/suits-and-rovers/spacewalking-tools/); Naids et al. (2021), [NASA NTRS 20210000242](https://ntrs.nasa.gov/api/citations/20210000242/downloads/Developing%20Geology%20Sampling%20Tools_Lunar%20Surface%20Science%20Workshop_FINAL_2021.pdf); Apollo sample-bag records | Rock-chip sampling plans and equipment |
 
 Image and terrain credit: NASA/JPL-Caltech/UArizona. Each package in
 [`public/data`](public/data) has a README and a `provenance.json` with source
@@ -145,6 +162,12 @@ POLARIS Module is a planning prototype. It says what it does not know.
 - **Slope limits and walking speeds are your assumptions,** not certified
   astronaut limits. The EVA duration is walking time plus stop time, not a
   physiological model.
+- **Science activities are proposals.** They follow up published Curiosity
+  findings; they are not new science. Sampling plans adapt lunar tool and
+  sample-bag practice to a Mars scenario, so the equipment, sample
+  availability and task duration are not established. The two orbital
+  candidates are imaging regions chosen by the project, not mineral detections.
+  Activities use your time per stop; none has its own duration.
 - **No hazard, thermal or mineral-abundance model.** The enhanced RGB image uses
   synthetic blue and is not true colour or a mineral map. CRISM, THEMIS,
   geological units and hazard maps are listed in the app as not yet available.
@@ -159,11 +182,12 @@ src/features/
   map/           2D map, waypoints, layer panel
   mapLayers/     Elevation/slope overlays, context layers, RGB imagery
   science/       Science target list and details
+  scienceSuggestions/  Objective and equipment choice, activity cards, map evidence
   terrain3d/     3D terrain view (Three.js, loaded on demand)
   mission/       Planner panel and mission report
   missions/      Saved missions: browser library, JSON import/export
-scripts/terrain/ Python preprocessing and source checks
-public/data/     Processed terrain, imagery, science and context packages
+scripts/terrain/ Python preprocessing, activity exporters and source checks
+public/data/     Processed terrain, imagery, science, activity and context packages
 docs/            Data contracts, terrain reviews and validation records
 ```
 
@@ -171,19 +195,22 @@ Key documents:
 
 - [Current roadmap and implementation status](ROADMAP.md)
 - [Integrated data and processing guide](docs/data-sources.md)
-
 - [Terrain data contract](docs/terrain-data-contract.md)
 - [Science target contract](docs/science-target-contract.md) and
   [display context contract](docs/display-context-contract.md)
 - [3D coordinate conventions](src/features/terrain3d/README.md)
 - [Georeferencing review](docs/terrain/georeferencing-review.md) and
   [terrain validation records](docs/terrain/README.md)
-- [Science activity contract proposal](docs/science-activity-contract-proposal.md)
+- [Science activity contract](docs/science-activity-contract-proposal.md) and
+  [science suggestions implementation guide](docs/science-suggestions-implementation.md)
+- Activity source reviews: [rock textures](docs/terrain/science-activity-review.md),
+  [water, minerals and orbital candidates](docs/terrain/science-objectives-v2.md)
+  and [rock sampling](docs/terrain/rock-sampling-v3.md)
 
 ## Development
 
 ```sh
-npm test         # Unit tests: routing, contracts, coordinates, missions, 3D geometry
+npm test         # Unit tests: routing, contracts, coordinates, missions, science activities, 3D geometry
 npm run lint     # ESLint
 npm run build    # Type-check and production build
 npm run preview  # Serve the production build
@@ -194,10 +221,8 @@ uses Python with NumPy and Pillow; see [terrain preparation](scripts/terrain/REA
 
 ## What's next
 
-1. **Expand science-backed suggestions.** The initial local Science tab is implemented. Pick a science objective and available
-   equipment, see suggested activities linked to their historical evidence, and
-   add them to the route. The independent [activity contract](docs/science-activity-contract-proposal.md)
-   now supports imaging and rock-sampling plans with mission/report persistence.
+1. **More science activities**, for more objectives and equipment, each
+   reviewed against its sources like the current 14.
 2. **More data layers**, such as CRISM mineral indicators, once each has been
    reviewed for coverage and alignment.
 3. **Wider coverage and more regions**, using the same versioned package format.
@@ -218,19 +243,3 @@ The NASA and mission data in [`public/data`](public/data) is not covered by
 that license. It comes from the sources listed under [Data sources](#data-sources),
 keeps their own terms, and must be credited as shown there
 (images and terrain: NASA/JPL-Caltech/UArizona).
-
-The 2D map toolbar offers a metric grid with local east/north labels and explicit
-display/routing spacing. A zoom-aware scale bar remains visible with the grid off.
-
-
-## Science suggestions (local feature branch)
-
-Open Science in the planner, select the listed equipment and add a suggested activity.
-The current collection offers Study rock textures, Investigate past water activity
-and Investigate mineral diversity: twelve historical follow-ups (including four
-rock-sampling proposals) and two reviewed HiRISE imaging candidates. The Science missions switch shows or hides all 2D science evidence overlays.
-See the [imaging source review](docs/terrain/science-objectives-v2.md) and
-[rock-sampling methods and equipment sources](docs/terrain/rock-sampling-v3.md).
-Use Route for comparison/reports and Missions to save or export the complete plan.
-Activities retain their evidence in mission v2 files; existing v1 files still open.
-See [implementation and validation](docs/science-suggestions-implementation.md).
