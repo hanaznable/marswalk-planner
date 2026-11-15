@@ -39,7 +39,9 @@ coordinate systems. POLARIS Module brings them onto one map for one site.
 | **3D terrain view** | The same terrain, imagery, routes and markers in 3D, at true vertical scale by default. |
 | **Missions and reports** | Save named missions in the browser, export or import them as JSON, and export a printable or JSON mission report with sources, assumptions and limitations. Missions and reports keep the chosen science activities and their evidence. |
 
-![The same plan in the 3D terrain view, with heights exaggerated 2× for display](docs/images/polaris-3d-terrain.png)
+![The Science tab with the objective "Investigate past water activity", the equipment checklist and the Garden City veins activity added to the route, its historical evidence open, and the science mission sites shown on the map](docs/images/polaris-science-suggestions.png)
+
+![The plan with the Garden City activity added, in the 3D terrain view, with heights exaggerated 2× for display](docs/images/polaris-3d-terrain.png)
 
 ## Try it
 
