@@ -74,10 +74,6 @@ export function MissionPanel({
       className="panel mission-panel"
       aria-label="Route planning and mission information"
     >
-      <div className="panel-heading">
-        <span className="eyebrow">MISSION CONTROL</span>
-        <span className="panel-index">02</span>
-      </div>
       <div
         className="mission-tabs"
         role="tablist"
@@ -92,8 +88,8 @@ export function MissionPanel({
           tabIndex={tab === 'route' ? 0 : -1}
           onClick={() => setTab('route')}
         >
-          <Icon name="route" size={15} />
-          Route planner
+          <Icon name="route" size={14} />
+          Route
         </button>
         <button
           id="library-tab"
@@ -103,7 +99,7 @@ export function MissionPanel({
           tabIndex={tab === 'library' ? 0 : -1}
           onClick={() => setTab('library')}
         >
-          <Icon name="database" size={15} />
+          <Icon name="database" size={14} />
           Missions
         </button>
         <button
@@ -114,8 +110,8 @@ export function MissionPanel({
           tabIndex={tab === 'mission' ? 0 : -1}
           onClick={() => setTab('mission')}
         >
-          <Icon name="info" size={15} />
-          Mission info
+          <Icon name="info" size={14} />
+          Info
         </button>
       </div>
       <div
@@ -145,19 +141,12 @@ export function MissionPanel({
         hidden={tab !== 'mission'}
       >
         <div className="section-heading">
-          <h2>Mission information</h2>
+          <h2>Plan context</h2>
         </div>
-        <p className="panel-description">
-          A foundation for future exploration.
-        </p>
         <dl>
           <div>
             <dt>Selected region</dt>
             <dd>{region.name}</dd>
-          </div>
-          <div>
-            <dt>Mission assignment</dt>
-            <dd>Not configured</dd>
           </div>
           <div>
             <dt>Terrain</dt>
@@ -167,59 +156,13 @@ export function MissionPanel({
             <dt>Science targets</dt>
             <dd>{targetsLabel(targetsState)}</dd>
           </div>
-          <div>
-            <dt>Surface conditions</dt>
-            <dd>Not available</dd>
-          </div>
         </dl>
         <p className="info-notice">
           {terrainState.status === 'ready' && !terrainState.terrain.manifest.synthetic
-            ? 'Prototype HiRISE terrain: positions are not verified to absolute accuracy, and routes are not safety assessments. See the data catalog for all limitations.'
+            ? 'Prototype HiRISE terrain: positions are not verified to absolute accuracy, and routes are not safety assessments. See Data sources for all limitations.'
             : 'No mission observations, verified coordinates, or safety assessments are available.'}
         </p>
       </div>
-      <div className="mission-bottom">
-        <div className="section-heading">
-          <span className="eyebrow">WORKSPACE READINESS</span>
-          <Icon name="compass" size={15} />
-        </div>
-        <div className="readiness-item">
-          <span className="readiness-check">
-            <Icon name="check" size={12} />
-          </span>
-          Application shell<span>READY</span>
-        </div>
-        <ReadinessItem
-          label="NASA terrain"
-          ready={terrainState.status === 'ready' && !terrainState.terrain.manifest.synthetic}
-          pending="PENDING"
-        />
-        <ReadinessItem label="Route planning" ready={terrainState.status === 'ready'} pending="NEEDS TERRAIN" />
-        <ReadinessItem
-          label="Science targets"
-          ready={targetsState.status === 'ready' && !targetsState.collection.synthetic}
-          pending={
-            targetsState.status === 'ready' ? 'SYNTHETIC' : targetsState.status === 'error' ? 'FAILED' : 'PENDING'
-          }
-        />
-        <ReadinessItem label="3D terrain view" ready={terrainState.status === 'ready'} pending="NEEDS TERRAIN" />
-      </div>
     </aside>
-  )
-}
-
-function ReadinessItem({ label, ready, pending }: { label: string; ready: boolean; pending: string }) {
-  return (
-    <div className="readiness-item">
-      {ready ? (
-        <span className="readiness-check">
-          <Icon name="check" size={12} />
-        </span>
-      ) : (
-        <span className="readiness-pending" />
-      )}
-      {label}
-      <span>{ready ? 'READY' : pending}</span>
-    </div>
   )
 }

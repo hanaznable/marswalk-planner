@@ -1,7 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
 import { AppHeader } from './components/layout/AppHeader'
-import { StatusBar } from './components/layout/StatusBar'
-import { Icon } from './components/ui/Icon'
 import { regions } from './features/datasets/regions'
 import { LayersPanel } from './features/map/components/LayersPanel'
 import { MapViewport } from './features/map/components/MapViewport'
@@ -36,7 +34,7 @@ const NO_TARGETS: readonly PlacedTarget[] = []
 function App() {
   const [regionId, setRegionId] = useState(regions[0].id)
   const [viewMode, setViewMode] = useState<ViewMode>('2d')
-  const [showGrid, setShowGrid] = useState(true)
+  const [showGrid, setShowGrid] = useState(false)
   const [expanded, setExpanded] = useState(false)
   const [addMode, setAddMode] = useState(false)
   const region = regions.find((item) => item.id === regionId) ?? regions[0]
@@ -216,20 +214,6 @@ function App() {
         Skip to map
       </a>
       <AppHeader regionId={regionId} onRegionChange={setRegionId} />
-      <div className="workspace-heading">
-        <div>
-          <p className="eyebrow">
-            MISSION WORKSPACE <span>/</span> MARS
-          </p>
-          <h1>
-            Surface exploration<span className="title-dot">.</span>
-          </h1>
-        </div>
-        <div className="workspace-state">
-          <span className="status-dot" /> Workspace initialized{' '}
-          <span className="tag">PREVIEW</span>
-        </div>
-      </div>
       <main className="workspace" aria-label="Mars exploration workspace">
         <LayersPanel
           showGrid={showGrid}
@@ -331,26 +315,6 @@ function App() {
           }
         />
       </main>
-      <div className="workspace-note">
-        <Icon name="info" size={14} />
-        <span>Built for exploration. Grounded in real data.</span>
-        <span className="note-detail">
-          {dataset
-            ? `Terrain: ${dataset.title} (HiRISE, ${dataset.attribution}). Prototype data; ${
-                targets.status === 'ready'
-                  ? 'science target positions carry the caveats shown with each target.'
-                  : 'science targets are not included yet.'
-              }`
-            : terrain?.manifest.synthetic
-              ? 'Synthetic development terrain. Not NASA data.'
-              : terrainState.status === 'loading'
-                ? 'Loading the terrain package…'
-                : terrainState.status === 'error'
-                  ? 'The terrain package failed to load; no other terrain is shown in its place.'
-                  : 'No terrain package exists for this region yet.'}
-        </span>
-      </div>
-      <StatusBar terrainState={terrainState} />
       {report && (
         <MissionReportDialog
           report={report}

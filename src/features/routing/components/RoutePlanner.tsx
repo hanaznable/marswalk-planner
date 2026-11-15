@@ -63,19 +63,12 @@ export function RoutePlanner({
   return (
     <div className="route-planner">
       <div className="section-heading">
-        <h2>Your next expedition</h2>
-        <span className="tag">DRAFT</span>
+        <h2>Waypoints</h2>
+        {waypoints.length > 0 && <span className="small-label">{waypoints.length}</span>}
       </div>
-      <p className="panel-description">Every discovery starts with a plan.</p>
 
       {waypoints.length === 0 ? (
         <div className="route-empty">
-          <div className="route-diagram" aria-hidden="true">
-            <span className="route-node" />
-            <span className="route-dash" />
-            <Icon name="pin" size={25} />
-          </div>
-          <h3>No route planned yet</h3>
           <p>
             Add a start point, then a destination. Points in between become
             stops.

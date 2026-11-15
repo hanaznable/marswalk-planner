@@ -74,16 +74,17 @@ export function MapViewport({
           ? `HiRISE orthoimage (grayscale), ${terrain.manifest.source.attribution}`
           : 'Terrain surface'
   const context = displayLayers.state.status === 'ready' ? displayLayers.state.context : null
-  const previewLabel =
+  // The terrain's standing caveat, stated once, next to the map title.
+  const caveat =
     terrainState.status === 'ready'
       ? terrainState.terrain.manifest.synthetic
-        ? 'SYNTHETIC PREVIEW'
-        : 'PROTOTYPE DATA'
+        ? { tone: 'warning', text: 'Synthetic terrain · not NASA data' }
+        : { tone: 'note', text: 'Prototype data · position not verified' }
       : terrainState.status === 'loading'
-        ? 'LOADING'
+        ? { tone: 'note', text: 'Loading terrain…' }
         : terrainState.status === 'error'
-          ? 'LOAD FAILED'
-          : 'NO TERRAIN'
+          ? { tone: 'danger', text: 'Terrain failed to load' }
+          : { tone: 'note', text: 'No terrain package' }
   return (
     <section
       className="map-viewport"
@@ -93,12 +94,42 @@ export function MapViewport({
     >
       <div className="viewport-topbar">
         <div className="viewport-title">
-          <Icon name="planet" size={17} />
-          <span>MARS</span>
-          <span className="breadcrumb-slash">/</span>
+          <span className="viewport-planet">Mars</span>
+          <span className="breadcrumb-slash" aria-hidden="true">/</span>
           <strong>{title}</strong>
+          <span className={`map-caveat ${caveat.tone}`} role="note">
+            {caveat.text}
+          </span>
         </div>
-        <span className="map-preview-label">{previewLabel}</span>
+        <div className="viewport-actions">
+          <div className="view-switcher segmented" role="group" aria-label="Viewport mode">
+            <button
+              aria-pressed={viewMode === '2d'}
+              className={viewMode === '2d' ? 'selected' : ''}
+              onClick={() => onViewModeChange('2d')}
+            >
+              <Icon name="grid" size={14} />
+              2D map
+            </button>
+            <button
+              aria-pressed={viewMode === '3d'}
+              className={viewMode === '3d' ? 'selected' : ''}
+              onClick={() => onViewModeChange('3d')}
+            >
+              <Icon name="cube" size={14} />
+              3D terrain
+            </button>
+          </div>
+          <button
+            className="icon-button"
+            onClick={onExpand}
+            aria-label={expanded ? 'Restore workspace panels' : 'Expand viewport'}
+            aria-expanded={expanded}
+            title={expanded ? 'Show panels' : 'Hide panels'}
+          >
+            <Icon name={expanded ? 'collapse' : 'expand'} size={16} />
+          </button>
+        </div>
       </div>
       <div className="map-stage">
         {viewMode === '2d' ? (
@@ -147,7 +178,7 @@ export function MapViewport({
           <TerrainStatusPanel state={terrainState} regionName={region.name} />
         )}
         {viewMode === '3d' && addMode && (
-          <div className="map-notice" role="status">
+          <div className="map-notice below-toolbar" role="status">
             Waypoints are placed and moved in the 2D map
           </div>
         )}
@@ -159,47 +190,6 @@ export function MapViewport({
                 : 'Click the terrain to place a waypoint')}
           </div>
         )}
-        <div className="view-switcher" role="group" aria-label="Viewport mode">
-          <button
-            aria-pressed={viewMode === '2d'}
-            className={viewMode === '2d' ? 'selected' : ''}
-            onClick={() => onViewModeChange('2d')}
-          >
-            <Icon name="grid" size={14} />
-            2D map
-          </button>
-          <button
-            aria-pressed={viewMode === '3d'}
-            className={viewMode === '3d' ? 'selected' : ''}
-            onClick={() => onViewModeChange('3d')}
-          >
-            <Icon name="cube" size={14} />
-            3D terrain
-          </button>
-        </div>
-        <button
-          className="expand-button icon-button"
-          onClick={onExpand}
-          aria-label={expanded ? 'Restore workspace panels' : 'Expand viewport'}
-          aria-expanded={expanded}
-        >
-          <Icon name={expanded ? 'collapse' : 'expand'} size={17} />
-        </button>
-        <div className="viewport-corner corner-tl" aria-hidden="true" />
-        <div className="viewport-corner corner-tr" aria-hidden="true" />
-        <div className="viewport-corner corner-bl" aria-hidden="true" />
-        <div className="viewport-corner corner-br" aria-hidden="true" />
-      </div>
-      <div className="viewport-bottom">
-        <span>
-          <span className="hollow-dot" />{' '}
-          {viewMode === '2d' ? '2D MAP VIEW' : `3D TERRAIN VIEW · ${verticalScale}× VERTICAL`}
-        </span>
-        <span>
-          {viewMode === '2d'
-            ? 'DRAG TO PAN · SCROLL TO ZOOM'
-            : 'DRAG TO ORBIT · RIGHT-DRAG TO PAN · SCROLL TO ZOOM'}
-        </span>
       </div>
     </section>
   )
