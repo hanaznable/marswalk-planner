@@ -1,5 +1,5 @@
 /*
- * POLARIS Module layout. The map is the work surface: on wide screens the
+ * Polaris Module layout. The map is the work surface: on wide screens the
  * workspace fills the window and the side panels scroll inside themselves, so
  * a growing waypoint list never moves the map under the cursor.
  */
@@ -40,14 +40,13 @@
   white-space: nowrap;
 }
 .brand-name {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
-  letter-spacing: 1.6px;
+  letter-spacing: 0.2px;
   color: var(--text);
 }
 .brand-module {
   font-weight: 450;
-  letter-spacing: 0.4px;
   color: var(--accent-text);
 }
 .brand-subtitle {

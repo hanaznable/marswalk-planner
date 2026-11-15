@@ -108,8 +108,8 @@ describe('mission record', () => {
   })
 
   it('names the export after the mission and the UTC time', () => {
-    expect(missionFileName(record())).toBe('marswalk-mission-ridge-traverse-20261115-1805Z.json')
-    expect(missionFileName(record({ name: 'Ödül !!' }))).toBe('marswalk-mission-odul-20261115-1805Z.json')
+    expect(missionFileName(record())).toBe('polaris-mission-ridge-traverse-20261115-1805Z.json')
+    expect(missionFileName(record({ name: 'Ödül !!' }))).toBe('polaris-mission-odul-20261115-1805Z.json')
   })
 })
 
@@ -117,7 +117,7 @@ describe('parseMissionRecord', () => {
   const json = () => JSON.parse(JSON.stringify(record())) as Record<string, unknown>
 
   it('rejects other files and future versions with a clear reason', () => {
-    expect(() => parseMissionRecord({ format: 'marswalk-mission-report', version: 1 })).toThrow('not a Marswalk mission file')
+    expect(() => parseMissionRecord({ format: 'marswalk-mission-report', version: 1 })).toThrow('not a Polaris Module mission file')
     expect(() => parseMissionRecord({ ...json(), version: 2 })).toThrow('newer version of the planner (format version 2)')
   })
 

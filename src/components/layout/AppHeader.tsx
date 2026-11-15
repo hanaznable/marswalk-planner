@@ -11,7 +11,7 @@ export function AppHeader({ regionId, onRegionChange }: AppHeaderProps) {
     <header className="app-header">
       <div className="brand">
         <h1 className="brand-name">
-          POLARIS <span className="brand-module">Module</span>
+          Polaris <span className="brand-module">Module</span>
         </h1>
         <span className="brand-subtitle">Mars EVA route planner</span>
       </div>
@@ -29,7 +29,7 @@ export function AppHeader({ regionId, onRegionChange }: AppHeaderProps) {
           <Icon name="chevron" size={12} />
         </span>
       </label>
-      <p className="header-context">Prototype - NASA Space Apps Challenge 2026</p>
+      <p className="header-context">Prototype - 2026 NASA Space Apps Challenge</p>
     </header>
   )
 }

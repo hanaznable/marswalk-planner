@@ -6,6 +6,7 @@
  */
 import { MissionFormatError, parseMissionRecord, type MissionRecord } from './missionRecord'
 
+/** Kept from the earlier project name so missions already saved in a browser stay available. */
 export const LIBRARY_KEY = 'marswalk.missions.v1'
 
 /** The subset of the Web Storage API the library uses (injectable for tests). */

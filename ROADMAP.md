@@ -1,6 +1,6 @@
 # POLARIS Module — Project Roadmap
 
-Updated 2026-11-15 against the merged application baseline (`6a290bb`).
+Updated 2026-11-15 including the merged naming, license and submission-documentation updates (`d00682f`).
 This document describes current status and agreed priorities; older dated review
 reports describe their own checkouts, not the latest application.
 
@@ -105,12 +105,15 @@ processing, and unresolved validation. The original full rasters remain local.
 
 ## 6. Next increments
 
-1. **Documentation and wording — completed on `feature/science-activities`:**
+1. **Documentation and map/UI fixes - completed:**
    current guides and status claims reconciled, historical reviews labelled,
    source guide updated and contradictory layer wording corrected. The broader
-   visitor-facing content pass remains item 4.
-2. **Science activity contract and content:** review Developer Y's draft on
-   `yusuf/activity-contract-proposal`; agree objectives, equipment, position/quality
+   visitor-facing content pass remains item 4. This fixes branch also delivers
+   concise layer/observation details, drill-site filtering, status colors and
+   a metric grid with local coordinate labels and a zoom-aware scale bar.
+   Science suggestions will use a separate feature branch.
+2. **Science activity contract and content:** review Developer Y's merged draft at
+   `docs/science-activity-contract-proposal.md`; agree objectives, equipment, position/quality
    rules and review criteria. Developer B prepares 3–5 sourced activities with
    provenance. No runtime activity collection is currently delivered.
 3. **Activity integration:** Developer Y adds parsing/coverage checks, objective

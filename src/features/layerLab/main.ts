@@ -36,7 +36,7 @@ interface LayerEntry {
 const base = import.meta.env.BASE_URL
 const root = document.querySelector<HTMLDivElement>('#layer-lab')!
 root.innerHTML = `
-  <header><div><span class="eyebrow">DEVELOPER B - LOCAL DATA REVIEW</span><h1>Marswalk <span>Layer Lab</span></h1></div><a class="app-link">Open planner ↗</a></header>
+  <header><div><span class="eyebrow">DEVELOPER B - LOCAL DATA REVIEW</span><h1>Polaris Module <span>Layer Lab</span></h1></div><a class="app-link">Open planner ↗</a></header>
   <div class="lab-layout"><aside><p class="intro">Pahrump Hills - 1 × 1 km<br>Compare layers and send feedback. Previews do not change routing or approved targets.</p>
     <p id="load-status" role="status">Loading terrain and research context…</p><div id="layer-controls"></div>
     <section class="feedback"><h2>Your feedback</h2><label for="feedback-notes">Which layers help? What looks wrong or unclear?</label><textarea id="feedback-notes" rows="4" placeholder="Layer name, preferred opacity, observations…"></textarea><button id="download-feedback" disabled>Download feedback JSON</button><p>Saved locally with layer settings and the terrain version.</p></section>
@@ -223,7 +223,7 @@ async function start() {
   feedbackButton.addEventListener('click', () => {
     const report = { kind: 'layer-lab-feedback', terrainPackageId: context.terrainPackageId, terrainManifestSha256: hash, createdAt: new Date().toISOString(), layers: Object.fromEntries(settings), notes: document.querySelector<HTMLTextAreaElement>('#feedback-notes')!.value }
     const url = URL.createObjectURL(new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' }))
-    const link = document.createElement('a'); link.href = url; link.download = 'marswalk-layer-feedback.json'; link.click()
+    const link = document.createElement('a'); link.href = url; link.download = 'polaris-layer-feedback.json'; link.click()
     setTimeout(() => URL.revokeObjectURL(url), 1000)
   })
   loadStatus.textContent = `${entries.filter((entry) => entry.layer || entry.raster).length} testable layers - ${entries.filter((entry) => !entry.layer && !entry.raster).length} awaiting data/processing. No route inputs changed.`
