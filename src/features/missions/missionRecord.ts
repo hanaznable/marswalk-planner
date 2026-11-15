@@ -139,6 +139,24 @@ const isRecord = (value: unknown): value is UnknownRecord =>
   typeof value === 'object' && value !== null && !Array.isArray(value)
 const isText = (value: unknown): value is string => typeof value === 'string' && value.trim().length > 0
 const isCount = (value: unknown): value is number => Number.isInteger(value) && (value as number) >= 0
+// Source links are shown as clickable links, so only https is accepted, as for science activities.
+const isHttpsUrl = (value: unknown): boolean => {
+  if (!isText(value)) return false
+  try { return new URL(value).protocol === 'https:' } catch { return false }
+}
+
+/**
+ * Real mission files are tens of kilobytes (the science snapshot is the largest
+ * part). The limit stops a wrong or hostile file from freezing the tab on parse.
+ */
+export const MAX_MISSION_FILE_BYTES = 5 * 1024 * 1024
+
+/** A message when a file is too large to import, otherwise null. */
+export function missionFileSizeError(fileName: string, bytes: number): string | null {
+  if (bytes <= MAX_MISSION_FILE_BYTES) return null
+  const megabytes = (bytes / (1024 * 1024)).toFixed(1)
+  return `${fileName} is too large to be a mission file (${megabytes} MB; the limit is ${MAX_MISSION_FILE_BYTES / (1024 * 1024)} MB).`
+}
 
 function validateOrigin(value: unknown): boolean {
   if (!isRecord(value)) return false
@@ -156,7 +174,7 @@ function validateOrigin(value: unknown): boolean {
     position.basis === 'rover-position-proxy' &&
     position.uncertaintyMeters === null &&
     Array.isArray(value.sources) &&
-    value.sources.every((source) => isRecord(source) && isText(source.url) && typeof source.attribution === 'string' && typeof source.provides === 'string') &&
+    value.sources.every((source) => isRecord(source) && isHttpsUrl(source.url) && typeof source.attribution === 'string' && typeof source.provides === 'string') &&
     (value.sourceSha256 === null || (typeof value.sourceSha256 === 'string' && /^[a-f0-9]{64}$/.test(value.sourceSha256))) &&
     Array.isArray(value.reviewFlags) &&
     value.reviewFlags.every((flag) => typeof flag === 'string')

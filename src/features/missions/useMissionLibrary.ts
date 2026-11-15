@@ -8,7 +8,7 @@ import {
   storeLibrary,
   upsertMission,
 } from './missionStore'
-import { MissionFormatError, missionFileName, parseMissionRecord, type MissionRecord } from './missionRecord'
+import { MissionFormatError, missionFileName, missionFileSizeError, parseMissionRecord, type MissionRecord } from './missionRecord'
 
 export type LibraryResult = { readonly ok: true; readonly record: MissionRecord } | { readonly ok: false; readonly message: string }
 
@@ -40,6 +40,8 @@ export function useMissionLibrary() {
       downloadJson(missionFileName(record), record)
     },
     async importFile(file: File): Promise<LibraryResult> {
+      const sizeError = missionFileSizeError(file.name, file.size)
+      if (sizeError) return { ok: false, message: sizeError }
       let input: unknown
       try {
         input = JSON.parse(await file.text())
