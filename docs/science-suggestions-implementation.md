@@ -34,8 +34,9 @@ Equipment and objective choices do not silently remove already selected activiti
 Missing equipment remains visible on those activity cards. All activity durations
 are null; the user's time-per-stop applies once per physical stop, not per activity.
 
-Mission format v2 stores the collection, hash, choices and waypoint associations;
-legacy v1 missions still open. Saved collection snapshots are preserved when the
+Mission format v3 stores oxygen settings alongside the collection, hash, choices
+and waypoint associations; legacy v1/v2 missions still open. See the
+[oxygen model](eva/oxygen-budget.md). Saved collection snapshots are preserved when the
 runtime collection changes. Mission JSON and printable reports retain evidence,
 procedures and original access positions. Reports disclose relocated stops.
 The collection hash identifies the original source snapshot; it is not an

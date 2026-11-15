@@ -1,3 +1,5 @@
+import type { OxygenAlternatives } from '../../eva/oxygenBudget'
+import { OxygenSummary } from '../../eva/components/OxygenSummary'
 import { Icon } from '../../../components/ui/Icon'
 import { waypointRoleLabel } from '../../map/waypointPlacement'
 import type { RouteResult, Waypoint } from '../model/types'
@@ -8,6 +10,7 @@ import { formatDuration, type EvaAssumptions } from '../../eva/evaEstimate'
 import type { EvaPlan } from '../../eva/useEvaPlan'
 
 interface RouteComparisonProps {
+  oxygen?: OxygenAlternatives | null
   plan: RoutePlan | null
   waypoints: readonly Waypoint[]
   maxSlopeDegrees: number
@@ -22,6 +25,7 @@ const formatMetres = (value: number | null) =>
   value === null ? '—' : `${Math.round(value)} m`
 
 export function RouteComparison({
+  oxygen,
   plan,
   waypoints,
   maxSlopeDegrees,
@@ -38,7 +42,7 @@ export function RouteComparison({
   if (!plan) {
     return (
       <div className="route-summary">
-        <span className="eyebrow">ROUTE COMPARISON</span>
+        <h2 className="route-section-title">Route comparison</h2>
         <div className="summary-note">
           <Icon name="info" size={13} />
           <span>Place a start and a destination to compare routes.</span>
@@ -56,7 +60,7 @@ export function RouteComparison({
 
   return (
     <div className="route-summary">
-      <span className="eyebrow">ROUTE COMPARISON</span>
+      <h2 className="route-section-title">Route comparison</h2>
       <table className="route-table">
         <thead>
           <tr>
@@ -112,6 +116,7 @@ export function RouteComparison({
           synthetic={synthetic}
         />
       )}
+      <OxygenSummary oxygen={oxygen ?? null} />
 
       <div className="summary-note">
         <Icon name="info" size={13} />

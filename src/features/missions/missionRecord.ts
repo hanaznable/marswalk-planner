@@ -1,6 +1,7 @@
+import { OXYGEN_MODEL_ID, OXYGEN_RANGE } from '../eva/oxygenBudget'
 import { parseSciencePlan, type SciencePlanSnapshot } from '../scienceSuggestions/model'
 /**
- * Saved mission record (format "marswalk-mission", versions 1 and 2). Pure TypeScript.
+ * Saved mission record (format "marswalk-mission", versions 1, 2 and 3). Pure TypeScript.
  * The format identifier keeps the earlier project name on purpose: it is
  * written into saved and exported missions, which must stay readable.
  *
@@ -16,7 +17,7 @@ import type { WaypointOrigin } from '../datasets/waypointOrigin'
 import type { Waypoint } from '../routing'
 
 export const MISSION_FORMAT = 'marswalk-mission'
-export const MISSION_VERSION = 2
+export const MISSION_VERSION = 3
 
 /** Ranges match the planner's controls; values outside them are rejected on import. */
 export const SETTING_RANGES = {
@@ -27,6 +28,8 @@ export const SETTING_RANGES = {
 } as const
 
 export interface MissionSettings {
+  readonly oxygenCapacityKg?: number
+  readonly oxygenModelId?: typeof OXYGEN_MODEL_ID
   readonly maxSlopeDegrees: number
   readonly slopePenalty: number
   readonly returnToStart: boolean
@@ -54,7 +57,7 @@ export interface MissionWaypoint {
 export interface MissionRecord {
   readonly sciencePlan?: SciencePlanSnapshot
   readonly format: typeof MISSION_FORMAT
-  readonly version: 1 | 2
+  readonly version: 1 | 2 | 3
   /** Stable library id; a new one is assigned when a copy is imported. */
   readonly id: string
   readonly name: string
@@ -93,7 +96,7 @@ export function createMissionRecord(snapshot: MissionSnapshot, id: string, saved
   if (!name) throw new Error('A mission needs a name.')
   return {
     format: MISSION_FORMAT,
-    version: snapshot.sciencePlan ? 2 : 1,
+    version: snapshot.settings.oxygenCapacityKg !== undefined ? 3 : snapshot.sciencePlan ? 2 : 1,
     ...(snapshot.sciencePlan ? { sciencePlan: structuredClone(snapshot.sciencePlan) } : {}),
     id,
     name,
@@ -118,7 +121,7 @@ export function createMissionRecord(snapshot: MissionSnapshot, id: string, saved
       cell: { row: waypoint.cell.row, col: waypoint.cell.col },
       origin: snapshot.origins[waypoint.id] ? structuredClone(snapshot.origins[waypoint.id]) : null,
     })),
-    settings: { ...snapshot.settings },
+    settings: { ...snapshot.settings, ...(snapshot.settings.oxygenCapacityKg !== undefined ? { oxygenModelId: OXYGEN_MODEL_ID } : {}) },
     selectedTargetId: snapshot.selectedTargetId,
   }
 }
@@ -168,7 +171,7 @@ export function parseMissionRecord(input: unknown): MissionRecord {
   if (!isRecord(input) || input.format !== MISSION_FORMAT) {
     throw new MissionFormatError(['this is not a POLARIS Module mission file'])
   }
-  if (input.version !== 1 && input.version !== MISSION_VERSION) {
+  if (input.version !== 1 && input.version !== 2 && input.version !== MISSION_VERSION) {
     throw new MissionFormatError([
       typeof input.version === 'number' && input.version > MISSION_VERSION
         ? `it was saved by a newer version of the planner (format version ${input.version})`
@@ -177,7 +180,7 @@ export function parseMissionRecord(input: unknown): MissionRecord {
   }
   const issues: string[] = []
   if (input.version === 1 && input.sciencePlan !== undefined) issues.push('v1 missions cannot contain science activities')
-  if (input.version === 2 && (!isRecord(input.sciencePlan) || !isRecord(input.sciencePlan.collection) || typeof input.sciencePlan.collectionSha256 !== 'string' || !/^[a-f0-9]{64}$/.test(input.sciencePlan.collectionSha256) || !Array.isArray(input.sciencePlan.selections))) issues.push('sciencePlan is invalid')
+  if ((input.version === 2 || input.sciencePlan !== undefined) && (!isRecord(input.sciencePlan) || !isRecord(input.sciencePlan.collection) || typeof input.sciencePlan.collectionSha256 !== 'string' || !/^[a-f0-9]{64}$/.test(input.sciencePlan.collectionSha256) || !Array.isArray(input.sciencePlan.selections))) issues.push('sciencePlan is invalid')
   if (!isText(input.id)) issues.push('id is missing')
   if (typeof input.name !== 'string' || !normaliseName(input.name)) issues.push('name is missing')
   if (typeof input.savedAt !== 'string' || Number.isNaN(Date.parse(input.savedAt))) issues.push('savedAt is not a date')
@@ -226,6 +229,10 @@ export function parseMissionRecord(input: unknown): MissionRecord {
   if (!isRecord(settings) || typeof settings.returnToStart !== 'boolean') {
     issues.push('settings are incomplete')
   } else {
+    if (input.version === 3 || settings.oxygenCapacityKg !== undefined) {
+      if (typeof settings.oxygenCapacityKg !== 'number' || !Number.isFinite(settings.oxygenCapacityKg) || settings.oxygenCapacityKg < OXYGEN_RANGE[0] || settings.oxygenCapacityKg > OXYGEN_RANGE[1]) issues.push('settings.oxygenCapacityKg is invalid')
+      if (settings.oxygenModelId !== OXYGEN_MODEL_ID) issues.push('settings.oxygenModelId is unsupported')
+    }
     for (const [key, [min, max]] of Object.entries(SETTING_RANGES)) {
       const value = settings[key]
       if (typeof value !== 'number' || !Number.isFinite(value) || value < min || value > max) {

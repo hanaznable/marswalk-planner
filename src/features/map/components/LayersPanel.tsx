@@ -47,7 +47,7 @@ function targetsRow(
       }
     }
     case 'loading':
-      return { ...base, description: 'Loading the target collection…', loaded: null, pending: 'LOADING' }
+      return { ...base, description: 'Loading the target collectionâ€¦', loaded: null, pending: 'LOADING' }
     case 'error':
       return { ...base, description: 'The target collection failed to load', loaded: null, pending: 'LOAD FAILED' }
     case 'none':
@@ -140,7 +140,7 @@ export function LayersPanel({
         <>
           <div className="section-heading">
             <h2>Map layers</h2>
-            <span className="small-label">{activeCount} active</span>
+            <span className="active-layer-count">{activeCount} active</span>
           </div>
           <div className="layer-list">
             {rows.map((layer) => (
@@ -224,24 +224,22 @@ export function LayersPanel({
                 <div>
                   <dt>Routing grid</dt>
                   <dd>
-                    {terrainState.terrain.manifest.raster.width} ×{' '}
+                    {terrainState.terrain.manifest.raster.width} Ã—{' '}
                     {terrainState.terrain.manifest.raster.height} cells,{' '}
                     {terrainState.terrain.manifest.raster.geoTransform[1]} m
                   </dd>
                 </div>
               </dl>
-              <h4>Prototype limitations</h4>
-              <ul className="limitations">
-                {dataset.limitations.map((limitation) => (
-                  <li key={limitation}>{limitation}</li>
-                ))}
-              </ul>
+              <details className="dataset-methods">
+                <summary>Methods and limitations</summary>
+                <ul className="limitations">
+                  {(dataset.dataSourceNotes ?? dataset.limitations).map(note => <li key={note}>{note}</li>)}
+                </ul>
+              </details>
               <h4>Imagery and observations</h4>
               <SurfaceImageryDetails controller={surfaceImagery} />
               {displayLayers.state.status === 'ready' && <p className="panel-description">
-                APXS: {displayLayers.state.context.observations.length} historical records.
-                Repeated positions are grouped; orange markers indicate source review flags.
-                Positions are rover proxies. Open observations for their sources and limitations.
+                APXS: {displayLayers.state.context.observations.length} historical measurements.
               </p>}
             </div>
           ) : (
@@ -251,7 +249,7 @@ export function LayersPanel({
               </div>
               <h3>
                 {terrainState.status === 'loading'
-                  ? 'Loading terrain package…'
+                  ? 'Loading terrain packageâ€¦'
                   : terrainState.status === 'error'
                     ? 'Terrain package failed to load'
                     : terrainState.status === 'ready'
@@ -260,21 +258,16 @@ export function LayersPanel({
               </h3>
               <p>
                 {terrainState.status === 'ready'
-                  ? 'Made-up hills for development. Not NASA data.'
-                  : 'Real NASA assets and their source information appear here once loaded.'}
+                  ? 'Synthetic terrain - not NASA data.'
+                  : terrainState.status === 'error'
+                    ? 'Source details are unavailable because the terrain could not load.'
+                    : terrainState.status === 'loading'
+                      ? 'Loading source details.'
+                      : 'No data package is loaded.'}
               </p>
             </>
           )}
-          <details className="pending-layer-guide">
-            <summary>Layers awaiting validated data</summary>
-            <ul>
-              <li><strong>CRISM:</strong> orbital mineral indicators.</li>
-              <li><strong>THEMIS:</strong> thermal context.</li>
-              <li><strong>Geological units:</strong> mapped rock units and contacts.</li>
-              <li><strong>Hazards:</strong> documented surface obstacles.</li>
-            </ul>
-            <p>These layers are planned and unavailable for this region.</p>
-          </details>
+
         </div>
       )}
     </aside>

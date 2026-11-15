@@ -25,7 +25,8 @@
 
 /* Top bar */
 .app-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: 24px;
   min-height: 52px;
@@ -50,11 +51,10 @@
   letter-spacing: 0.4px;
   color: var(--accent-text);
 }
-.brand-subtitle {
-  font-size: 12px;
-  color: var(--muted);
-}
+
 .region-picker {
+  grid-column: 2;
+  justify-self: center;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -101,12 +101,7 @@
 .region-select option {
   background: var(--surface);
 }
-.header-context {
-  margin-left: auto;
-  font-size: 12px;
-  color: var(--muted);
-  white-space: nowrap;
-}
+
 
 /* Shared type */
 .eyebrow {
@@ -128,6 +123,12 @@ h3 {
   font-size: 14px;
   font-weight: 600;
   color: var(--text);
+}
+.active-layer-count {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent-text);
 }
 .small-label {
   font: 11px var(--mono);
@@ -637,10 +638,6 @@ dd {
   .workspace {
     grid-template-columns: 260px minmax(0, 1fr) 310px;
   }
-  .brand-subtitle,
-  .header-context {
-    display: none;
-  }
 }
 /* Medium screens: map across the top, the two panels side by side below it. */
 @media (max-width: 1020px) {
@@ -668,11 +665,12 @@ dd {
 /* Narrow screens: one column; the planner comes before the layer list. */
 @media (max-width: 700px) {
   .app-header {
-    flex-wrap: wrap;
+    grid-template-columns: minmax(0, 1fr);
     gap: 8px 16px;
     padding: 10px 12px;
   }
   .region-picker {
+    grid-column: 1;
     flex: 1;
     min-width: 0;
   }
@@ -974,9 +972,7 @@ dd {
   margin-top: 22px;
   padding-top: 18px;
 }
-.route-settings > .eyebrow {
-  font-size: 10px;
-}
+
 .setting-row {
   display: flex;
   align-items: center;
@@ -1756,3 +1752,64 @@ dd {
 .map-canvas .leaflet-control-scale { margin-bottom: 32px; margin-left: 12px; pointer-events: none; }
 .map-canvas .leaflet-control-scale-line { background: var(--overlay); border-color: var(--text-secondary); color: var(--text); text-shadow: none; font-family: inherit; }
 @media (max-width: 700px) { .grid-spacing { flex-basis: 100%; } }
+
+/* Fixed planetary context, above the map but transparent to all interactions. */
+.mars-locator { position: absolute; top: 16px; right: 16px; z-index: 500; margin: 0; pointer-events: none; user-select: none; text-align: center; }
+.mars-locator-globe { display: block; position: relative; width: 112px; height: 112px; border-radius: 50%; filter: drop-shadow(0 3px 8px #0009); }
+.mars-locator-globe img { display: block; width: 100%; height: 100%; }
+.mars-locator-pin { position: absolute; top: 50%; left: 50%; width: 7px; height: 7px; transform: translate(-50%, -50%); border-radius: 50%; background: #8db6ff; border: 1px solid #fff; box-shadow: 0 0 0 4px #4f8cff44; }
+.mars-locator-caption { display: block; margin-top: 4px; color: var(--text); font-size: 11px; text-shadow: 0 1px 4px #000; }
+@media (max-width: 700px) { .mars-locator { top: 12px; right: 12px; } .mars-locator-globe { width: 80px; height: 80px; } }
+
+.map-stage-3d .mars-locator { top: 76px; }
+.mars-locator-toggle { display: block; pointer-events: auto; padding: 0; background: transparent; border: 0; color: inherit; cursor: pointer; }
+.mars-locator-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 8px; }
+.mars-context { position: absolute; top: 0; right: calc(100% + 16px); width: 360px; max-width: calc(100vw - 32px); max-height: min(620px, calc(100svh - 130px)); overflow-y: auto; pointer-events: auto; background: var(--surface); border: 1px solid var(--border-strong); border-radius: 8px; padding: 12px; box-shadow: 0 8px 28px #0008; text-align: left; }
+.mars-context header { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; }
+.mars-context header button { background: transparent; color: var(--text-secondary); font-size: 20px; padding: 0 6px; }
+.mars-context figure { margin: 0 0 12px; }
+.mars-context figure img { display: block; width: 100%; height: auto; pointer-events: none; user-select: none; }
+.mars-context figcaption { font-size: 11px; color: var(--text-secondary); margin-top: 5px; }
+.mars-context-sources a { display: block; font-size: 10px; margin-top: 5px; }
+@media (max-width: 700px) { .mars-context { position: fixed; top: 100px; right: 12px; width: min(360px, calc(100vw - 24px)); max-height: calc(100svh - 120px); } }
+
+.gale-context-highlight { position: relative; }
+.gale-context-highlight svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.gale-context-highlight ellipse { fill: #4f8cff33; stroke: #9bc2ff; stroke-width: 4; }
+.gale-context-highlight path { fill: none; stroke: #9bc2ff; stroke-width: 3; }
+.gale-context-highlight text { fill: #fff; font-size: 28px; font-weight: 600; paint-order: stroke; stroke: #151a20; stroke-width: 4; }
+
+.route-section-title { font-family: inherit; font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+
+.map-coverage { font-size: 12px; font-weight: 400; color: var(--text-secondary); white-space: nowrap; }
+
+.mission-brief { font-size: 12px; line-height: 1.6; }
+.mission-brief > h3 { font-size: 16px; font-weight: 600; }
+.mission-brief-region { color: var(--muted); margin-top: 4px; }
+.mission-brief section { border-top: 1px solid var(--border); margin-top: 18px; padding-top: 14px; }
+.mission-brief section > h3 { margin-bottom: 8px; color: var(--text); }
+.mission-brief section p { color: var(--text-secondary); }
+.mission-brief section a { display: inline-block; margin-top: 8px; font-size: 11px; }
+.mission-brief ul { padding-left: 16px; color: var(--text-secondary); }
+.mission-brief-work { list-style: none; padding: 0; }
+.mission-brief-work li + li { margin-top: 12px; }
+.mission-brief-work span { display: block; font-size: 11px; color: var(--muted); }
+.mission-brief-work strong { font-weight: 500; }
+
+.route-broken-link { color: #ff5757; background: var(--surface); border: 1px solid #ff5757; border-radius: 5px; padding: 3px; box-shadow: 0 1px 5px #0009; pointer-events: none; }
+.route-broken-link svg { display: block; width: 100%; height: 100%; }
+.failed-route-legend { color: #ff8585; }
+.route-legend { flex-wrap: wrap; }
+
+.oxygen-method { font-size: 11px; color: var(--text-secondary); margin: 8px 0 14px; line-height: 1.6; }
+.oxygen-method summary { cursor: pointer; }
+.oxygen-method a { display: block; margin-top: 6px; }
+.oxygen-summary { margin: 14px 0; padding: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; font-size: 12px; }
+.oxygen-budget-row { display: grid; gap: 4px; margin-top: 12px; }
+.oxygen-budget-row meter { width: 100%; height: 12px; }
+.oxygen-budget-row > span { font-size: 11px; }
+.oxygen-enough { color: var(--positive-text); }
+.oxygen-shortfall { color: var(--warning-text); }
+.oxygen-limit-marker { background: var(--surface); color: var(--warning-text); border: 1px solid var(--warning-text); border-radius: 5px; text-align: center; font-family: inherit; font-size: 11px; font-weight: 600; line-height: 21px; pointer-events: none; }
+
+.oxygen-budget-swatch { display: inline-block; width: 22px; border-top: 3px dashed #f0c98e; margin-right: 5px; vertical-align: middle; }

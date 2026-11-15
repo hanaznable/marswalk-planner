@@ -1,3 +1,4 @@
+import type { OxygenAlternatives } from '../eva/oxygenBudget'
 /**
  * Three.js scene for the 3D terrain view. Framework-free: the React wrapper
  * creates one instance per mount and calls `dispose()` on unmount, which
@@ -46,7 +47,7 @@ import { cellCenterToMap, mapToCell, type MapPoint, type RasterGrid } from '../d
 import { elevationAt, type TerrainPackage } from '../datasets/terrainPackage'
 import type { MapContext, Observation } from '../mapLayers/context'
 import type { RouteAlternatives, Waypoint } from '../routing'
-import { drapeSegment, overlayLift, routeLines, surfacePoint, waypointAnchors } from './overlays'
+import { drapeSegment, failedRouteConnections, overlayLift, routeLines, surfacePoint, waypointAnchors } from './overlays'
 import {
   createSceneFrame,
   elevationRange,
@@ -57,6 +58,7 @@ import {
 import { buildTerrainMesh, imageUvTransform } from './terrainMesh'
 
 export interface OverlayInput {
+  readonly oxygen?: OxygenAlternatives | null
   readonly waypoints: readonly Waypoint[]
   readonly routes: RouteAlternatives | null
   readonly targets: readonly PlacedTarget[]
@@ -384,9 +386,39 @@ export class TerrainRenderer {
     }
 
     if (input.routes) {
-      // Same pairing as 2D: slope-aware solid underneath, shortest dashed on top.
-      this.addRoute(routeLines(terrain, frame, input.routes.terrain), themeColour('--route-slope-aware', '#3987e5'), 4, false)
-      this.addRoute(routeLines(terrain, frame, input.routes.distance), themeColour('--route-shortest', '#c98500'), 3, true)
+      const oxygen = input.oxygen
+      for (const budget of [oxygen?.slopeAware, oxygen?.shortest]) {
+        if (budget) this.addDrapedPath(budget.beyondPath, new Color('#f0c98e'), 4, true)
+      }
+      const profiles = [
+        { route: input.routes.terrain, budget: oxygen?.slopeAware, color: themeColour('--route-slope-aware', '#3987e5'), width: 4, dashed: false },
+        { route: input.routes.distance, budget: oxygen?.shortest, color: themeColour('--route-shortest', '#c98500'), width: 3, dashed: true },
+      ]
+      for (const profile of profiles) {
+        if (profile.budget && !profile.budget.withinBudget) this.addDrapedPath(profile.budget.withinPath, profile.color, profile.width, profile.dashed)
+        else this.addRoute(routeLines(terrain, frame, profile.route), profile.color, profile.width, profile.dashed)
+      }
+      const limits = input.routes.identical ? [['O2 limit', oxygen?.slopeAware]] as const
+        : [['O2 short', oxygen?.shortest], ['O2 slope', oxygen?.slopeAware]] as const
+      for (const [label, budget] of limits) {
+        if (!budget?.cutoffPoint) continue
+        this.addLabel(budget.cutoffPoint, `terrain3d-oxygen-limit${label === 'O2 short' ? ' shortest' : ''}`, label, 'Oxygen planning reserve boundary')
+      }
+      const failed = failedRouteConnections(terrain, frame, input.routes.terrain, input.waypoints)
+      if (failed.segments.length > 0) {
+        const geometry = new LineSegmentsGeometry().setPositions(failed.segments)
+        const material = this.lineMaterial(new Color('#ff5757'), 3, true)
+        material.depthTest = false
+        const connector = new LineSegments2(geometry, material)
+        connector.computeLineDistances()
+        connector.renderOrder = 10
+        this.overlayGroup.add(connector)
+      }
+      for (const point of failed.endpoints) {
+        const element = this.addLabel(point, 'terrain3d-broken-link', '', 'No slope-aware connection - diagnostic connector, not a walking route')
+        if (element) element.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 15-1 1a4 4 0 0 1-6-6l4-4a4 4 0 0 1 6 0m0 12a4 4 0 0 0 6 0l4-4a4 4 0 0 0-6-6l-1 1M3 2l3 3m12 14 3 3M11 10l2 4"/></svg>'
+      }
+
     }
 
     if (input.context && input.showApxs) {
@@ -429,6 +461,15 @@ export class TerrainRenderer {
       this.overlayGroup.add(object)
     }
     this.requestRender()
+  }
+
+  private addDrapedPath(points: readonly MapPoint[], colour: Color, width: number, dashed: boolean) {
+    if (!this.terrain || !this.frame || points.length < 2) return
+    const segments = points.slice(1).flatMap((point, i) => drapeSegment(this.terrain!, this.frame!, points[i], point))
+    if (segments.length === 0) return
+    const object = new LineSegments2(new LineSegmentsGeometry().setPositions(segments), this.lineMaterial(colour, width, dashed))
+    if (dashed) object.computeLineDistances()
+    this.overlayGroup.add(object)
   }
 
   private addRoute(lines: Float32Array[], colour: Color, width: number, dashed: boolean) {

@@ -1,3 +1,5 @@
+import { RouteLegend } from './RouteLegend'
+import type { OxygenAlternatives, OxygenRouteBudget } from '../../eva/oxygenBudget'
 import { scienceEvidenceLayer, type ScienceMapOverlay } from '../../scienceSuggestions/mapEvidence'
 import { useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
@@ -35,6 +37,7 @@ import type { BasemapStatus } from '../useBasemapStatus'
 import type { WaypointOrigin } from '../../datasets/waypointOrigin'
 
 interface MapCanvasProps {
+  oxygen?: OxygenAlternatives | null
   scienceOverlays?: ScienceMapOverlay
   regionId: string
   showGrid: boolean
@@ -66,6 +69,7 @@ interface MapCanvasProps {
  * corner; the source Mars CRS stays in the terrain manifest.
  */
 export function MapCanvas({
+  oxygen,
   scienceOverlays,
   regionId,
   showGrid,
@@ -241,7 +245,19 @@ export function MapCanvas({
     group.clearLayers()
     if (!terrain || !routes) return
     const { raster } = terrain.manifest
-    const draw = (result: RouteResult, className: string) => {
+    for (const budget of [oxygen?.slopeAware, oxygen?.shortest]) {
+      if (!budget || budget.beyondPath.length < 2) continue
+      polyline(budget.beyondPath.map(p => toLatLng(raster, p)), { className: 'route-oxygen-excess', color: '#f0c98e', weight: 4, opacity: .9, dashArray: '4 8', interactive: false }).addTo(group)
+    }
+    const draw = (result: RouteResult, className: string, budget?: OxygenRouteBudget | null) => {
+      if (budget && !budget.withinBudget) {
+        if (budget.withinPath.length > 1) {
+          const points = budget.withinPath.map(p => toLatLng(raster, p))
+          polyline(points, { className: 'route-line route-halo', interactive: false }).addTo(group)
+          polyline(points, { className, interactive: false }).addTo(group)
+        }
+        return
+      }
       for (const leg of result.legs) {
         if (leg.status !== 'ok' || leg.path.length < 2) continue
         const points = leg.path.map((cell) => toLatLng(raster, cellCenterToMap(raster, cell)))
@@ -250,9 +266,40 @@ export function MapCanvas({
         polyline(points, { className, interactive: false }).addTo(group)
       }
     }
-    draw(routes.terrain, 'route-line route-slope-limited')
-    draw(routes.distance, 'route-line route-shortest')
-  }, [terrain, routes])
+    draw(routes.terrain, 'route-line route-slope-limited', oxygen?.slopeAware)
+    draw(routes.distance, 'route-line route-shortest', oxygen?.shortest)
+    const limits = routes.identical ? [['Slope-aware', oxygen?.slopeAware]] as const
+      : [['Shortest', oxygen?.shortest], ['Slope-aware', oxygen?.slopeAware]] as const
+    for (const [label, budget] of limits) {
+      if (!budget?.cutoffPoint) continue
+      marker(toLatLng(raster, budget.cutoffPoint), {
+        interactive: false, keyboard: false, zIndexOffset: 1400,
+        icon: divIcon({ className: 'oxygen-limit-marker', iconSize: [70, 23], iconAnchor: [35, label === 'Shortest' ? -12 : 35], html: `<span title="${label} oxygen reserve boundary">${routes.identical ? 'O2 limit' : label === 'Shortest' ? 'O2 short' : 'O2 slope'}</span>` }),
+      }).addTo(group)
+    }
+    const marked = new Set<string>()
+    for (const leg of routes.terrain.legs) {
+      if (leg.status !== 'failed') continue
+      const from = waypoints.find(w => w.id === leg.fromId)
+      const to = waypoints.find(w => w.id === leg.toId)
+      if (!from || !to) continue
+      const endpoints = [from, to].map(w => toLatLng(raster, cellCenterToMap(raster, w.cell)))
+      // A direct diagnostic connector, never an invented traversable path.
+      polyline(endpoints, { color: '#101418', weight: 6, opacity: .85, interactive: false }).addTo(group)
+      polyline(endpoints, { className: 'route-failed-connector', color: '#ff5757', weight: 3, dashArray: '7 9', interactive: false }).addTo(group)
+      for (const waypoint of [from, to]) {
+        if (marked.has(waypoint.id)) continue
+        marked.add(waypoint.id)
+        marker(toLatLng(raster, cellCenterToMap(raster, waypoint.cell)), {
+          interactive: false, keyboard: false, zIndexOffset: 1500,
+          icon: divIcon({
+            className: 'route-broken-link', iconSize: [26, 26], iconAnchor: [-9, 28],
+            html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 15-1 1a4 4 0 0 1-6-6l4-4a4 4 0 0 1 6 0m0 12a4 4 0 0 0 6 0l4-4a4 4 0 0 0-6-6l-1 1M3 2l3 3m12 14 3 3M11 10l2 4"/></svg>',
+          }),
+        }).addTo(group)
+      }
+    }
+  }, [terrain, routes, waypoints, oxygen])
 
   // Terrain image, extent outline, and zoom limits.
   useEffect(() => {
@@ -478,16 +525,7 @@ export function MapCanvas({
           still work.
         </div>
       )}
-      {routes && (
-        <div className="route-legend" aria-label="Route legend">
-          <span>
-            <span className="legend-swatch shortest" aria-hidden="true" /> Shortest
-          </span>
-          <span>
-            <span className="legend-swatch slope-limited" aria-hidden="true" /> Slope-aware
-          </span>
-        </div>
-      )}
+      <RouteLegend routes={routes} oxygen={oxygen} />
       <div className="map-attribution">
         {terrain
           ? terrain.manifest.synthetic

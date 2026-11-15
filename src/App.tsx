@@ -1,3 +1,5 @@
+import { DEFAULT_OXYGEN_KG, estimateOxygenAlternatives } from './features/eva/oxygenBudget'
+import { MissionBrief } from './features/mission/MissionBrief'
 import { ScienceEvidenceControls } from './features/scienceSuggestions/ScienceEvidenceControls'
 import { useScienceSuggestions } from './features/scienceSuggestions/useScienceSuggestions'
 import { ScienceSuggestionsPanel } from './features/scienceSuggestions/ScienceSuggestionsPanel'
@@ -96,10 +98,12 @@ function App() {
   const [returnToStart, setReturnToStart] = useState(false)
   const plan = useRoutePlan(terrain, waypoints.waypoints, assumptions, returnToStart)
   const [evaAssumptions, setEvaAssumptions] = useState<EvaAssumptions>({
+    oxygenCapacityKg: DEFAULT_OXYGEN_KG,
     walkingSpeedKmh: 2,
     stopMinutes: 15,
   })
   const eva = useEvaPlan(plan, terrain, evaAssumptions)
+  const oxygen = useMemo(() => plan && terrain ? estimateOxygenAlternatives(plan.alternatives, terrain.manifest.raster, evaAssumptions) : null, [plan, terrain, evaAssumptions])
   const [report, setReport] = useState<MissionReport | null>(null)
   const closeReport = useCallback(() => setReport(null), [])
 
@@ -152,7 +156,7 @@ function App() {
         setMaxSlopeDegrees(settings.maxSlopeDegrees)
         setSlopePenalty(settings.slopePenalty)
         setReturnToStart(settings.returnToStart)
-        setEvaAssumptions({ walkingSpeedKmh: settings.walkingSpeedKmh, stopMinutes: settings.stopMinutes })
+        setEvaAssumptions({ walkingSpeedKmh: settings.walkingSpeedKmh, stopMinutes: settings.stopMinutes, oxygenCapacityKg: settings.oxygenCapacityKg ?? DEFAULT_OXYGEN_KG })
         const known = targets.status === 'ready' && targets.inside.some(({ target }) => target.id === savedTarget)
         setSelectedTargetId(known ? savedTarget : null)
         setAddMode(false)
@@ -257,6 +261,7 @@ function App() {
           }
         />
         <MapViewport
+          oxygen={oxygen}
           scienceOverlays={{ collection: suggestions.collection, visible: showScienceMissions, equipmentIds: suggestions.equipment, selectedActivityIds: suggestions.selected.map(s => s.activityId), onAdd: suggestions.add }}
           region={region}
           viewMode={viewMode}
@@ -281,9 +286,7 @@ function App() {
           basemap={basemap}
         />
         <MissionPanel
-          region={region}
-          terrainState={terrainState}
-          targetsState={targets}
+          missionInfo={<MissionBrief name={openMission?.name ?? null} region={region.name} pahrump={terrain?.manifest.id === 'pahrump-hills-v1'} sciencePlan={suggestions.snapshot} waypointCount={waypoints.waypoints.length} returnToStart={returnToStart} />}
           scienceSuggestions={<ScienceSuggestionsPanel controller={suggestions} />}
           missionLibrary={
             <MissionLibrary
@@ -311,6 +314,7 @@ function App() {
           }
           routePlanner={
             <RoutePlanner
+              oxygen={oxygen}
               raster={terrain?.manifest.raster ?? null}
               waypoints={waypoints.waypoints}
               addMode={addMode}

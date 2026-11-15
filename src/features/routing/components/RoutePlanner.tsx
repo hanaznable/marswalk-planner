@@ -1,3 +1,4 @@
+import { DEFAULT_OXYGEN_KG, OXYGEN_RANGE, OXYGEN_RATE_KG_PER_HOUR, OXYGEN_RESERVE_MINUTES, OXYGEN_SOURCES, type OxygenAlternatives } from '../../eva/oxygenBudget'
 import { useEffect, useRef, useState } from 'react'
 import { Icon } from '../../../components/ui/Icon'
 import {
@@ -13,6 +14,7 @@ import type { EvaAssumptions } from '../../eva/evaEstimate'
 import type { EvaPlan } from '../../eva/useEvaPlan'
 
 interface RoutePlannerProps {
+  oxygen?: OxygenAlternatives | null
   /** Null until a terrain package is loaded. */
   raster: RasterGrid | null
   waypoints: readonly Waypoint[]
@@ -39,6 +41,7 @@ interface RoutePlannerProps {
 }
 
 export function RoutePlanner({
+  oxygen,
   raster,
   waypoints,
   addMode,
@@ -210,7 +213,7 @@ export function RoutePlanner({
       </p>
 
       <div className="route-settings">
-        <span className="eyebrow">PLANNING ASSUMPTIONS</span>
+        <h2 className="route-section-title">Planning assumptions</h2>
         <label className="setting-row">
           <span>Max slope</span>
           <input
@@ -220,14 +223,14 @@ export function RoutePlanner({
             step={1}
             value={maxSlopeDegrees}
             onChange={(event) => onMaxSlopeChange(Number(event.target.value))}
-            aria-describedby="slope-hint"
+            aria-describedby="max-slope-description"
           />
           <output>{maxSlopeDegrees}°</output>
         </label>
-        <p id="slope-hint" className="setting-hint">
-          Applies to the slope-aware route only. A scenario assumption, not a
-          certified astronaut safety limit.
+        <p id="max-slope-description" className="setting-hint">
+          The slope-aware route avoids terrain steeper than this limit.
         </p>
+
         <label className="setting-row">
           <span>Slope penalty</span>
           <input
@@ -242,8 +245,7 @@ export function RoutePlanner({
           <output>{slopePenalty}</output>
         </label>
         <p id="penalty-hint" className="setting-hint">
-          How strongly the slope-aware route avoids steep ground. 0 = shortest
-          within the limit. Planning heuristic, not an energy model.
+          How strongly the slope-aware route avoids steep ground.
         </p>
         <label className="setting-row">
           <span>Walking speed</span>
@@ -256,7 +258,6 @@ export function RoutePlanner({
             onChange={(event) =>
               onEvaAssumptionsChange({ ...evaAssumptions, walkingSpeedKmh: Number(event.target.value) })
             }
-            aria-describedby="eva-hint"
           />
           <output>{evaAssumptions.walkingSpeedKmh.toFixed(1)} km/h</output>
         </label>
@@ -271,14 +272,21 @@ export function RoutePlanner({
             onChange={(event) =>
               onEvaAssumptionsChange({ ...evaAssumptions, stopMinutes: Number(event.target.value) })
             }
-            aria-describedby="eva-hint"
           />
           <output>{evaAssumptions.stopMinutes} min</output>
         </label>
-        <p id="eva-hint" className="setting-hint">
-          Scenario assumptions for the EVA estimate, not measured astronaut
-          performance.
-        </p>
+
+        <label className="setting-row">
+          <span>Oxygen tank</span>
+          <input type="range" min={OXYGEN_RANGE[0]} max={OXYGEN_RANGE[1]} step={0.01} value={evaAssumptions.oxygenCapacityKg ?? DEFAULT_OXYGEN_KG} onChange={event => onEvaAssumptionsChange({ ...evaAssumptions, oxygenCapacityKg: Number(event.target.value) })} aria-describedby="oxygen-hint" />
+          <output>{(evaAssumptions.oxygenCapacityKg ?? DEFAULT_OXYGEN_KG).toFixed(2)} kg</output>
+        </label>
+        <p id="oxygen-hint" className="setting-hint">Per astronaut - EMU primary reference: 0.54 kg</p>
+        <details className="oxygen-method"><summary>Oxygen model and sources</summary>
+          <p>NASA Mars closed-loop scenario: {OXYGEN_RATE_KG_PER_HOUR} kg/hour, including metabolism and leakage. A {OXYGEN_RESERVE_MINUTES} min planning reserve is held back.</p>
+          <p>Budget = tank oxygen - rate x (walking + stops + reserve). No refills; emergency oxygen is excluded. This estimates oxygen only, not safe EVA endurance or a guaranteed return.</p>
+          {OXYGEN_SOURCES.map(source => <a key={source.url} href={source.url} target="_blank" rel="noreferrer">{source.title}</a>)}
+        </details>
         <label className="setting-row checkbox">
           <input
             type="checkbox"
@@ -290,6 +298,7 @@ export function RoutePlanner({
       </div>
 
       <RouteComparison
+        oxygen={oxygen}
         plan={plan}
         waypoints={waypoints}
         maxSlopeDegrees={maxSlopeDegrees}

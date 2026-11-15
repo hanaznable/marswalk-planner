@@ -77,6 +77,21 @@ const savedAt = new Date('2026-11-15T18:05:30Z')
 const record = (overrides: Partial<MissionSnapshot> = {}) => createMissionRecord(snapshot(overrides), 'mission-1', savedAt)
 
 describe('mission record', () => {
+  it('round-trips oxygen capacity and model in v3 while retaining legacy inputs', () => {
+    const saved = record({ settings: { ...settings, oxygenCapacityKg: 0.54 } })
+    expect(saved.version).toBe(3)
+    const imported = parseMissionRecord(JSON.parse(JSON.stringify(saved)))
+    expect(imported.settings.oxygenCapacityKg).toBe(0.54)
+    expect(imported.settings.oxygenModelId).toBe('nasa-bvad-mars-closed-loop-v1')
+    expect(parseMissionRecord(JSON.parse(JSON.stringify(record()))).version).toBe(1)
+  })
+  it('refuses oxygen missions with missing, invalid or unsupported model inputs', () => {
+    const saved = record({ settings: { ...settings, oxygenCapacityKg: 0.54 } })
+    for (const oxygenCapacityKg of [undefined, 0, -1, 2, NaN, Infinity]) {
+      expect(() => parseMissionRecord({ ...saved, settings: { ...saved.settings, oxygenCapacityKg } })).toThrow(/oxygenCapacityKg/)
+    }
+    expect(() => parseMissionRecord({ ...saved, settings: { ...saved.settings, oxygenModelId: 'unknown' } })).toThrow(/oxygenModelId/)
+  })
   it('stores the planner inputs and the exact terrain grid', () => {
     const saved = record()
     expect(saved).toMatchObject({
@@ -118,7 +133,7 @@ describe('parseMissionRecord', () => {
 
   it('rejects other files and future versions with a clear reason', () => {
     expect(() => parseMissionRecord({ format: 'marswalk-mission-report', version: 1 })).toThrow('not a POLARIS Module mission file')
-    expect(() => parseMissionRecord({ ...json(), version: 3 })).toThrow('newer version of the planner (format version 3)')
+    expect(() => parseMissionRecord({ ...json(), version: 4 })).toThrow('newer version of the planner (format version 4)')
   })
 
   it('lists every problem in a damaged file', () => {

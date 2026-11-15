@@ -1,6 +1,8 @@
+import type { OxygenAlternatives } from '../../eva/oxygenBudget'
 import type { ScienceMapOverlay } from '../../scienceSuggestions/mapEvidence'
+import { MarsLocator } from './MarsLocator'
 import type { PlacedTarget } from '../../datasets/scienceTargets'
-import type { MapPoint } from '../../datasets/terrainContract'
+import { rasterBounds, type MapPoint } from '../../datasets/terrainContract'
 import type { MarsRegion } from '../../datasets/types'
 import type { RouteAlternatives, Waypoint } from '../../routing'
 import { gridSpacing } from '../mapGrid'
@@ -16,6 +18,7 @@ import type { BasemapController } from '../useBasemapStatus'
 import type { WaypointOrigin } from '../../datasets/waypointOrigin'
 
 interface MapViewportProps {
+  oxygen?: OxygenAlternatives | null
   scienceOverlays?: ScienceMapOverlay
   region: MarsRegion
   viewMode: ViewMode
@@ -41,6 +44,7 @@ interface MapViewportProps {
 }
 
 export function MapViewport({
+  oxygen,
   scienceOverlays,
   region,
   viewMode,
@@ -65,6 +69,8 @@ export function MapViewport({
   basemap,
 }: MapViewportProps) {
   const terrain = terrainState.status === 'ready' ? terrainState.terrain : null
+  const coverage = terrain ? rasterBounds(terrain.manifest.raster) : null
+  const formatKm = (metres: number) => (metres / 1000).toLocaleString(undefined, { maximumFractionDigits: 2 })
   const title = terrain ? terrain.manifest.title : region.name
   // A view setting, kept here so it survives switching between 2D and 3D.
   const [verticalScale, setVerticalScale] = useState(1)
@@ -80,12 +86,12 @@ export function MapViewport({
           ? `HiRISE orthoimage (grayscale), ${terrain.manifest.source.attribution}`
           : 'Terrain surface'
   const context = displayLayers.state.status === 'ready' ? displayLayers.state.context : null
-  // The terrain's standing caveat, stated once, next to the map title.
+  // Show synthetic-data and loading/error states next to the map title.
   const caveat =
     terrainState.status === 'ready'
       ? terrainState.terrain.manifest.synthetic
         ? { tone: 'warning', text: 'Synthetic terrain - not NASA data' }
-        : { tone: 'note', text: 'Prototype data - position not verified' }
+        : null
       : terrainState.status === 'loading'
         ? { tone: 'note', text: 'Loading terrain…' }
         : terrainState.status === 'error'
@@ -103,9 +109,10 @@ export function MapViewport({
           <span className="viewport-planet">Mars</span>
           <span className="breadcrumb-slash" aria-hidden="true">/</span>
           <strong>{title}</strong>
-          <span className={`map-caveat ${caveat.tone}`} role="note">
+          {coverage && <span className="map-coverage">Coverage: {formatKm(coverage.maxX - coverage.minX)} x {formatKm(coverage.maxY - coverage.minY)} km</span>}
+          {caveat && <span className={`map-caveat ${caveat.tone}`} role="note">
             {caveat.text}
-          </span>
+          </span>}
         </div>
         <div className="viewport-actions">
           {viewMode === '2d' && showGrid && terrain && <span className="grid-spacing" title="Coordinates are local metres east and north from the terrain's south-west corner.">
@@ -143,9 +150,11 @@ export function MapViewport({
           </button>
         </div>
       </div>
-      <div className="map-stage">
+      <div className={`map-stage${viewMode === '3d' ? ' map-stage-3d' : ''}`}>
+        {region.id === 'gale-pahrump-hills' && <MarsLocator />}
         {viewMode === '2d' ? (
           <MapCanvas
+            oxygen={oxygen}
             scienceOverlays={scienceOverlays}
             regionId={region.id}
             showGrid={showGrid}
@@ -168,6 +177,7 @@ export function MapViewport({
           />
         ) : terrain ? (
           <Terrain3DPanel
+            oxygen={oxygen}
             terrain={terrain}
             imageUrl={basemap.url}
             imageFootprint={imageFootprint}

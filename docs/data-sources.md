@@ -1,4 +1,4 @@
-# POLARIS Module — integrated data and source guide
+# POLARIS Module â€” integrated data and source guide
 
 Updated 2026-11-15. The planner loads the real Pahrump Hills prototype by default.
 This guide covers integrated source groups; per-file hashes and processing
@@ -15,11 +15,11 @@ scenario. No CRISM mineral raster or thermal dataset has been integrated.
 
 | Content | Runtime location under `public/data/` | Source and meaning |
 | --- | --- | --- |
-| Elevation and slope | `gale/pahrump-hills-v1/` | [HiRISE DTM DTEEC_040770_1755_039280_1755_A01](https://www.uahirise.org/dtm/dtm.php?ID=ESP_040770_1755), NASA/JPL-Caltech/UArizona; 200 × 200 cells, 5 m spacing over 1000 × 1000 projected metres |
-| Grayscale basemap | `gale/pahrump-hills-v1/basemap.jpg` | Matching ESP_039280_1755 RED orthoimage; resampled to the terrain footprint, 989 × 989 display pixels |
-| Enhanced RGB | `imagery/pahrump-hills-rgb-v1/` | [ESP_039280_1755 MRGB](https://www.uahirise.org/ESP_039280_1755), NASA/JPL-Caltech/UArizona; 1000 × 1000 display pixels at 1 m, derived from 0.5 m source imagery, with empirical relative registration |
+| Elevation and slope | `gale/pahrump-hills-v1/` | [HiRISE DTM DTEEC_040770_1755_039280_1755_A01](https://www.uahirise.org/dtm/dtm.php?ID=ESP_040770_1755), NASA/JPL-Caltech/UArizona; 200 Ã— 200 cells, 5 m spacing over 1000 Ã— 1000 projected metres |
+| Grayscale basemap | `gale/pahrump-hills-v1/basemap.jpg` | Matching ESP_039280_1755 RED orthoimage; resampled to the terrain footprint, 989 Ã— 989 display pixels |
+| Enhanced RGB | `imagery/pahrump-hills-rgb-v1/` | [ESP_039280_1755 MRGB](https://www.uahirise.org/ESP_039280_1755), NASA/JPL-Caltech/UArizona; 1000 Ã— 1000 display pixels at 1 m, derived from 0.5 m source imagery, with empirical relative registration |
 | Three drill-associated rover proxies | `science/pahrump-hills-v1/` | Confidence Hills, Mojave 2 and Telegraph Peak; NASA [waypoints](https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_waypoints.json) joined to published site/drive associations; [science review](terrain/science-target-review.md) records the sources |
-| APXS observations | `layer-lab/pahrump-hills-v1/context.json` | [Berger 2020 PDS supplement, sols 0–2301](https://pds-geosciences.wustl.edu/msl/urn-nasa-pds-msl_apxs_supplement_sols_0_2301/), DOI 10.17189/1519050; 104 measurement records at 30 coordinate pairs inside the footprint |
+| APXS observations | `layer-lab/pahrump-hills-v1/context.json` | [Berger 2020 PDS supplement, sols 0â€“2301](https://pds-geosciences.wustl.edu/msl/urn-nasa-pds-msl_apxs_supplement_sols_0_2301/), DOI 10.17189/1519050; 104 measurement records at 30 coordinate pairs inside the footprint |
 | Historical traverse | Same `context.json` | NASA [MSL_traverse.json](https://mars.nasa.gov/mmgis-maps/MSL/Layers/json/MSL_traverse.json), clipped spatially to the loaded footprint; no per-feature sol filter |
 | Buckskin mineral finding | Same `context.json` | Published [CheMin tridymite finding](https://www.jpl.nasa.gov/news/nasa-scientists-discover-unexpected-mineral-on-mars/), NASA/JPL-Caltech; one sample-associated rover-position proxy |
 
@@ -36,7 +36,7 @@ The older `gale/pahrump-hills/` image-only preview is not the active terrain API
   equipotential surface; negative values are expected here.
 - [Georeferencing review](terrain/georeferencing-review.md): the prototype uses
   a spherical Mars Equirectangular source frame (radius 3396190 m, central
-  meridian 137.39°E). Absolute positioning and image/DEM accuracy remain unverified.
+  meridian 137.39Â°E). Absolute positioning and image/DEM accuracy remain unverified.
 - [Science positions](terrain/science-positions-provenance.json): activity and
   position-record sols remain distinct. Rover proxies are not exact holes or rock
   targets; source-stated uncertainty is unavailable. No raster-origin pixel
@@ -209,3 +209,26 @@ georeferencing resolution and aligned derivative production remain outstanding.
 
 No scientific targets, mineral/thermal products, slope rasters, cropped assets,
 or frontend dataset integrations have been validated by this inspection.
+
+## Interpretation of displayed context
+
+Routes have no validated hazard, thermal or astronaut safety model. The shortest
+route uses distance and terrain coverage; the slope-aware alternative additionally
+uses the selected slope limit and penalty. Neither certifies traversal safety.
+
+Mineral findings describe published samples at associated locations, not a
+continuous mineral-distribution map. Drill markers use associated rover positions
+rather than exact drill-hole coordinates; positional uncertainty is unknown.
+
+The Curiosity traverse is historical context, spatially clipped to the terrain.
+It is neither time-filtered to the Pahrump campaign nor a suggested EVA route.
+Concise layer descriptions identify these records in the interface; the full
+qualifications also remain in dataset metadata and exported reports.
+
+The fixed planetary locator uses [NASA/JPL Viking global imagery](https://space.jpl.nasa.gov/tmaps/mars.html),
+credited Caltech/JPL/USGS. [Locator preparation and nominal position](../public/data/locator/README.md)
+are independent of the terrain package; it is display context only.
+
+The [oxygen budget source review](eva/oxygen-budget.md) records NASA BVAD Rev2
+Mars closed-loop consumption, the historical EMU primary-capacity reference,
+the project reserve allowance, equations and limits of the 2D reach visualization.

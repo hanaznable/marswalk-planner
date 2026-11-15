@@ -147,7 +147,7 @@ POLARIS Module is a planning prototype. It says what it does not know.
   physiological model.
 - **No hazard, thermal or mineral-abundance model.** The enhanced RGB image uses
   synthetic blue and is not true colour or a mineral map. CRISM, THEMIS,
-  geological units and hazard maps are listed in the app as not yet available.
+  geological units and hazard maps have not been integrated.
 
 ## Project structure
 
@@ -232,5 +232,6 @@ rock-sampling proposals) and two reviewed HiRISE imaging candidates. The Science
 See the [imaging source review](docs/terrain/science-objectives-v2.md) and
 [rock-sampling methods and equipment sources](docs/terrain/rock-sampling-v3.md).
 Use Route for comparison/reports and Missions to save or export the complete plan.
-Activities retain their evidence in mission v2 files; existing v1 files still open.
+New missions use format v3 to retain oxygen settings and science evidence; existing
+v1/v2 files still open. See the [NASA-based oxygen model](docs/eva/oxygen-budget.md).
 See [implementation and validation](docs/science-suggestions-implementation.md).
