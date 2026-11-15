@@ -117,7 +117,7 @@ describe('parseMissionRecord', () => {
   const json = () => JSON.parse(JSON.stringify(record())) as Record<string, unknown>
 
   it('rejects other files and future versions with a clear reason', () => {
-    expect(() => parseMissionRecord({ format: 'marswalk-mission-report', version: 1 })).toThrow('not a Polaris Module mission file')
+    expect(() => parseMissionRecord({ format: 'marswalk-mission-report', version: 1 })).toThrow('not a POLARIS Module mission file')
     expect(() => parseMissionRecord({ ...json(), version: 2 })).toThrow('newer version of the planner (format version 2)')
   })
 

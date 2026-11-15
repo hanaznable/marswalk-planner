@@ -165,7 +165,8 @@ export function RoutePlanner({
           <output>{maxSlopeDegrees}°</output>
         </label>
         <p id="slope-hint" className="setting-hint">
-          Scenario assumption, not a certified astronaut safety limit.
+          Applies to the slope-aware route only. A scenario assumption, not a
+          certified astronaut safety limit.
         </p>
         <label className="setting-row">
           <span>Slope penalty</span>

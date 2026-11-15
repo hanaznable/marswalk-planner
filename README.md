@@ -1,4 +1,4 @@
-# Polaris Module
+# POLARIS Module
 
 **A Mars EVA route planner built on real HiRISE terrain.**
 Plan a walking traverse across a 1 × 1 km patch of Gale Crater, compare a
@@ -9,7 +9,7 @@ Built for the *Interplanetary Survival Guide: Martian Map* challenge of the
 2026 NASA Space Apps Challenge. Prototype, not an operational navigation or
 safety tool.
 
-![Polaris Module planning a three-waypoint traverse on HiRISE terrain of Pahrump Hills, with the shortest and slope-aware routes, the historical Curiosity traverse and a science target's sourced details](docs/images/polaris-2d-plan.png)
+![POLARIS Module planning a three-waypoint traverse on HiRISE terrain of Pahrump Hills, with the shortest and slope-aware routes, the historical Curiosity traverse and a science target's sourced details](docs/images/polaris-2d-plan.png)
 
 ## The problem
 
@@ -22,7 +22,7 @@ what is worth studying. A planner has to answer three questions together:
 
 Mission data that answers these questions exists, but it is spread across
 orbital terrain models, rover archives and science papers, in different
-coordinate systems. Polaris Module brings them onto one map for one site.
+coordinate systems. POLARIS Module brings them onto one map for one site.
 
 ## What it does
 
@@ -50,14 +50,15 @@ with script execution disabled, use `npm.cmd ci` and `npm.cmd run dev`.
 
 **Two-minute walkthrough**
 
-1. The app opens on **Gale Crater - Pahrump Hills**.
-2. In the left panel, select **Confidence Hills** and choose **Add as waypoint**.
-   Its card shows the drill sols, sources and the note that the marker is a
-   rover position, not the exact drill hole.
+1. The app opens on **Gale Crater - Pahrump Hills**. The scale bar shows
+   distance; the grid button in the map toolbar adds local east/north labels.
+2. In the left panel, open **Drill sites** under **Drill proxies**, select
+   **Confidence Hills** and choose **Add as waypoint**. Its card shows the drill
+   sols and sources.
 3. Choose **Add waypoints** and click two more points on the map.
 4. Compare **Shortest** (dashed) and **Slope-aware** (solid). Move the
    **Max slope** slider and watch the slope-aware route change, or fail with
-   a reason.
+   a reason. The planner notes that only the slope-aware route applies the limit.
 5. Turn on **Historical traverse** or **APXS observations** in the left panel.
 6. Switch to **3D terrain** and orbit around the route.
 7. Open the **Missions** tab to save the plan, or choose **Mission report** to
@@ -114,7 +115,7 @@ URLs, file hashes and processing steps.
 
 ## Honest limits
 
-Polaris Module is a planning prototype. It says what it does not know.
+POLARIS Module is a planning prototype. It says what it does not know.
 
 - **Positions are not certified.** The terrain's absolute position on Mars is
   unverified. The image-to-terrain alignment follows a documented working
@@ -123,7 +124,8 @@ Polaris Module is a planning prototype. It says what it does not know.
   shown where the rover was, not at the exact rock or drill hole. No positional
   uncertainty is stated by the sources, so none is shown.
 - **The shortest route ignores the slope limit.** It only avoids cells with no
-  data. Only the slope-aware route applies your slope limit.
+  data. Only the slope-aware route applies your slope limit. The planner and the
+  mission report both say so.
 - **Slope limits and walking speeds are your assumptions,** not certified
   astronaut limits. The EVA duration is walking time plus stop time, not a
   physiological model.
@@ -200,6 +202,3 @@ The NASA and mission data in [`public/data`](public/data) is not covered by
 that license. It comes from the sources listed under [Data sources](#data-sources),
 keeps their own terms, and must be credited as shown there
 (images and terrain: NASA/JPL-Caltech/UArizona).
-
-The 2D map toolbar offers a metric grid with local east/north labels and explicit
-display/routing spacing. A zoom-aware scale bar remains visible with the grid off.
