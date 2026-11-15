@@ -11,7 +11,7 @@ export function AppHeader({ regionId, onRegionChange }: AppHeaderProps) {
     <header className="app-header">
       <div className="brand">
         <h1 className="brand-name">
-          Polaris <span className="brand-module">Module</span>
+          POLARIS <span className="brand-module">Module</span>
         </h1>
         <span className="brand-subtitle">Mars EVA route planner</span>
       </div>

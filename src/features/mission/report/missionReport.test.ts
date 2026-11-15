@@ -301,6 +301,7 @@ describe('buildMissionReport', () => {
     expect(report.assumptions).toEqual(assumptions)
     expect(report.disclaimers.join(' ')).toMatch(/not an operationally validated/)
     expect(report.disclaimers.join(' ')).toMatch(/scenario assumptions/)
+    expect(report.disclaimers.join(' ')).toMatch(/shortest route ignores the slope limit/)
     expect(report.disclaimers.join(' ')).toMatch(/not a physiological model/)
   })
 

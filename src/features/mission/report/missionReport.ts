@@ -182,6 +182,7 @@ export function buildMissionReport(input: MissionReportInput): MissionReport {
       'Prototype planning output for the 2026 NASA Space Apps Challenge; not an operationally validated navigation or safety product.',
       `Distances are planar grid distances on the terrain's ${cellSize} m routing grid; no Earth geodesy.`,
       'Slope limit, slope penalty, walking speed and stop time are user scenario assumptions, not certified limits.',
+      'The shortest route ignores the slope limit and only avoids cells without elevation data; only the slope-aware route applies it.',
       'EVA duration is a simple planning estimate (walking time plus stop time), not a physiological model.',
       ...(scienceTargets
         ? [

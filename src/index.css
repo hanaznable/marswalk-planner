@@ -10,7 +10,7 @@
   -moz-osx-font-smoothing: grayscale;
   color-scheme: dark;
 
-  /* Polaris Module: neutral cool surfaces, one blue accent for interface chrome. */
+  /* POLARIS Module: neutral cool surfaces, one blue accent for interface chrome. */
   --bg: #0e1115;
   --surface: #151a20;
   --surface-raised: #1b2129;

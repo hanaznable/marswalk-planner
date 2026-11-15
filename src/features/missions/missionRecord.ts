@@ -162,7 +162,7 @@ function validateOrigin(value: unknown): boolean {
 /** Validates untrusted JSON (an imported file or a stored library entry). */
 export function parseMissionRecord(input: unknown): MissionRecord {
   if (!isRecord(input) || input.format !== MISSION_FORMAT) {
-    throw new MissionFormatError(['this is not a Polaris Module mission file'])
+    throw new MissionFormatError(['this is not a POLARIS Module mission file'])
   }
   if (input.version !== MISSION_VERSION) {
     throw new MissionFormatError([

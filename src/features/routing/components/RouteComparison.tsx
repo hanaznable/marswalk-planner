@@ -65,6 +65,7 @@ export function RouteComparison({
             </th>
             <th scope="col">
               <span className="legend-swatch shortest" aria-hidden="true" /> Shortest
+              <span className="column-detail">no slope limit</span>
             </th>
             <th scope="col">
               <span className="legend-swatch slope-limited" aria-hidden="true" /> Slope-aware
@@ -89,6 +90,14 @@ export function RouteComparison({
           </tr>
         </tbody>
       </table>
+
+      <div className="summary-note">
+        <Icon name="info" size={13} />
+        <span>
+          The shortest route ignores the slope limit and only avoids cells without
+          elevation data. Only the slope-aware route applies it.
+        </span>
+      </div>
 
       {alternatives.identical && (
         <p className="route-note">Both profiles give the same route.</p>
