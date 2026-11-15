@@ -1,7 +1,8 @@
 # Route planning boundary
 
-`components/RoutePlanner.tsx` is still an empty-state UI and is not wired to the
-algorithms yet. No duration, traversability scoring, or safety calculation exists.
+`components/RoutePlanner.tsx` is the planner panel: waypoints, slope and EVA
+settings, the route comparison and export. Durations come from the separate
+`features/eva` estimate. No traversability scoring or safety calculation exists.
 
 The route core is pure TypeScript, exported from `index.ts`, and independent of
 React, Leaflet, and the 3D renderer:
