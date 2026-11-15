@@ -57,7 +57,7 @@ export function MissionReportDialog({ report, onClose, onDownloadJson }: Mission
 
         <article className="report-page">
           <header>
-            <p className="report-eyebrow">MARSWALK PLANNER · MISSION REPORT</p>
+            <p className="report-eyebrow">POLARIS MODULE · MISSION REPORT</p>
             <h1 id="report-title">{terrain.title}</h1>
             <p className="report-meta">
               Generated {generated.toUTCString()}

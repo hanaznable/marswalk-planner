@@ -94,6 +94,7 @@ export interface ReportRoute {
 }
 
 export interface MissionReport {
+  /** Stable format identifier (kept from the earlier project name so existing exports stay readable). */
   readonly format: 'marswalk-mission-report'
   readonly version: 1
   readonly generatedAt: string
@@ -178,7 +179,7 @@ export function buildMissionReport(input: MissionReportInput): MissionReport {
     version: 1,
     generatedAt: input.generatedAt.toISOString(),
     disclaimers: [
-      'Prototype planning output for the NASA Space Apps Challenge 2026; not an operationally validated navigation or safety product.',
+      'Prototype planning output for the 2026 NASA Space Apps Challenge; not an operationally validated navigation or safety product.',
       `Distances are planar grid distances on the terrain's ${cellSize} m routing grid; no Earth geodesy.`,
       'Slope limit, slope penalty, walking speed and stop time are user scenario assumptions, not certified limits.',
       'EVA duration is a simple planning estimate (walking time plus stop time), not a physiological model.',
@@ -263,8 +264,8 @@ export function buildMissionReport(input: MissionReportInput): MissionReport {
   }
 }
 
-/** e.g. marswalk-mission-pahrump-hills-v1-20261114-1805Z.json (UTC). */
+/** e.g. polaris-report-pahrump-hills-v1-20261114-1805Z.json (UTC). */
 export function missionReportFileName(report: MissionReport): string {
   const stamp = report.generatedAt.replace(/[-:]/g, '').replace(/^(\d{8})T(\d{4}).*$/, '$1-$2Z')
-  return `marswalk-mission-${report.terrain.id}-${stamp}.json`
+  return `polaris-report-${report.terrain.id}-${stamp}.json`
 }

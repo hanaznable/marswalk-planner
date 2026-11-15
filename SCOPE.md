@@ -1,7 +1,7 @@
-# Marswalk Planner — Proje kapsamı
+# Polaris Module — Proje kapsamı
 
 Durum: Planlanan ürün kapsamı. Bu belge özelliklerin uygulanmış olduğunu göstermez.
-Proje adı geçicidir. Kapsam, NASA Space Apps Challenge 2026 proje çalışması için
+Kapsam, 2026 NASA Space Apps Challenge proje çalışması için
 hazırlanmıştır; resmî görev planlama veya astronot güvenliği onayı anlamına gelmez.
 
 ## Amaç ve temel kullanıcı akışı
