@@ -358,48 +358,7 @@ export function MapCanvas({
             : 'Empty 2D map. No terrain loaded. Use arrow keys to pan, plus and minus to zoom.'
         }
       />
-      {terrain ? (
-        terrain.manifest.synthetic ? (
-          <div className="synthetic-banner" role="note">
-            SYNTHETIC DEVELOPMENT TERRAIN <span>·</span> NOT NASA DATA
-          </div>
-        ) : (
-          <div className="synthetic-banner prototype-banner" role="note">
-            HIRISE PROTOTYPE TERRAIN <span>·</span> POSITION NOT VERIFIED
-          </div>
-        )
-      ) : emptyState ? (
-        emptyState
-      ) : (
-        <div className="map-empty-state">
-          <div className="orbital-illustration" aria-hidden="true">
-            <div className="orbit orbit-one" />
-            <div className="orbit orbit-two" />
-            <div className="planet-grid">
-              <span />
-              <span />
-              <span />
-            </div>
-            <span className="orbit-point" />
-            <span className="illustration-cross cross-one">+</span>
-            <span className="illustration-cross cross-two">+</span>
-          </div>
-          <span className="eyebrow">THE SURFACE IS JUST THE BEGINNING</span>
-          <h2>
-            A world of possibilities.
-            <br />
-            <span>Ready to explore.</span>
-          </h2>
-          <p>
-            Your mission starts with a map. NASA surface
-            <br className="desktop-break" /> datasets will bring this workspace to
-            life.
-          </p>
-          <div className="empty-state-tag">
-            <span className="status-dot" /> AWAITING DATA INTEGRATION
-          </div>
-        </div>
-      )}
+      {!terrain && emptyState}
       <div
         className="map-zoom-controls"
         role="group"

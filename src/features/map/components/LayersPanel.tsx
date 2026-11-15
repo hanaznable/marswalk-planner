@@ -106,7 +106,6 @@ export function LayersPanel({
     surfaceImagery.mode === 'rgb' && surfaceImagery.state.status === 'ready',
     basemap,
   )
-  const realTargets = targetsState.status === 'ready' && !targetsState.collection.synthetic
   const activeCount = rows.filter((row) => row.loaded && (row.toggle?.on ?? true)).length
     + (terrainState.status === 'ready' && displayLayers.settings.raster ? 1 : 0)
     + (displayLayers.state.status === 'ready' ? Number(displayLayers.settings.apxs) + Number(displayLayers.settings.traverse) + Number(displayLayers.settings.minerals) : 0)
@@ -118,38 +117,30 @@ export function LayersPanel({
       className="panel layers-panel"
       aria-label="Map layers and navigation"
     >
-      <div className="panel-heading">
-        <span className="eyebrow">EXPLORER</span>
-        <span className="panel-index">01</span>
-      </div>
-      <nav className="explorer-nav" aria-label="Explorer sections">
+      <div className="panel-tabs segmented" role="group" aria-label="Left panel sections">
         <button
-          className={section === 'layers' ? 'nav-item active' : 'nav-item'}
+          className={section === 'layers' ? 'selected' : ''}
           aria-pressed={section === 'layers'}
           onClick={() => setSection('layers')}
         >
-          <Icon name="layers" />
-          Map layers
-          <Icon name="chevron" size={14} />
+          <Icon name="layers" size={14} />
+          Layers
         </button>
         <button
-          className={section === 'datasets' ? 'nav-item active' : 'nav-item'}
+          className={section === 'datasets' ? 'selected' : ''}
           aria-pressed={section === 'datasets'}
           onClick={() => setSection('datasets')}
         >
-          <Icon name="database" />
-          Data catalog<span className="count">{datasetLoaded ? 1 : 0}</span>
+          <Icon name="database" size={14} />
+          Data sources<span className="count">{datasetLoaded ? 1 : 0}</span>
         </button>
-      </nav>
+      </div>
       {section === 'layers' ? (
         <>
           <div className="section-heading">
             <h2>Map layers</h2>
-            <span className="small-label">{activeCount} ACTIVE</span>
+            <span className="small-label">{activeCount} active</span>
           </div>
-          <p className="panel-description">
-            Build a clearer picture of the surface.
-          </p>
           <div className="layer-list">
             {rows.map((layer) => (
               <div className="layer-row" key={layer.title}>
@@ -205,7 +196,7 @@ export function LayersPanel({
           </details>
           {targetBrowser}
           <div className="section-heading overlay-heading">
-            <h2>Display overlays</h2>
+            <h2>Display</h2>
           </div>
           <div className="grid-row">
             <Icon name="grid" />
@@ -227,8 +218,8 @@ export function LayersPanel({
       ) : (
         <div className="catalog-view">
           <div className="section-heading">
-            <h2>Data catalog</h2>
-            <span className="small-label">{datasetLoaded ? 1 : 0} LOADED</span>
+            <h2>Data sources</h2>
+            <span className="small-label">{datasetLoaded ? 1 : 0} loaded</span>
           </div>
           {dataset && terrainState.status === 'ready' ? (
             <div className="catalog-entry">
@@ -289,36 +280,6 @@ export function LayersPanel({
           )}
         </div>
       )}
-      <div className="sidebar-bottom">
-        <div className="data-notice">
-          <Icon name="database" />
-          <div>
-            <h3>Real science. Real sources.</h3>
-            <p>
-              {datasetLoaded
-                ? `HiRISE terrain is loaded with its source and limitations in the data catalog. ${
-                    realTargets
-                      ? 'Science targets are loaded with their sources and position caveats.'
-                      : 'Science targets are not loaded yet.'
-                  }`
-                : 'No NASA datasets are loaded for this selection. Map layers become available as data loads.'}
-            </p>
-          </div>
-        </div>
-        <details className="workspace-help">
-          <summary>
-            <Icon name="info" size={15} />
-            About this workspace
-            <Icon name="plus" size={14} />
-          </summary>
-          <p>
-            Compare sourced imagery, elevation, slope and historical science
-            context. Display overlays do not change route costs. APXS research
-            observations and mineral findings retain their source and position
-            caveats. The 3D view remains a placeholder.
-          </p>
-        </details>
-      </div>
     </aside>
   )
 }

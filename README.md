@@ -45,7 +45,7 @@ src/
   App.css                          Responsive layout and component styles
   index.css                        Theme tokens, typography, global accessibility
   components/
-    layout/                        Header and workspace status bar
+    layout/                        Top bar (POLARIS Module brand and region picker)
     ui/Icon.tsx                    Shared SVG icons; no icon dependency
   features/
     datasets/                      Region registry, terrain/science contracts and source types
@@ -77,14 +77,17 @@ layer-lab.html                    Independent local layer comparison page
   state. A labeled synthetic development terrain can be selected explicitly.
 - Pan and zoom the HiRISE basemap with keyboard or pointer controls; reset the
   view and expand or restore the viewport.
-- Toggle the visual viewport grid, inspect the data catalog (source,
-  attribution, grid and prototype limitations), and switch between route
-  planning and mission information.
+- Toggle the visual viewport grid, inspect the data sources (source,
+  attribution, grid and prototype limitations), and switch between the route
+  planner, saved missions and plan context.
 - Switch to a read-only 3D terrain view (Three.js, loaded on demand) showing the
   same imagery, waypoints, routes, science targets and context layers. Vertical
   scale is 1× by default; exaggeration is a labelled display setting. Waypoints
   are edited in 2D. See [src/features/terrain3d/README.md](src/features/terrain3d/README.md).
-- Desktop uses three columns. On narrower screens panels flow below the map.
+- The interface is branded POLARIS Module. On wide screens the map fills the
+  window between the layer panel and the planner panel, which scroll on their
+  own; medium screens put the two panels side by side under the map, and
+  phones stack the planner, then the layers, below the map.
 - Save named missions in this browser, reopen them, and export or import them
   as JSON. A mission stores waypoints, science selections and route settings with
   the terrain package and grid; it opens only on that same grid, and routes are

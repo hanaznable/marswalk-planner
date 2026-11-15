@@ -2,24 +2,54 @@
 
 :root {
   font-family: 'DM Sans', 'Segoe UI', sans-serif;
-  color: #e0e3e2;
-  background: #101313;
+  color: var(--text);
+  background: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color-scheme: dark;
-  --surface: #171b1b;
-  --border: #2a3030;
-  --muted: #959e9b;
-  --faint: #737e7b;
-  --accent: #d38d70;
+
+  /* POLARIS Module: neutral cool surfaces, one blue accent for interface chrome. */
+  --bg: #0e1115;
+  --surface: #151a20;
+  --surface-raised: #1b2129;
+  --surface-hover: #232a34;
+  --overlay: #151a20ee;
+  --border: #262e38;
+  --border-strong: #36414e;
+  --text: #e6eaef;
+  --text-secondary: #bcc4ce;
+  --muted: #929ca8;
+  --faint: #838d99;
+  --accent: #4f8cff;
+  --accent-text: #8db6ff;
+  --accent-strong: #2f6fe0;
+  --accent-pressed: #2563d1;
+  --accent-soft: #4f8cff1f;
+  --accent-border: #4f8cff66;
+  --link: #8db6ff;
+  --warning-text: #f0c98e;
+  --warning-border: #7a5f35;
+  --warning-bg: #2a2216;
+  --danger-text: #f2a594;
+  --danger-border: #87483c;
+  --danger-bg: #2c1915;
+  --positive-text: #9fd3b0;
   --mono: 'IBM Plex Mono', Consolas, monospace;
+
+  /* Data colours (map, 3D, profile, report). Independent of the interface accent. */
   /* Route identity colours, validated for CVD on the dark surface (dataviz validator). */
   --route-shortest: #c98500;
   --route-slope-aware: #3987e5;
   /* Science target markers; kept apart from route and waypoint hues. */
   --science-target: #b9a4f2;
+  /* Waypoint roles; each marker also carries a letter or number. */
+  --waypoint-start: #8fb07a;
+  --waypoint-stop: #d9c48f;
+  --waypoint-destination: #d38d70;
+  /* Dark outline around map marks so they read on bright imagery. */
+  --mark-outline: #0e1115;
 }
 
 * {
@@ -73,7 +103,7 @@ span svg {
   flex-shrink: 0;
 }
 ::selection {
-  background: #72503f;
+  background: #2f5fb3;
   color: #fff;
 }
 [hidden] {
