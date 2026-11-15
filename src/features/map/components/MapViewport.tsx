@@ -1,3 +1,4 @@
+import type { ScienceMapOverlay } from '../../scienceSuggestions/mapEvidence'
 import type { PlacedTarget } from '../../datasets/scienceTargets'
 import type { MapPoint } from '../../datasets/terrainContract'
 import type { MarsRegion } from '../../datasets/types'
@@ -15,6 +16,7 @@ import type { BasemapController } from '../useBasemapStatus'
 import type { WaypointOrigin } from '../../datasets/waypointOrigin'
 
 interface MapViewportProps {
+  scienceOverlays?: ScienceMapOverlay
   region: MarsRegion
   viewMode: ViewMode
   onViewModeChange: (mode: ViewMode) => void
@@ -39,6 +41,7 @@ interface MapViewportProps {
 }
 
 export function MapViewport({
+  scienceOverlays,
   region,
   viewMode,
   onViewModeChange,
@@ -143,6 +146,7 @@ export function MapViewport({
       <div className="map-stage">
         {viewMode === '2d' ? (
           <MapCanvas
+            scienceOverlays={scienceOverlays}
             regionId={region.id}
             showGrid={showGrid}
             terrain={terrain}

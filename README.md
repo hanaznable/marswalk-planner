@@ -194,10 +194,10 @@ uses Python with NumPy and Pillow; see [terrain preparation](scripts/terrain/REA
 
 ## What's next
 
-1. **Science-backed suggestions.** Pick a science objective and available
+1. **Expand science-backed suggestions.** The initial local Science tab is implemented. Pick a science objective and available
    equipment, see suggested activities linked to their historical evidence, and
-   add them to the route. The data format is being agreed
-   ([proposal](docs/science-activity-contract-proposal.md)).
+   add them to the route. The independent [activity contract](docs/science-activity-contract-proposal.md)
+   now supports imaging and rock-sampling plans with mission/report persistence.
 2. **More data layers**, such as CRISM mineral indicators, once each has been
    reviewed for coverage and alignment.
 3. **Wider coverage and more regions**, using the same versioned package format.
@@ -218,3 +218,19 @@ The NASA and mission data in [`public/data`](public/data) is not covered by
 that license. It comes from the sources listed under [Data sources](#data-sources),
 keeps their own terms, and must be credited as shown there
 (images and terrain: NASA/JPL-Caltech/UArizona).
+
+The 2D map toolbar offers a metric grid with local east/north labels and explicit
+display/routing spacing. A zoom-aware scale bar remains visible with the grid off.
+
+
+## Science suggestions (local feature branch)
+
+Open Science in the planner, select the listed equipment and add a suggested activity.
+The current collection offers Study rock textures, Investigate past water activity
+and Investigate mineral diversity: twelve historical follow-ups (including four
+rock-sampling proposals) and two reviewed HiRISE imaging candidates. The Science missions switch shows or hides all 2D science evidence overlays.
+See the [imaging source review](docs/terrain/science-objectives-v2.md) and
+[rock-sampling methods and equipment sources](docs/terrain/rock-sampling-v3.md).
+Use Route for comparison/reports and Missions to save or export the complete plan.
+Activities retain their evidence in mission v2 files; existing v1 files still open.
+See [implementation and validation](docs/science-suggestions-implementation.md).

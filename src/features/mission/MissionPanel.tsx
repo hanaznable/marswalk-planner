@@ -35,7 +35,7 @@ function targetsLabel(state: ScienceTargetsState): string {
   }
 }
 
-const TABS = ['route', 'library', 'mission'] as const
+const TABS = ['route', 'science', 'library', 'mission'] as const
 type Tab = (typeof TABS)[number]
 
 export function MissionPanel({
@@ -44,12 +44,14 @@ export function MissionPanel({
   targetsState,
   routePlanner,
   missionLibrary,
+  scienceSuggestions,
 }: {
   region: MarsRegion
   terrainState: TerrainState
   targetsState: ScienceTargetsState
   routePlanner: ReactNode
   missionLibrary: ReactNode
+  scienceSuggestions: ReactNode
 }) {
   const [tab, setTab] = useState<Tab>('route')
 
@@ -91,6 +93,10 @@ export function MissionPanel({
           <Icon name="route" size={14} />
           Route
         </button>
+        <button id="science-tab" role="tab" aria-selected={tab === 'science'} aria-controls="science-panel" tabIndex={tab === 'science' ? 0 : -1} onClick={() => setTab('science')}>
+          <Icon name="flask" size={14} />
+          Science
+        </button>
         <button
           id="library-tab"
           role="tab"
@@ -123,6 +129,7 @@ export function MissionPanel({
       >
         {routePlanner}
       </div>
+      <div id="science-panel" role="tabpanel" aria-labelledby="science-tab" tabIndex={0} hidden={tab !== 'science'}>{scienceSuggestions}</div>
       <div
         id="library-panel"
         role="tabpanel"

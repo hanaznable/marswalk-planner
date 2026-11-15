@@ -1,5 +1,6 @@
+import { parseSciencePlan, type SciencePlanSnapshot } from '../scienceSuggestions/model'
 /**
- * Saved mission record (format "marswalk-mission", version 1). Pure TypeScript.
+ * Saved mission record (format "marswalk-mission", versions 1 and 2). Pure TypeScript.
  * The format identifier keeps the earlier project name on purpose: it is
  * written into saved and exported missions, which must stay readable.
  *
@@ -15,7 +16,7 @@ import type { WaypointOrigin } from '../datasets/waypointOrigin'
 import type { Waypoint } from '../routing'
 
 export const MISSION_FORMAT = 'marswalk-mission'
-export const MISSION_VERSION = 1
+export const MISSION_VERSION = 2
 
 /** Ranges match the planner's controls; values outside them are rejected on import. */
 export const SETTING_RANGES = {
@@ -51,8 +52,9 @@ export interface MissionWaypoint {
 }
 
 export interface MissionRecord {
+  readonly sciencePlan?: SciencePlanSnapshot
   readonly format: typeof MISSION_FORMAT
-  readonly version: typeof MISSION_VERSION
+  readonly version: 1 | 2
   /** Stable library id; a new one is assigned when a copy is imported. */
   readonly id: string
   readonly name: string
@@ -68,6 +70,7 @@ export interface MissionRecord {
 }
 
 export interface MissionSnapshot {
+  readonly sciencePlan?: SciencePlanSnapshot | null
   readonly name: string
   readonly regionId: string
   readonly terrain: TerrainPackage
@@ -90,7 +93,8 @@ export function createMissionRecord(snapshot: MissionSnapshot, id: string, saved
   if (!name) throw new Error('A mission needs a name.')
   return {
     format: MISSION_FORMAT,
-    version: MISSION_VERSION,
+    version: snapshot.sciencePlan ? 2 : 1,
+    ...(snapshot.sciencePlan ? { sciencePlan: structuredClone(snapshot.sciencePlan) } : {}),
     id,
     name,
     savedAt: savedAt.toISOString(),
@@ -164,7 +168,7 @@ export function parseMissionRecord(input: unknown): MissionRecord {
   if (!isRecord(input) || input.format !== MISSION_FORMAT) {
     throw new MissionFormatError(['this is not a POLARIS Module mission file'])
   }
-  if (input.version !== MISSION_VERSION) {
+  if (input.version !== 1 && input.version !== MISSION_VERSION) {
     throw new MissionFormatError([
       typeof input.version === 'number' && input.version > MISSION_VERSION
         ? `it was saved by a newer version of the planner (format version ${input.version})`
@@ -172,6 +176,8 @@ export function parseMissionRecord(input: unknown): MissionRecord {
     ])
   }
   const issues: string[] = []
+  if (input.version === 1 && input.sciencePlan !== undefined) issues.push('v1 missions cannot contain science activities')
+  if (input.version === 2 && (!isRecord(input.sciencePlan) || !isRecord(input.sciencePlan.collection) || typeof input.sciencePlan.collectionSha256 !== 'string' || !/^[a-f0-9]{64}$/.test(input.sciencePlan.collectionSha256) || !Array.isArray(input.sciencePlan.selections))) issues.push('sciencePlan is invalid')
   if (!isText(input.id)) issues.push('id is missing')
   if (typeof input.name !== 'string' || !normaliseName(input.name)) issues.push('name is missing')
   if (typeof input.savedAt !== 'string' || Number.isNaN(Date.parse(input.savedAt))) issues.push('savedAt is not a date')
@@ -239,6 +245,7 @@ export type Compatibility =
       readonly waypoints: Waypoint[]
       readonly origins: Record<string, WaypointOrigin>
       readonly warnings: string[]
+      readonly sciencePlan?: SciencePlanSnapshot
     }
   | { readonly ok: false; readonly reasons: string[] }
 
@@ -253,6 +260,7 @@ export function checkCompatibility(
   record: MissionRecord,
   terrain: TerrainPackage,
   currentScienceTargets: { readonly id: string } | null,
+  terrainManifestHash?: string,
 ): Compatibility {
   const { manifest } = terrain
   const saved = record.terrain
@@ -276,6 +284,13 @@ export function checkCompatibility(
   }
   if (reasons.length > 0) return { ok: false, reasons }
 
+  let sciencePlan: SciencePlanSnapshot | undefined
+  if (record.sciencePlan) {
+    try {
+      if (!terrainManifestHash) throw new Error('The current terrain version could not be verified. Retry loading science data.')
+      sciencePlan = parseSciencePlan(record.sciencePlan, terrain, terrainManifestHash, record.waypoints.length)
+    } catch (e) { return { ok: false, reasons: [e instanceof Error ? e.message : String(e)] } }
+  }
   const warnings: string[] = []
   const savedTargets = record.scienceTargets?.collectionId ?? null
   const currentTargets = currentScienceTargets?.id ?? null
@@ -294,7 +309,7 @@ export function checkCompatibility(
     if (waypoint.origin) origins[id] = structuredClone(waypoint.origin)
     return { id, label: waypoint.label, cell: { row: waypoint.cell.row, col: waypoint.cell.col } }
   })
-  return { ok: true, waypoints, origins, warnings }
+  return { ok: true, waypoints, origins, warnings, ...(sciencePlan ? { sciencePlan } : {}) }
 }
 
 /** e.g. polaris-mission-ridge-traverse-20261115-1805Z.json (UTC). */

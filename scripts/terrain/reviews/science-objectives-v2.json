@@ -1,0 +1,147 @@
+{
+  "kind": "science-objectives-source-review",
+  "reviewer": "Codex - source/content and image-feature review for Developer B",
+  "date": "2026-11-15",
+  "inputHashes": {
+    "public/data/gale/pahrump-hills-v1/manifest.json": "450ada2dc924b72e6188bedc476c6373f7776544d599c0c6402d8e3e6d05b5c5",
+    "public/data/gale/pahrump-hills-v1/basemap.jpg": "bc29fea551923f65882585cf26889cc09227b857fd4b6eefbbe5c422566bb4f5",
+    "public/data/layer-lab/pahrump-hills-v1/context.json": "4cec443428b147b78a26755c3cc3734a0b2e128780bdd87b8eeeb5617c255dde",
+    "public/data/science/pahrump-hills-v1/targets.json": "900cebe9bd54bbb9c5c397433e5ff618454e9ea59fa6eb5a7f0854ad2eafaf4f",
+    "public/data/science-activities/pahrump-hills-v1/v1/activities.json": "f66264b040326eda43ec6b37ca8403a086aa85f50ef4cd4a1753b737b8edc5b7"
+  },
+  "sources": {
+    "garden-city": {
+      "url": "https://www.jpl.nasa.gov/news/upgrade-helps-nasa-study-mineral-veins-on-mars/",
+      "attribution": "NASA/JPL-Caltech",
+      "provides": "Published Garden City vein investigation and fluid-history interpretation"
+    },
+    "garden-targets": {
+      "url": "https://doi.org/10.1029/2018EA000482",
+      "attribution": "Kronyak et al. (2019), Earth and Space Science, doi:10.1029/2018EA000482",
+      "provides": "Table 1 and Garden City section: Alvord Mountain/Coalville and Indianola target associations; table sols are not used as APXS measurement sols"
+    },
+    "pahrump-mineralogy": {
+      "url": "https://ntrs.nasa.gov/api/citations/20150019443/downloads/20150019443.pdf",
+      "attribution": "Rampe et al. (2015), NASA NTRS 20150019443",
+      "provides": "CheMin findings and acid-sulfate interpretation for Confidence Hills, Mojave 2 and Telegraph Peak samples"
+    },
+    "mineral-comparison": {
+      "url": "https://www.jpl.nasa.gov/images/pia21146-mudstone-mineralogy-from-curiositys-chemin-2013-to-2016/",
+      "attribution": "NASA/JPL-Caltech, PIA21146",
+      "provides": "Published sample mineralogy comparison; no abundances digitized"
+    },
+    "buckskin": {
+      "url": "https://www.jpl.nasa.gov/news/nasa-scientists-discover-unexpected-mineral-on-mars/",
+      "attribution": "NASA/JPL-Caltech",
+      "provides": "Buckskin sample collected on sol 1060 and published tridymite identification"
+    },
+    "hirise": {
+      "url": "https://www.uahirise.org/ESP_039280_1755",
+      "attribution": "NASA/JPL-Caltech/UArizona",
+      "provides": "HiRISE scene identity and orbital imaging context; candidate regions are project-authored visual review"
+    },
+    "garden-manuscript": {
+      "url": "https://laro.lanl.gov/esploro/outputs/journalArticle/Mineral-Filled-Fractures-as-Indicators-of-Multigenerational/9916362278803761",
+      "attribution": "Kronyak et al. (2019), LANL accepted manuscript",
+      "provides": "Stable repository record for accepted manuscript; Table 1 target associations"
+    },
+    "instrument-capabilities": {
+      "url": "https://science.nasa.gov/mission/msl-curiosity/science-instruments/",
+      "attribution": "NASA Science - Curiosity science instruments",
+      "provides": "Mastcam context imaging, MAHLI close-up texture imaging, APXS elemental analysis and CheMin X-ray diffraction roles; not an astronaut hardware certification"
+    }
+  },
+  "orbitalRegions": [
+    {
+      "id": "orbital-northern-outcrop",
+      "title": "Survey the northern outcrop",
+      "name": "Northern outcrop imaging area",
+      "ringPixels": [
+        [
+          715,
+          275
+        ],
+        [
+          770,
+          246
+        ],
+        [
+          830,
+          270
+        ],
+        [
+          834,
+          314
+        ],
+        [
+          780,
+          330
+        ],
+        [
+          724,
+          313
+        ],
+        [
+          715,
+          275
+        ]
+      ],
+      "accessPixel": [
+        760,
+        280
+      ],
+      "observation": "The reviewed image region contains a bright exposure with an irregular margin and visible surface relief.",
+      "experiment": "Photograph outcrop texture and its margin"
+    },
+    {
+      "id": "orbital-southwestern-outcrop",
+      "title": "Survey the southwestern outcrop",
+      "name": "Southwestern outcrop imaging area",
+      "ringPixels": [
+        [
+          270,
+          785
+        ],
+        [
+          315,
+          760
+        ],
+        [
+          357,
+          792
+        ],
+        [
+          350,
+          847
+        ],
+        [
+          302,
+          868
+        ],
+        [
+          270,
+          835
+        ],
+        [
+          270,
+          785
+        ]
+      ],
+      "accessPixel": [
+        300,
+        810
+      ],
+      "observation": "The reviewed image region contains bright rock surfaces divided by visible linear boundaries.",
+      "experiment": "Photograph surface textures and edges"
+    }
+  ],
+  "geometryMethod": "Manual visual selection of imaging regions on the committed 989x989 basemap. Pixel coordinates reference image edges; transform with the basemap geotransform. These are candidate imaging ROIs, not mapped geological units, mineral boundaries or documented unvisited areas.",
+  "orbitalResolutionMeters": 1.0117571650087,
+  "sourceAccessNotes": "NASA/JPL, NTRS and HiRISE pages reviewed. Publisher DOI endpoint returned 403; named Garden City associations were reviewed in Table 1 text of the LANL accepted manuscript exposed by web search. Stable DOI is retained; no expiring signed download URL is used.",
+  "closeUpImagingActivities": [
+    "shoemaker-imaging",
+    "book-cliffs-imaging",
+    "chinle-comparison",
+    "garden-city-vein-imaging"
+  ]
+}

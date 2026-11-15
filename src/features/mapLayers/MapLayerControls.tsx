@@ -4,7 +4,7 @@ import { rasterScale } from './rasterDisplay'
 import type { ContextDisplay, DisplayLayersController, RasterDisplay } from './useDisplayLayers'
 import './style.css'
 
-export function MapLayerControls({ terrain, controller }: { terrain: TerrainPackage | null; controller: DisplayLayersController }) {
+export function MapLayerControls({ terrain, controller, hideMinerals = false }: { terrain: TerrainPackage | null; controller: DisplayLayersController; hideMinerals?: boolean }) {
   const { settings, state } = controller
   return <>
     {(['elevation', 'slope'] as const).map((kind: RasterDisplay) => {
@@ -29,14 +29,19 @@ export function MapLayerControls({ terrain, controller }: { terrain: TerrainPack
       ['apxs', 'APXS observations', 'Rock chemistry observations'],
       ['traverse', 'Historical traverse', "Curiosity's historical path"],
       ['minerals', 'Mineral finding', 'Tridymite identified in the Buckskin sample'],
-    ] as const).map(([kind, title, detail]: readonly [ContextDisplay, string, string]) => <div className="layer-row" key={kind}>
+    ] as const).filter(([kind]) => !hideMinerals || kind !== 'minerals').map(([kind, title, detail]: readonly [ContextDisplay, string, string]) => <ContextLayerControl key={kind} kind={kind} title={title} detail={detail} controller={controller} />)}
+    {state.status === 'error' && <div className="display-load-error" role="alert"><p>Context layers could not load: {state.message}</p><button onClick={controller.retry}>Retry context layers</button></div>}
+  </>
+}
+
+function ContextLayerControl({ kind, title, detail, controller }: { kind: ContextDisplay; title: string; detail: string; controller: DisplayLayersController }) {
+  const { settings, state } = controller
+  return <div className="layer-row" key={kind}>
       <span className="layer-icon"><Icon name={kind === 'traverse' ? 'layers' : 'pin'} /></span>
       <div>
         <h3>{title}</h3><p>{detail}</p>
         <span className={state.status === 'ready' ? `layer-loaded${settings[kind] ? '' : ' layer-hidden'}` : 'unavailable'}>{state.status === 'ready' ? settings[kind] ? 'SHOWN ON MAP' : 'HIDDEN' : state.status === 'loading' ? 'LOADING' : state.status === 'error' ? 'LOAD FAILED' : 'NOT AVAILABLE FOR THIS REGION'}</span>
       </div>
       <button className={`switch${settings[kind] && state.status === 'ready' ? ' on' : ''}`} role="switch" aria-checked={settings[kind] && state.status === 'ready'} aria-label={`Show ${title.toLowerCase()} on the map`} disabled={state.status !== 'ready'} onClick={() => controller.toggleContext(kind)}><span /></button>
-    </div>)}
-    {state.status === 'error' && <div className="display-load-error" role="alert"><p>Context layers could not load: {state.message}</p><button onClick={controller.retry}>Retry context layers</button></div>}
-  </>
+    </div>
 }

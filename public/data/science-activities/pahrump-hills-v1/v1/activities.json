@@ -1,0 +1,346 @@
+{
+  "contractVersion": 1,
+  "id": "pahrump-hills-activities-v1",
+  "terrainPackageId": "pahrump-hills-v1",
+  "terrainManifestSha256": "450ada2dc924b72e6188bedc476c6373f7776544d599c0c6402d8e3e6d05b5c5",
+  "synthetic": false,
+  "objectives": [
+    {
+      "id": "rock-textures",
+      "title": "Study rock textures",
+      "description": "How do visible layering and crystal textures differ among the documented outcrops?",
+      "sources": [
+        {
+          "url": "https://www.hou.usra.edu/meetings/lpsc2015/pdf/2855.pdf",
+          "attribution": "McBride et al. (2015), LPSC abstract 2855",
+          "provides": "MAHLI outcrop and named-target observations"
+        }
+      ]
+    }
+  ],
+  "equipment": [
+    {
+      "id": "field-camera",
+      "name": "Field camera",
+      "description": "A camera for visual documentation; no specified performance or suit integration.",
+      "basis": "scenario-assumption",
+      "sources": []
+    }
+  ],
+  "evidence": [
+    {
+      "mission": "MSL Curiosity",
+      "targetName": "Pelona_DRT",
+      "footprint": {
+        "type": "point",
+        "position": {
+          "x": -741.8406219128293,
+          "y": -276377.7570047902,
+          "basis": "rover-position-proxy",
+          "uncertaintyMeters": null
+        }
+      },
+      "qualityFlags": [],
+      "links": {
+        "targetId": null,
+        "apxsRecordId": "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-161"
+      },
+      "id": "shoemaker-imaging-apxs",
+      "kind": "apxs-measurement",
+      "instrument": "APXS",
+      "sol": 805,
+      "statement": "The archived APXS table records Pelona_DRT on mission sol 805.",
+      "productIds": [
+        "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-161"
+      ],
+      "sources": [
+        {
+          "url": "https://pds-geosciences.wustl.edu/msl/urn-nasa-pds-msl_apxs_supplement_sols_0_2301/data/ds01_2020je006536rr.csv",
+          "attribution": "Berger (2020), NASA PDS, doi:10.17189/1519050",
+          "provides": "Target, measurement sol and associated rover position; CSV row 161"
+        }
+      ]
+    },
+    {
+      "mission": "MSL Curiosity",
+      "targetName": "Pelona_DRT",
+      "footprint": {
+        "type": "point",
+        "position": {
+          "x": -741.8406219128293,
+          "y": -276377.7570047902,
+          "basis": "rover-position-proxy",
+          "uncertaintyMeters": null
+        }
+      },
+      "qualityFlags": [],
+      "links": {
+        "targetId": null,
+        "apxsRecordId": "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-161"
+      },
+      "id": "shoemaker-imaging-imaging",
+      "kind": "image-observation",
+      "instrument": "MAHLI",
+      "sol": null,
+      "statement": "MAHLI observations at Shoemaker describe closely spaced layers at Pelona.",
+      "productIds": [
+        "LPSC-2015-2855: Shoemaker section, page 1"
+      ],
+      "sources": [
+        {
+          "url": "https://www.hou.usra.edu/meetings/lpsc2015/pdf/2855.pdf",
+          "attribution": "McBride et al. (2015), LPSC abstract 2855",
+          "provides": "MAHLI outcrop and named-target observations"
+        }
+      ]
+    },
+    {
+      "mission": "MSL Curiosity",
+      "targetName": "Punchbowl_DRT_raster1",
+      "footprint": {
+        "type": "point",
+        "position": {
+          "x": -732.9434898137954,
+          "y": -276394.92200879776,
+          "basis": "rover-position-proxy",
+          "uncertaintyMeters": null
+        }
+      },
+      "qualityFlags": [],
+      "links": {
+        "targetId": null,
+        "apxsRecordId": "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-169"
+      },
+      "id": "book-cliffs-imaging-apxs",
+      "kind": "apxs-measurement",
+      "instrument": "APXS",
+      "sol": 813,
+      "statement": "The archived APXS table records Punchbowl_DRT_raster1 on mission sol 813.",
+      "productIds": [
+        "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-169"
+      ],
+      "sources": [
+        {
+          "url": "https://pds-geosciences.wustl.edu/msl/urn-nasa-pds-msl_apxs_supplement_sols_0_2301/data/ds01_2020je006536rr.csv",
+          "attribution": "Berger (2020), NASA PDS, doi:10.17189/1519050",
+          "provides": "Target, measurement sol and associated rover position; CSV row 169"
+        }
+      ]
+    },
+    {
+      "mission": "MSL Curiosity",
+      "targetName": "Punchbowl_DRT_raster1",
+      "footprint": {
+        "type": "point",
+        "position": {
+          "x": -732.9434898137954,
+          "y": -276394.92200879776,
+          "basis": "rover-position-proxy",
+          "uncertaintyMeters": null
+        }
+      },
+      "qualityFlags": [],
+      "links": {
+        "targetId": null,
+        "apxsRecordId": "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-169"
+      },
+      "id": "book-cliffs-imaging-imaging",
+      "kind": "image-observation",
+      "instrument": "MAHLI",
+      "sol": null,
+      "statement": "The Book Cliffs imaging account describes pale crystals in Punchbowl, Afton Canyon and Topanga targets.",
+      "productIds": [
+        "LPSC-2015-2855: Book Cliffs section, page 2"
+      ],
+      "sources": [
+        {
+          "url": "https://www.hou.usra.edu/meetings/lpsc2015/pdf/2855.pdf",
+          "attribution": "McBride et al. (2015), LPSC abstract 2855",
+          "provides": "MAHLI outcrop and named-target observations"
+        }
+      ]
+    },
+    {
+      "mission": "MSL Curiosity",
+      "targetName": "Pickhandle_DRT",
+      "footprint": {
+        "type": "point",
+        "position": {
+          "x": -724.2004719292809,
+          "y": -276420.3829809213,
+          "basis": "rover-position-proxy",
+          "uncertaintyMeters": null
+        }
+      },
+      "qualityFlags": [],
+      "links": {
+        "targetId": null,
+        "apxsRecordId": "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-179"
+      },
+      "id": "chinle-comparison-apxs",
+      "kind": "apxs-measurement",
+      "instrument": "APXS",
+      "sol": 828,
+      "statement": "The archived APXS table records Pickhandle_DRT on mission sol 828.",
+      "productIds": [
+        "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-179"
+      ],
+      "sources": [
+        {
+          "url": "https://pds-geosciences.wustl.edu/msl/urn-nasa-pds-msl_apxs_supplement_sols_0_2301/data/ds01_2020je006536rr.csv",
+          "attribution": "Berger (2020), NASA PDS, doi:10.17189/1519050",
+          "provides": "Target, measurement sol and associated rover position; CSV row 179"
+        }
+      ]
+    },
+    {
+      "mission": "MSL Curiosity",
+      "targetName": "Pickhandle_DRT",
+      "footprint": {
+        "type": "point",
+        "position": {
+          "x": -724.2004719292809,
+          "y": -276420.3829809213,
+          "basis": "rover-position-proxy",
+          "uncertaintyMeters": null
+        }
+      },
+      "qualityFlags": [],
+      "links": {
+        "targetId": null,
+        "apxsRecordId": "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-179"
+      },
+      "id": "chinle-comparison-imaging",
+      "kind": "image-observation",
+      "instrument": "MAHLI",
+      "sol": null,
+      "statement": "MAHLI imaged Pickhandle among the Chinle targets investigated for different lamination patterns.",
+      "productIds": [
+        "LPSC-2015-2855: Chinle section, page 2"
+      ],
+      "sources": [
+        {
+          "url": "https://www.hou.usra.edu/meetings/lpsc2015/pdf/2855.pdf",
+          "attribution": "McBride et al. (2015), LPSC abstract 2855",
+          "provides": "MAHLI outcrop and named-target observations"
+        }
+      ]
+    }
+  ],
+  "activities": [
+    {
+      "id": "shoemaker-imaging",
+      "title": "Photograph Pelona layering",
+      "category": "historical-follow-up",
+      "experiment": "Photograph layered rock textures",
+      "objectiveIds": [
+        "rock-textures"
+      ],
+      "evidenceIds": [
+        "shoemaker-imaging-apxs",
+        "shoemaker-imaging-imaging"
+      ],
+      "requiredEquipmentIds": [
+        "field-camera"
+      ],
+      "access": {
+        "evidenceId": "shoemaker-imaging-apxs",
+        "point": {
+          "x": -741.8406219128293,
+          "y": -276377.7570047902
+        },
+        "selectionBasis": "associated-rover-position",
+        "justification": "Use the published APXS-associated rover position as the planning access point for the named imaging target."
+      },
+      "rationale": "Revisit the documented imaging target to compare visible layer spacing and surface textures.",
+      "limitations": [
+        "The planning position is an associated rover pose, not the measured rock footprint.",
+        "Camera equipment is a planning assumption; source observations do not establish access, safety or task duration.",
+        "Image-observation statements are published target context, not a new geometry solution or an exact imaging-sol association."
+      ],
+      "durationMinutes": null,
+      "durationSource": null,
+      "review": {
+        "status": "reviewed",
+        "by": "Codex - source/content review for Developer B",
+        "date": "2026-11-15"
+      }
+    },
+    {
+      "id": "book-cliffs-imaging",
+      "title": "Photograph Punchbowl textures",
+      "category": "historical-follow-up",
+      "experiment": "Photograph crystals and surrounding rock",
+      "objectiveIds": [
+        "rock-textures"
+      ],
+      "evidenceIds": [
+        "book-cliffs-imaging-apxs",
+        "book-cliffs-imaging-imaging"
+      ],
+      "requiredEquipmentIds": [
+        "field-camera"
+      ],
+      "access": {
+        "evidenceId": "book-cliffs-imaging-apxs",
+        "point": {
+          "x": -732.9434898137954,
+          "y": -276394.92200879776
+        },
+        "selectionBasis": "associated-rover-position",
+        "justification": "Use the published APXS-associated rover position as the planning access point for the named imaging target."
+      },
+      "rationale": "Photograph the historical target setting to document crystal shapes and their surrounding rock.",
+      "limitations": [
+        "The planning position is an associated rover pose, not the measured rock footprint.",
+        "Camera equipment is a planning assumption; source observations do not establish access, safety or task duration.",
+        "Image-observation statements are published target context, not a new geometry solution or an exact imaging-sol association."
+      ],
+      "durationMinutes": null,
+      "durationSource": null,
+      "review": {
+        "status": "reviewed",
+        "by": "Codex - source/content review for Developer B",
+        "date": "2026-11-15"
+      }
+    },
+    {
+      "id": "chinle-comparison",
+      "title": "Photograph Pickhandle bedding",
+      "category": "historical-follow-up",
+      "experiment": "Photograph bedding from different angles",
+      "objectiveIds": [
+        "rock-textures"
+      ],
+      "evidenceIds": [
+        "chinle-comparison-apxs",
+        "chinle-comparison-imaging"
+      ],
+      "requiredEquipmentIds": [
+        "field-camera"
+      ],
+      "access": {
+        "evidenceId": "chinle-comparison-apxs",
+        "point": {
+          "x": -724.2004719292809,
+          "y": -276420.3829809213
+        },
+        "selectionBasis": "associated-rover-position",
+        "justification": "Use the published APXS-associated rover position as the planning access point for the named imaging target."
+      },
+      "rationale": "Use multiple views of the historical target setting to compare visible bedding patterns.",
+      "limitations": [
+        "The planning position is an associated rover pose, not the measured rock footprint.",
+        "Camera equipment is a planning assumption; source observations do not establish access, safety or task duration.",
+        "Image-observation statements are published target context, not a new geometry solution or an exact imaging-sol association."
+      ],
+      "durationMinutes": null,
+      "durationSource": null,
+      "review": {
+        "status": "reviewed",
+        "by": "Codex - source/content review for Developer B",
+        "date": "2026-11-15"
+      }
+    }
+  ]
+}

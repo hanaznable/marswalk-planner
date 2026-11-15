@@ -1,3 +1,4 @@
+import type { SciencePlanSnapshot } from '../../scienceSuggestions/model'
 import {
   cellCenterToMap,
   mapToCell,
@@ -34,6 +35,7 @@ export interface MissionAssumptions {
 }
 
 export interface MissionReportInput {
+  readonly sciencePlan?: SciencePlanSnapshot | null
   readonly generatedAt: Date
   readonly terrain: TerrainPackage
   /** Registry entry for real packages; null for synthetic terrain. */
@@ -94,6 +96,7 @@ export interface ReportRoute {
 }
 
 export interface MissionReport {
+  readonly sciencePlan?: SciencePlanSnapshot
   /** Stable format identifier (kept from the earlier project name so existing exports stay readable). */
   readonly format: 'marswalk-mission-report'
   readonly version: 1
@@ -175,6 +178,7 @@ export function buildMissionReport(input: MissionReportInput): MissionReport {
   })
 
   return {
+    ...(input.sciencePlan ? { sciencePlan: structuredClone(input.sciencePlan) } : {}),
     format: 'marswalk-mission-report',
     version: 1,
     generatedAt: input.generatedAt.toISOString(),

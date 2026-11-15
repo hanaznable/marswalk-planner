@@ -1,0 +1,69 @@
+{
+  "kind": "rock-sampling-v3-provenance",
+  "date": "2026-11-15",
+  "reviewer": "Codex - source/content review for Developer B",
+  "reviewConfigSha256": "e6189a468febccc532392fd83df2ed741364a5332a66ad8adfa35c3183b050e5",
+  "inputHashes": {
+    "public/data/science-activities/pahrump-hills-v1/v2/activities.json": "036ae3a3e260f2abb6139039aea87d0107211f27e47638341d467f74c72c5b74",
+    "public/data/science-activities/pahrump-hills-v1/v2/provenance.json": "aee3a9854c027443c05e30fc86e54f94e53b4fc719551ef3ae5f6afaf9048e6b",
+    "public/data/gale/pahrump-hills-v1/manifest.json": "450ada2dc924b72e6188bedc476c6373f7776544d599c0c6402d8e3e6d05b5c5"
+  },
+  "sources": {
+    "tools": {
+      "url": "https://www.nasa.gov/suits-and-rovers/spacewalking-tools/",
+      "attribution": "NASA - Spacewalking Tools",
+      "provides": "Geology hammer used for rock-chip collection; tongs for handling rocks into sample bags, in lunar operations"
+    },
+    "tool-development": {
+      "url": "https://ntrs.nasa.gov/api/citations/20210000242/downloads/Developing%20Geology%20Sampling%20Tools_Lunar%20Surface%20Science%20Workshop_FINAL_2021.pdf",
+      "attribution": "Naids et al. (2021), NASA NTRS 20210000242",
+      "provides": "Artemis geology sampling tool functions and collection of chip samples; lunar development context, not Mars hardware qualification"
+    },
+    "containment": {
+      "url": "https://www.nasa.gov/wp-content/uploads/static/history/alsj/WOTM/WOTM-SCB.html",
+      "attribution": "NASA Apollo Lunar Surface Journal - Sample Collection Bag",
+      "provides": "Individual sample bagging and stowage workflow in Apollo surface operations"
+    },
+    "documentation": {
+      "url": "https://www.nasa.gov/podcasts/houston-we-have-a-podcast/the-untouched-apollo-samples/",
+      "attribution": "NASA - The Untouched Apollo Samples",
+      "provides": "Geological sample documentation using descriptions and photographs; returned samples analyzed in a laboratory"
+    }
+  },
+  "samplingContexts": [
+    "sample-context-curiosity-confidence-hills",
+    "sample-context-curiosity-mojave-2",
+    "sample-context-curiosity-telegraph-peak",
+    "buckskin-context-imaging"
+  ],
+  "interpretation": "Four proposed human rock-chip sampling activities at existing historical sample-context rover proxies. Lunar tool functions inform a Mars planning scenario; no available chip, expected composition, sample mass, duration, safety or Mars-certified hardware is established.",
+  "procedure": {
+    "steps": [
+      "Photograph and describe the selected rock in its outcrop context.",
+      "If suitable material is confirmed on site, collect a rock chip with the sampling tools.",
+      "Place the chip in an individually labelled container and record its site and photograph references.",
+      "Stow the documented sample for later laboratory analysis."
+    ],
+    "outcome": "A documented rock sample for later laboratory analysis; mineral identity and abundance remain undetermined.",
+    "sources": [
+      {
+        "url": "https://www.nasa.gov/suits-and-rovers/spacewalking-tools/",
+        "attribution": "NASA - Spacewalking Tools",
+        "provides": "Geology hammer used for rock-chip collection; tongs for handling rocks into sample bags, in lunar operations"
+      },
+      {
+        "url": "https://www.nasa.gov/wp-content/uploads/static/history/alsj/WOTM/WOTM-SCB.html",
+        "attribution": "NASA Apollo Lunar Surface Journal - Sample Collection Bag",
+        "provides": "Individual sample bagging and stowage workflow in Apollo surface operations"
+      },
+      {
+        "url": "https://www.nasa.gov/podcasts/houston-we-have-a-podcast/the-untouched-apollo-samples/",
+        "attribution": "NASA - The Untouched Apollo Samples",
+        "provides": "Geological sample documentation using descriptions and photographs; returned samples analyzed in a laboratory"
+      }
+    ]
+  },
+  "output_sha256": {
+    "activities.json": "63aa3cfd2468ea3619f4042c057da21fcab3d13d257e64b31db892f0a4f4edca"
+  }
+}

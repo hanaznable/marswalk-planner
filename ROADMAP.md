@@ -112,13 +112,17 @@ processing, and unresolved validation. The original full rasters remain local.
    concise layer/observation details, drill-site filtering, status colors and
    a metric grid with local coordinate labels and a zoom-aware scale bar.
    Science suggestions will use a separate feature branch.
-2. **Science activity contract and content:** review Developer Y's merged draft at
-   `docs/science-activity-contract-proposal.md`; agree objectives, equipment, position/quality
-   rules and review criteria. Developer B prepares 3–5 sourced activities with
-   provenance. No runtime activity collection is currently delivered.
-3. **Activity integration:** Developer Y adds parsing/coverage checks, objective
-   and equipment selection, activity cards, add-to-route, distinct evidence/activity
-   report sections and mission-file support. Coordinate on shared contracts first.
+2. **Science activities - implemented on the feature branch:** the
+   [activity contract](docs/science-activity-contract-proposal.md) and parser support
+   reviewed point/area evidence, three objectives and four equipment capabilities.
+   The v3 collection contains twelve historical follow-ups (four sampling proposals)
+   and two project-authored HiRISE imaging candidates. See the
+   [implementation guide](docs/science-suggestions-implementation.md) and linked
+   source reviews for provenance and preparation.
+3. **Activity integration - implemented locally:** the Science tab provides
+   objective/equipment controls and concise cards; selected activities reuse route
+   stops. Mission v2 preserves snapshots with v1 import, and reports separate
+   activities from evidence. Routing and stop-time arithmetic remain unchanged.
 4. **Visitor-facing content and cleanup:** finish copy review, remove confirmed
    obsolete code, preserve preprocessing tools and historical evidence.
 5. **Submission:** complete the dataset/method catalogue, demo narrative, deployment
@@ -144,3 +148,10 @@ assumptions. Do not invent findings, durations, safety guarantees or science sco
 
 Preserve the current 2D planner while extending independent modules. Do not
 implement every later feature at once or claim unavailable data is integrated.
+
+
+Science source reviews: [imaging and orbital candidates](docs/terrain/science-objectives-v2.md)
+and [rock sampling](docs/terrain/rock-sampling-v3.md). One 2D Science missions switch
+controls all science evidence overlays; shared locations expose their distinct
+experiments in one popup. Sampling methods remain planning scenarios; no sample
+availability, composition, activity duration or laboratory result is invented.

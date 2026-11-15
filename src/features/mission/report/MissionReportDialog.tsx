@@ -154,6 +154,31 @@ export function MissionReportDialog({ report, onClose, onDownloadJson }: Mission
 
           {scienceTargets && <ScienceTargetsSection targets={scienceTargets} />}
 
+          {report.sciencePlan && report.sciencePlan.selections.length > 0 && <section className="report-activities">
+            <h2>Suggested activities</h2>
+            <p>Project-proposed follow-ups. Timing uses the mission's time-per-stop setting.</p>
+            {report.sciencePlan.selections.map(selection => {
+              const plan = report.sciencePlan!
+              const activity = plan.collection.activities.find(a => a.id === selection.activityId)!
+              const waypoint = report.waypoints[selection.waypointOrder - 1]
+              const moved = waypoint && (Math.abs(waypoint.sourceCrs.x - activity.access.point.x) > report.terrain.cellSizeMeters / 2 || Math.abs(waypoint.sourceCrs.y - activity.access.point.y) > report.terrain.cellSizeMeters / 2)
+              return <article key={activity.id} className="report-target">
+                <h3>{activity.title}</h3><p>Waypoint {selection.waypointOrder} - {activity.category}</p>
+                <p>Experiment: {activity.experiment}</p><p>{activity.rationale}</p>
+                <p>Equipment: {activity.requiredEquipmentIds.map(id => plan.collection.equipment.find(e => e.id === id)?.name).join(', ')}</p>
+                {moved && <p>Waypoint relocated from the activity's original access position.</p>}
+                {activity.procedure && <section>
+                  <h4>Collection plan</h4><ol>{activity.procedure.steps.map(step => <li key={step}>{step}</li>)}</ol>
+                  <p>Planned output: {activity.procedure.outcome}</p>
+                  {activity.procedure.sources.map(source => <p key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.attribution}</a></p>)}
+                </section>}
+                <h4>Supporting evidence</h4>
+                {plan.collection.evidence.filter(e => activity.evidenceIds.includes(e.id)).map(e => <div key={e.id}><p>{e.instrument} - {e.targetName}{e.sol !== null ? ` - Sol ${e.sol}` : ''}: {e.statement}</p>{e.sources.map(source => <p key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.attribution}</a></p>)}</div>)}
+                <ul>{activity.limitations.map(l => <li key={l}>{l}</li>)}</ul>
+              </article>
+            })}
+            <p>Collection: {report.sciencePlan.collection.id} - SHA-256: {report.sciencePlan.collectionSha256}</p>
+          </section>}
           <SelectedObservations waypoints={report.waypoints} />
           <section>
             <h2>Routes</h2>

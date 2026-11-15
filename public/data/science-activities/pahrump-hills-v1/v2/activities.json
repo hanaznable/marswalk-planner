@@ -1,0 +1,1044 @@
+{
+  "contractVersion": 1,
+  "id": "pahrump-hills-activities-v2",
+  "terrainPackageId": "pahrump-hills-v1",
+  "terrainManifestSha256": "450ada2dc924b72e6188bedc476c6373f7776544d599c0c6402d8e3e6d05b5c5",
+  "synthetic": false,
+  "objectives": [
+    {
+      "id": "rock-textures",
+      "title": "Study rock textures",
+      "description": "How do visible layering and crystal textures differ among the documented outcrops?",
+      "sources": [
+        {
+          "url": "https://www.hou.usra.edu/meetings/lpsc2015/pdf/2855.pdf",
+          "attribution": "McBride et al. (2015), LPSC abstract 2855",
+          "provides": "MAHLI outcrop and named-target observations"
+        }
+      ]
+    },
+    {
+      "id": "past-water",
+      "title": "Investigate past water activity",
+      "description": "What can documented veins and altered samples tell us about earlier fluid activity?",
+      "sources": [
+        {
+          "url": "https://www.jpl.nasa.gov/news/upgrade-helps-nasa-study-mineral-veins-on-mars/",
+          "attribution": "NASA/JPL-Caltech",
+          "provides": "Published Garden City vein investigation and fluid-history interpretation"
+        },
+        {
+          "url": "https://ntrs.nasa.gov/api/citations/20150019443/downloads/20150019443.pdf",
+          "attribution": "Rampe et al. (2015), NASA NTRS 20150019443",
+          "provides": "CheMin findings and acid-sulfate interpretation for Confidence Hills, Mojave 2 and Telegraph Peak samples"
+        }
+      ]
+    },
+    {
+      "id": "mineral-diversity",
+      "title": "Investigate mineral diversity",
+      "description": "How do published sample findings differ across the study area?",
+      "sources": [
+        {
+          "url": "https://ntrs.nasa.gov/api/citations/20150019443/downloads/20150019443.pdf",
+          "attribution": "Rampe et al. (2015), NASA NTRS 20150019443",
+          "provides": "CheMin findings and acid-sulfate interpretation for Confidence Hills, Mojave 2 and Telegraph Peak samples"
+        },
+        {
+          "url": "https://www.jpl.nasa.gov/images/pia21146-mudstone-mineralogy-from-curiositys-chemin-2013-to-2016/",
+          "attribution": "NASA/JPL-Caltech, PIA21146",
+          "provides": "Published sample mineralogy comparison; no abundances digitized"
+        },
+        {
+          "url": "https://www.jpl.nasa.gov/news/nasa-scientists-discover-unexpected-mineral-on-mars/",
+          "attribution": "NASA/JPL-Caltech",
+          "provides": "Buckskin sample collected on sol 1060 and published tridymite identification"
+        }
+      ]
+    }
+  ],
+  "equipment": [
+    {
+      "id": "field-camera",
+      "name": "Field camera",
+      "description": "A camera for visual documentation; no specified performance or suit integration.",
+      "basis": "scenario-assumption",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/mission/msl-curiosity/science-instruments/",
+          "attribution": "NASA Science - Curiosity science instruments",
+          "provides": "Mastcam context imaging, MAHLI close-up texture imaging, APXS elemental analysis and CheMin X-ray diffraction roles; not an astronaut hardware certification"
+        }
+      ]
+    },
+    {
+      "id": "close-up-optics",
+      "name": "Close-up imaging optics",
+      "description": "Macro/close-up optics for documenting fine rock and vein textures. Can be integrated with the field camera; no MAHLI-equivalent performance or Mars EVA qualification is assumed.",
+      "basis": "scenario-assumption",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/mission/msl-curiosity/science-instruments/",
+          "attribution": "NASA Science - Curiosity science instruments",
+          "provides": "Mastcam context imaging, MAHLI close-up texture imaging, APXS elemental analysis and CheMin X-ray diffraction roles; not an astronaut hardware certification"
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "mission": "MSL Curiosity",
+      "targetName": "Pelona_DRT",
+      "footprint": {
+        "type": "point",
+        "position": {
+          "x": -741.8406219128293,
+          "y": -276377.7570047902,
+          "basis": "rover-position-proxy",
+          "uncertaintyMeters": null
+        }
+      },
+      "qualityFlags": [],
+      "links": {
+        "targetId": null,
+        "apxsRecordId": "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-161"
+      },
+      "id": "shoemaker-imaging-apxs",
+      "kind": "apxs-measurement",
+      "instrument": "APXS",
+      "sol": 805,
+      "statement": "The archived APXS table records Pelona_DRT on mission sol 805.",
+      "productIds": [
+        "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-161"
+      ],
+      "sources": [
+        {
+          "url": "https://pds-geosciences.wustl.edu/msl/urn-nasa-pds-msl_apxs_supplement_sols_0_2301/data/ds01_2020je006536rr.csv",
+          "attribution": "Berger (2020), NASA PDS, doi:10.17189/1519050",
+          "provides": "Target, measurement sol and associated rover position; CSV row 161"
+        }
+      ]
+    },
+    {
+      "mission": "MSL Curiosity",
+      "targetName": "Pelona_DRT",
+      "footprint": {
+        "type": "point",
+        "position": {
+          "x": -741.8406219128293,
+          "y": -276377.7570047902,
+          "basis": "rover-position-proxy",
+          "uncertaintyMeters": null
+        }
+      },
+      "qualityFlags": [],
+      "links": {
+        "targetId": null,
+        "apxsRecordId": "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-161"
+      },
+      "id": "shoemaker-imaging-imaging",
+      "kind": "image-observation",
+      "instrument": "MAHLI",
+      "sol": null,
+      "statement": "MAHLI observations at Shoemaker describe closely spaced layers at Pelona.",
+      "productIds": [
+        "LPSC-2015-2855: Shoemaker section, page 1"
+      ],
+      "sources": [
+        {
+          "url": "https://www.hou.usra.edu/meetings/lpsc2015/pdf/2855.pdf",
+          "attribution": "McBride et al. (2015), LPSC abstract 2855",
+          "provides": "MAHLI outcrop and named-target observations"
+        }
+      ]
+    },
+    {
+      "mission": "MSL Curiosity",
+      "targetName": "Punchbowl_DRT_raster1",
+      "footprint": {
+        "type": "point",
+        "position": {
+          "x": -732.9434898137954,
+          "y": -276394.92200879776,
+          "basis": "rover-position-proxy",
+          "uncertaintyMeters": null
+        }
+      },
+      "qualityFlags": [],
+      "links": {
+        "targetId": null,
+        "apxsRecordId": "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-169"
+      },
+      "id": "book-cliffs-imaging-apxs",
+      "kind": "apxs-measurement",
+      "instrument": "APXS",
+      "sol": 813,
+      "statement": "The archived APXS table records Punchbowl_DRT_raster1 on mission sol 813.",
+      "productIds": [
+        "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-169"
+      ],
+      "sources": [
+        {
+          "url": "https://pds-geosciences.wustl.edu/msl/urn-nasa-pds-msl_apxs_supplement_sols_0_2301/data/ds01_2020je006536rr.csv",
+          "attribution": "Berger (2020), NASA PDS, doi:10.17189/1519050",
+          "provides": "Target, measurement sol and associated rover position; CSV row 169"
+        }
+      ]
+    },
+    {
+      "mission": "MSL Curiosity",
+      "targetName": "Punchbowl_DRT_raster1",
+      "footprint": {
+        "type": "point",
+        "position": {
+          "x": -732.9434898137954,
+          "y": -276394.92200879776,
+          "basis": "rover-position-proxy",
+          "uncertaintyMeters": null
+        }
+      },
+      "qualityFlags": [],
+      "links": {
+        "targetId": null,
+        "apxsRecordId": "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-169"
+      },
+      "id": "book-cliffs-imaging-imaging",
+      "kind": "image-observation",
+      "instrument": "MAHLI",
+      "sol": null,
+      "statement": "The Book Cliffs imaging account describes pale crystals in Punchbowl, Afton Canyon and Topanga targets.",
+      "productIds": [
+        "LPSC-2015-2855: Book Cliffs section, page 2"
+      ],
+      "sources": [
+        {
+          "url": "https://www.hou.usra.edu/meetings/lpsc2015/pdf/2855.pdf",
+          "attribution": "McBride et al. (2015), LPSC abstract 2855",
+          "provides": "MAHLI outcrop and named-target observations"
+        }
+      ]
+    },
+    {
+      "mission": "MSL Curiosity",
+      "targetName": "Pickhandle_DRT",
+      "footprint": {
+        "type": "point",
+        "position": {
+          "x": -724.2004719292809,
+          "y": -276420.3829809213,
+          "basis": "rover-position-proxy",
+          "uncertaintyMeters": null
+        }
+      },
+      "qualityFlags": [],
+      "links": {
+        "targetId": null,
+        "apxsRecordId": "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-179"
+      },
+      "id": "chinle-comparison-apxs",
+      "kind": "apxs-measurement",
+      "instrument": "APXS",
+      "sol": 828,
+      "statement": "The archived APXS table records Pickhandle_DRT on mission sol 828.",
+      "productIds": [
+        "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-179"
+      ],
+      "sources": [
+        {
+          "url": "https://pds-geosciences.wustl.edu/msl/urn-nasa-pds-msl_apxs_supplement_sols_0_2301/data/ds01_2020je006536rr.csv",
+          "attribution": "Berger (2020), NASA PDS, doi:10.17189/1519050",
+          "provides": "Target, measurement sol and associated rover position; CSV row 179"
+        }
+      ]
+    },
+    {
+      "mission": "MSL Curiosity",
+      "targetName": "Pickhandle_DRT",
+      "footprint": {
+        "type": "point",
+        "position": {
+          "x": -724.2004719292809,
+          "y": -276420.3829809213,
+          "basis": "rover-position-proxy",
+          "uncertaintyMeters": null
+        }
+      },
+      "qualityFlags": [],
+      "links": {
+        "targetId": null,
+        "apxsRecordId": "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-179"
+      },
+      "id": "chinle-comparison-imaging",
+      "kind": "image-observation",
+      "instrument": "MAHLI",
+      "sol": null,
+      "statement": "MAHLI imaged Pickhandle among the Chinle targets investigated for different lamination patterns.",
+      "productIds": [
+        "LPSC-2015-2855: Chinle section, page 2"
+      ],
+      "sources": [
+        {
+          "url": "https://www.hou.usra.edu/meetings/lpsc2015/pdf/2855.pdf",
+          "attribution": "McBride et al. (2015), LPSC abstract 2855",
+          "provides": "MAHLI outcrop and named-target observations"
+        }
+      ]
+    },
+    {
+      "id": "garden-city-position",
+      "kind": "apxs-measurement",
+      "mission": "MSL Curiosity",
+      "instrument": "APXS",
+      "targetName": "Alvord_Mountain_raster1",
+      "sol": 935,
+      "statement": "The APXS archive records Alvord_Mountain_raster1 on sol 935.",
+      "footprint": {
+        "type": "point",
+        "position": {
+          "x": -749.9790378831219,
+          "y": -276442.47098565695,
+          "basis": "rover-position-proxy",
+          "uncertaintyMeters": null
+        }
+      },
+      "links": {
+        "targetId": null,
+        "apxsRecordId": "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-202"
+      },
+      "productIds": [
+        "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-202"
+      ],
+      "qualityFlags": [],
+      "sources": [
+        {
+          "url": "https://pds-geosciences.wustl.edu/msl/urn-nasa-pds-msl_apxs_supplement_sols_0_2301/data/ds01_2020je006536rr.csv",
+          "attribution": "Berger (2020), NASA PDS",
+          "provides": "Alvord Mountain measurement sol and rover-position proxy, CSV row 202"
+        }
+      ]
+    },
+    {
+      "id": "garden-city-veins",
+      "kind": "image-observation",
+      "mission": "MSL Curiosity",
+      "instrument": "Mastcam / MAHLI / ChemCam",
+      "targetName": "Garden City - Alvord Mountain",
+      "sol": null,
+      "statement": "Published Garden City studies associate Alvord Mountain with vein investigations; the site's vein diversity supports study of earlier fluid activity.",
+      "footprint": {
+        "type": "point",
+        "position": {
+          "x": -749.9790378831219,
+          "y": -276442.47098565695,
+          "basis": "rover-position-proxy",
+          "uncertaintyMeters": null
+        }
+      },
+      "links": {
+        "targetId": null,
+        "apxsRecordId": null
+      },
+      "productIds": [
+        "doi:10.1029/2018EA000482:Table-1",
+        "JPL-Garden-City-2015-11-11"
+      ],
+      "qualityFlags": [],
+      "sources": [
+        {
+          "url": "https://doi.org/10.1029/2018EA000482",
+          "attribution": "Kronyak et al. (2019), Earth and Space Science, doi:10.1029/2018EA000482",
+          "provides": "Table 1 and Garden City section: Alvord Mountain/Coalville and Indianola target associations; table sols are not used as APXS measurement sols"
+        },
+        {
+          "url": "https://laro.lanl.gov/esploro/outputs/journalArticle/Mineral-Filled-Fractures-as-Indicators-of-Multigenerational/9916362278803761",
+          "attribution": "Kronyak et al. (2019), LANL accepted manuscript",
+          "provides": "Stable repository record for accepted manuscript; Table 1 target associations"
+        },
+        {
+          "url": "https://www.jpl.nasa.gov/news/upgrade-helps-nasa-study-mineral-veins-on-mars/",
+          "attribution": "NASA/JPL-Caltech",
+          "provides": "Published Garden City vein investigation and fluid-history interpretation"
+        }
+      ]
+    },
+    {
+      "id": "mineralogy-curiosity-confidence-hills",
+      "kind": "chemin-mineralogy",
+      "mission": "MSL Curiosity",
+      "instrument": "CheMin",
+      "targetName": "Confidence Hills",
+      "sol": null,
+      "statement": "Rampe et al. report jarosite in the Confidence Hills sample, within a comparison of Pahrump Hills sample mineralogy.",
+      "footprint": {
+        "type": "point",
+        "position": {
+          "x": -743.0913180304459,
+          "y": -276380.0918351256,
+          "uncertaintyMeters": null,
+          "basis": "rover-position-proxy"
+        }
+      },
+      "links": {
+        "targetId": "curiosity-confidence-hills",
+        "apxsRecordId": null
+      },
+      "productIds": [
+        "NTRS-20150019443",
+        "PIA21146"
+      ],
+      "qualityFlags": [],
+      "sources": [
+        {
+          "url": "https://ntrs.nasa.gov/api/citations/20150019443/downloads/20150019443.pdf",
+          "attribution": "Rampe et al. (2015), NASA NTRS 20150019443",
+          "provides": "CheMin findings and acid-sulfate interpretation for Confidence Hills, Mojave 2 and Telegraph Peak samples"
+        },
+        {
+          "url": "https://www.jpl.nasa.gov/images/pia21146-mudstone-mineralogy-from-curiositys-chemin-2013-to-2016/",
+          "attribution": "NASA/JPL-Caltech, PIA21146",
+          "provides": "Published sample mineralogy comparison; no abundances digitized"
+        }
+      ]
+    },
+    {
+      "id": "mineralogy-curiosity-mojave-2",
+      "kind": "chemin-mineralogy",
+      "mission": "MSL Curiosity",
+      "instrument": "CheMin",
+      "targetName": "Mojave 2",
+      "sol": null,
+      "statement": "Rampe et al. report jarosite in the Mojave 2 sample, within a comparison of Pahrump Hills sample mineralogy.",
+      "footprint": {
+        "type": "point",
+        "position": {
+          "x": -743.9093088565608,
+          "y": -276389.8371881454,
+          "uncertaintyMeters": null,
+          "basis": "rover-position-proxy"
+        }
+      },
+      "links": {
+        "targetId": "curiosity-mojave-2",
+        "apxsRecordId": null
+      },
+      "productIds": [
+        "NTRS-20150019443",
+        "PIA21146"
+      ],
+      "qualityFlags": [],
+      "sources": [
+        {
+          "url": "https://ntrs.nasa.gov/api/citations/20150019443/downloads/20150019443.pdf",
+          "attribution": "Rampe et al. (2015), NASA NTRS 20150019443",
+          "provides": "CheMin findings and acid-sulfate interpretation for Confidence Hills, Mojave 2 and Telegraph Peak samples"
+        },
+        {
+          "url": "https://www.jpl.nasa.gov/images/pia21146-mudstone-mineralogy-from-curiositys-chemin-2013-to-2016/",
+          "attribution": "NASA/JPL-Caltech, PIA21146",
+          "provides": "Published sample mineralogy comparison; no abundances digitized"
+        }
+      ]
+    },
+    {
+      "id": "mineralogy-curiosity-telegraph-peak",
+      "kind": "chemin-mineralogy",
+      "mission": "MSL Curiosity",
+      "instrument": "CheMin",
+      "targetName": "Telegraph Peak",
+      "sol": null,
+      "statement": "Rampe et al. report jarosite in the Telegraph Peak sample, within a comparison of Pahrump Hills sample mineralogy.",
+      "footprint": {
+        "type": "point",
+        "position": {
+          "x": -743.7611221131266,
+          "y": -276429.17187742185,
+          "uncertaintyMeters": null,
+          "basis": "rover-position-proxy"
+        }
+      },
+      "links": {
+        "targetId": "curiosity-telegraph-peak",
+        "apxsRecordId": null
+      },
+      "productIds": [
+        "NTRS-20150019443",
+        "PIA21146"
+      ],
+      "qualityFlags": [],
+      "sources": [
+        {
+          "url": "https://ntrs.nasa.gov/api/citations/20150019443/downloads/20150019443.pdf",
+          "attribution": "Rampe et al. (2015), NASA NTRS 20150019443",
+          "provides": "CheMin findings and acid-sulfate interpretation for Confidence Hills, Mojave 2 and Telegraph Peak samples"
+        },
+        {
+          "url": "https://www.jpl.nasa.gov/images/pia21146-mudstone-mineralogy-from-curiositys-chemin-2013-to-2016/",
+          "attribution": "NASA/JPL-Caltech, PIA21146",
+          "provides": "Published sample mineralogy comparison; no abundances digitized"
+        }
+      ]
+    },
+    {
+      "id": "buckskin-mineralogy",
+      "kind": "chemin-mineralogy",
+      "mission": "MSL Curiosity",
+      "instrument": "CheMin",
+      "targetName": "Buckskin",
+      "sol": null,
+      "statement": "NASA reports tridymite in the Buckskin drill sample collected on sol 1060.",
+      "footprint": {
+        "type": "point",
+        "position": {
+          "x": -1167.794525784124,
+          "y": -276695.7729885158,
+          "basis": "rover-position-proxy",
+          "uncertaintyMeters": null
+        }
+      },
+      "links": {
+        "targetId": null,
+        "apxsRecordId": "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-227"
+      },
+      "productIds": [
+        "JPL-2016-157"
+      ],
+      "qualityFlags": [],
+      "sources": [
+        {
+          "url": "https://www.jpl.nasa.gov/news/nasa-scientists-discover-unexpected-mineral-on-mars/",
+          "attribution": "NASA/JPL-Caltech",
+          "provides": "Buckskin sample collected on sol 1060 and published tridymite identification"
+        }
+      ]
+    },
+    {
+      "id": "orbital-northern-outcrop-image",
+      "kind": "orbital-image-observation",
+      "mission": "MRO",
+      "instrument": "HiRISE",
+      "targetName": "Northern outcrop imaging area",
+      "sol": null,
+      "statement": "The reviewed image region contains a bright exposure with an irregular margin and visible surface relief.",
+      "footprint": {
+        "type": "area",
+        "ring": [
+          [
+            -511.813709513342,
+            -276180.926782745
+          ],
+          [
+            -456.2019804941307,
+            -276151.6042347167
+          ],
+          [
+            -395.5346397459002,
+            -276175.87117101596
+          ],
+          [
+            -391.49015036268486,
+            -276220.36055423133
+          ],
+          [
+            -446.0907570360923,
+            -276236.5385117642
+          ],
+          [
+            -502.71360840110754,
+            -276219.3494318855
+          ],
+          [
+            -511.813709513342,
+            -276180.926782745
+          ]
+        ],
+        "basis": "reviewed-orbital-footprint",
+        "uncertaintyMeters": null,
+        "nativeResolutionMeters": 1.0117571650087,
+        "geometrySource": {
+          "productId": "ESP_039280_1755_RED_C_02_ORTHO",
+          "method": "Manual visual selection of imaging regions on the committed 989x989 basemap. Pixel coordinates reference image edges; transform with the basemap geotransform. These are candidate imaging ROIs, not mapped geological units, mineral boundaries or documented unvisited areas.",
+          "sources": [
+            {
+              "url": "https://www.uahirise.org/ESP_039280_1755",
+              "attribution": "NASA/JPL-Caltech/UArizona",
+              "provides": "HiRISE scene identity and orbital imaging context; candidate regions are project-authored visual review"
+            }
+          ]
+        }
+      },
+      "links": {
+        "targetId": null,
+        "apxsRecordId": null
+      },
+      "productIds": [
+        "ESP_039280_1755_RED_C_02_ORTHO",
+        "project-ROI:orbital-northern-outcrop"
+      ],
+      "qualityFlags": [],
+      "sources": [
+        {
+          "url": "https://www.uahirise.org/ESP_039280_1755",
+          "attribution": "NASA/JPL-Caltech/UArizona",
+          "provides": "HiRISE scene identity and orbital imaging context; candidate regions are project-authored visual review"
+        }
+      ]
+    },
+    {
+      "id": "orbital-southwestern-outcrop-image",
+      "kind": "orbital-image-observation",
+      "mission": "MRO",
+      "instrument": "HiRISE",
+      "targetName": "Southwestern outcrop imaging area",
+      "sol": null,
+      "statement": "The reviewed image region contains bright rock surfaces divided by visible linear boundaries.",
+      "footprint": {
+        "type": "area",
+        "ring": [
+          [
+            -961.7631533960518,
+            -276696.5991791049
+          ],
+          [
+            -916.262647834879,
+            -276671.3211204598
+          ],
+          [
+            -873.7955093111176,
+            -276703.67703552556
+          ],
+          [
+            -880.8733657317446,
+            -276759.28876454476
+          ],
+          [
+            -929.4072383303289,
+            -276780.5223338067
+          ],
+          [
+            -961.7631533960518,
+            -276747.1552963951
+          ],
+          [
+            -961.7631533960518,
+            -276696.5991791049
+          ]
+        ],
+        "basis": "reviewed-orbital-footprint",
+        "uncertaintyMeters": null,
+        "nativeResolutionMeters": 1.0117571650087,
+        "geometrySource": {
+          "productId": "ESP_039280_1755_RED_C_02_ORTHO",
+          "method": "Manual visual selection of imaging regions on the committed 989x989 basemap. Pixel coordinates reference image edges; transform with the basemap geotransform. These are candidate imaging ROIs, not mapped geological units, mineral boundaries or documented unvisited areas.",
+          "sources": [
+            {
+              "url": "https://www.uahirise.org/ESP_039280_1755",
+              "attribution": "NASA/JPL-Caltech/UArizona",
+              "provides": "HiRISE scene identity and orbital imaging context; candidate regions are project-authored visual review"
+            }
+          ]
+        }
+      },
+      "links": {
+        "targetId": null,
+        "apxsRecordId": null
+      },
+      "productIds": [
+        "ESP_039280_1755_RED_C_02_ORTHO",
+        "project-ROI:orbital-southwestern-outcrop"
+      ],
+      "qualityFlags": [],
+      "sources": [
+        {
+          "url": "https://www.uahirise.org/ESP_039280_1755",
+          "attribution": "NASA/JPL-Caltech/UArizona",
+          "provides": "HiRISE scene identity and orbital imaging context; candidate regions are project-authored visual review"
+        }
+      ]
+    }
+  ],
+  "activities": [
+    {
+      "id": "shoemaker-imaging",
+      "title": "Photograph Pelona layering",
+      "category": "historical-follow-up",
+      "experiment": "Photograph layered rock textures",
+      "objectiveIds": [
+        "rock-textures"
+      ],
+      "evidenceIds": [
+        "shoemaker-imaging-apxs",
+        "shoemaker-imaging-imaging"
+      ],
+      "requiredEquipmentIds": [
+        "field-camera",
+        "close-up-optics"
+      ],
+      "access": {
+        "evidenceId": "shoemaker-imaging-apxs",
+        "point": {
+          "x": -741.8406219128293,
+          "y": -276377.7570047902
+        },
+        "selectionBasis": "associated-rover-position",
+        "justification": "Use the published APXS-associated rover position as the planning access point for the named imaging target."
+      },
+      "rationale": "Revisit the documented imaging target to compare visible layer spacing and surface textures.",
+      "limitations": [
+        "The planning position is an associated rover pose, not the measured rock footprint.",
+        "Camera equipment is a planning assumption; source observations do not establish access, safety or task duration.",
+        "Image-observation statements are published target context, not a new geometry solution or an exact imaging-sol association.",
+        "The close-up optics capability is motivated by MAHLI observations; exact optics, scale and astronaut access remain planning assumptions."
+      ],
+      "durationMinutes": null,
+      "durationSource": null,
+      "review": {
+        "status": "reviewed",
+        "by": "Codex - source/content review for Developer B",
+        "date": "2026-11-15"
+      }
+    },
+    {
+      "id": "book-cliffs-imaging",
+      "title": "Photograph Punchbowl textures",
+      "category": "historical-follow-up",
+      "experiment": "Photograph crystals and surrounding rock",
+      "objectiveIds": [
+        "rock-textures"
+      ],
+      "evidenceIds": [
+        "book-cliffs-imaging-apxs",
+        "book-cliffs-imaging-imaging"
+      ],
+      "requiredEquipmentIds": [
+        "field-camera",
+        "close-up-optics"
+      ],
+      "access": {
+        "evidenceId": "book-cliffs-imaging-apxs",
+        "point": {
+          "x": -732.9434898137954,
+          "y": -276394.92200879776
+        },
+        "selectionBasis": "associated-rover-position",
+        "justification": "Use the published APXS-associated rover position as the planning access point for the named imaging target."
+      },
+      "rationale": "Photograph the historical target setting to document crystal shapes and their surrounding rock.",
+      "limitations": [
+        "The planning position is an associated rover pose, not the measured rock footprint.",
+        "Camera equipment is a planning assumption; source observations do not establish access, safety or task duration.",
+        "Image-observation statements are published target context, not a new geometry solution or an exact imaging-sol association.",
+        "The close-up optics capability is motivated by MAHLI observations; exact optics, scale and astronaut access remain planning assumptions."
+      ],
+      "durationMinutes": null,
+      "durationSource": null,
+      "review": {
+        "status": "reviewed",
+        "by": "Codex - source/content review for Developer B",
+        "date": "2026-11-15"
+      }
+    },
+    {
+      "id": "chinle-comparison",
+      "title": "Photograph Pickhandle bedding",
+      "category": "historical-follow-up",
+      "experiment": "Photograph bedding from different angles",
+      "objectiveIds": [
+        "rock-textures"
+      ],
+      "evidenceIds": [
+        "chinle-comparison-apxs",
+        "chinle-comparison-imaging"
+      ],
+      "requiredEquipmentIds": [
+        "field-camera",
+        "close-up-optics"
+      ],
+      "access": {
+        "evidenceId": "chinle-comparison-apxs",
+        "point": {
+          "x": -724.2004719292809,
+          "y": -276420.3829809213
+        },
+        "selectionBasis": "associated-rover-position",
+        "justification": "Use the published APXS-associated rover position as the planning access point for the named imaging target."
+      },
+      "rationale": "Use multiple views of the historical target setting to compare visible bedding patterns.",
+      "limitations": [
+        "The planning position is an associated rover pose, not the measured rock footprint.",
+        "Camera equipment is a planning assumption; source observations do not establish access, safety or task duration.",
+        "Image-observation statements are published target context, not a new geometry solution or an exact imaging-sol association.",
+        "The close-up optics capability is motivated by MAHLI observations; exact optics, scale and astronaut access remain planning assumptions."
+      ],
+      "durationMinutes": null,
+      "durationSource": null,
+      "review": {
+        "status": "reviewed",
+        "by": "Codex - source/content review for Developer B",
+        "date": "2026-11-15"
+      }
+    },
+    {
+      "id": "garden-city-vein-imaging",
+      "title": "Investigate Garden City veins",
+      "category": "historical-follow-up",
+      "experiment": "Photograph vein textures and intersections",
+      "objectiveIds": [
+        "past-water"
+      ],
+      "evidenceIds": [
+        "garden-city-position",
+        "garden-city-veins"
+      ],
+      "requiredEquipmentIds": [
+        "field-camera",
+        "close-up-optics"
+      ],
+      "access": {
+        "evidenceId": "garden-city-position",
+        "point": {
+          "x": -749.9790378831219,
+          "y": -276442.47098565695
+        },
+        "selectionBasis": "associated-rover-position",
+        "justification": "Existing sourced rover-position proxy for this investigation."
+      },
+      "rationale": "Document the historical vein-investigation setting to compare visible structures associated with past fluid activity.",
+      "limitations": [
+        "The planning position is an associated rover pose, not an exact rock footprint.",
+        "Camera equipment is a planning assumption. Imaging does not reproduce laboratory mineral identification.",
+        "Access geometry inherits the prototype terrain registration; no new positional accuracy is claimed.",
+        "The close-up optics capability is motivated by MAHLI observations; exact optics, scale and astronaut access remain planning assumptions."
+      ],
+      "durationMinutes": null,
+      "durationSource": null,
+      "review": {
+        "status": "reviewed",
+        "by": "Codex - source/content and image-feature review for Developer B",
+        "date": "2026-11-15"
+      }
+    },
+    {
+      "id": "sample-context-curiosity-confidence-hills",
+      "title": "Document Confidence Hills sample context",
+      "category": "historical-follow-up",
+      "experiment": "Photograph the sampled outcrop setting",
+      "objectiveIds": [
+        "mineral-diversity",
+        "past-water"
+      ],
+      "evidenceIds": [
+        "mineralogy-curiosity-confidence-hills"
+      ],
+      "requiredEquipmentIds": [
+        "field-camera"
+      ],
+      "access": {
+        "evidenceId": "mineralogy-curiosity-confidence-hills",
+        "point": {
+          "x": -743.0913180304459,
+          "y": -276380.0918351256
+        },
+        "selectionBasis": "associated-rover-position",
+        "justification": "Existing sourced rover-position proxy for this investigation."
+      },
+      "rationale": "Compare visible sample settings alongside published mineralogical evidence; field photographs do not identify jarosite.",
+      "limitations": [
+        "The planning position is an associated rover pose, not an exact rock footprint.",
+        "Camera equipment is a planning assumption. Imaging does not reproduce laboratory mineral identification.",
+        "Access geometry inherits the prototype terrain registration; no new positional accuracy is claimed."
+      ],
+      "durationMinutes": null,
+      "durationSource": null,
+      "review": {
+        "status": "reviewed",
+        "by": "Codex - source/content and image-feature review for Developer B",
+        "date": "2026-11-15"
+      }
+    },
+    {
+      "id": "sample-context-curiosity-mojave-2",
+      "title": "Document Mojave 2 sample context",
+      "category": "historical-follow-up",
+      "experiment": "Photograph the sampled outcrop setting",
+      "objectiveIds": [
+        "mineral-diversity"
+      ],
+      "evidenceIds": [
+        "mineralogy-curiosity-mojave-2"
+      ],
+      "requiredEquipmentIds": [
+        "field-camera"
+      ],
+      "access": {
+        "evidenceId": "mineralogy-curiosity-mojave-2",
+        "point": {
+          "x": -743.9093088565608,
+          "y": -276389.8371881454
+        },
+        "selectionBasis": "associated-rover-position",
+        "justification": "Existing sourced rover-position proxy for this investigation."
+      },
+      "rationale": "Compare visible sample settings alongside published mineralogical evidence; field photographs do not identify jarosite.",
+      "limitations": [
+        "The planning position is an associated rover pose, not an exact rock footprint.",
+        "Camera equipment is a planning assumption. Imaging does not reproduce laboratory mineral identification.",
+        "Access geometry inherits the prototype terrain registration; no new positional accuracy is claimed."
+      ],
+      "durationMinutes": null,
+      "durationSource": null,
+      "review": {
+        "status": "reviewed",
+        "by": "Codex - source/content and image-feature review for Developer B",
+        "date": "2026-11-15"
+      }
+    },
+    {
+      "id": "sample-context-curiosity-telegraph-peak",
+      "title": "Document Telegraph Peak sample context",
+      "category": "historical-follow-up",
+      "experiment": "Photograph the sampled outcrop setting",
+      "objectiveIds": [
+        "mineral-diversity"
+      ],
+      "evidenceIds": [
+        "mineralogy-curiosity-telegraph-peak"
+      ],
+      "requiredEquipmentIds": [
+        "field-camera"
+      ],
+      "access": {
+        "evidenceId": "mineralogy-curiosity-telegraph-peak",
+        "point": {
+          "x": -743.7611221131266,
+          "y": -276429.17187742185
+        },
+        "selectionBasis": "associated-rover-position",
+        "justification": "Existing sourced rover-position proxy for this investigation."
+      },
+      "rationale": "Compare visible sample settings alongside published mineralogical evidence; field photographs do not identify jarosite.",
+      "limitations": [
+        "The planning position is an associated rover pose, not an exact rock footprint.",
+        "Camera equipment is a planning assumption. Imaging does not reproduce laboratory mineral identification.",
+        "Access geometry inherits the prototype terrain registration; no new positional accuracy is claimed."
+      ],
+      "durationMinutes": null,
+      "durationSource": null,
+      "review": {
+        "status": "reviewed",
+        "by": "Codex - source/content and image-feature review for Developer B",
+        "date": "2026-11-15"
+      }
+    },
+    {
+      "id": "buckskin-context-imaging",
+      "title": "Document Buckskin sample context",
+      "category": "historical-follow-up",
+      "experiment": "Photograph the mineral-study setting",
+      "objectiveIds": [
+        "mineral-diversity"
+      ],
+      "evidenceIds": [
+        "buckskin-mineralogy"
+      ],
+      "requiredEquipmentIds": [
+        "field-camera"
+      ],
+      "access": {
+        "evidenceId": "buckskin-mineralogy",
+        "point": {
+          "x": -1167.794525784124,
+          "y": -276695.7729885158
+        },
+        "selectionBasis": "associated-rover-position",
+        "justification": "Existing sourced rover-position proxy for this investigation."
+      },
+      "rationale": "Relate the published sample finding to its visible outcrop setting without extrapolating a mineral map.",
+      "limitations": [
+        "The planning position is an associated rover pose, not an exact rock footprint.",
+        "Camera equipment is a planning assumption. Imaging does not reproduce laboratory mineral identification.",
+        "Access geometry inherits the prototype terrain registration; no new positional accuracy is claimed."
+      ],
+      "durationMinutes": null,
+      "durationSource": null,
+      "review": {
+        "status": "reviewed",
+        "by": "Codex - source/content and image-feature review for Developer B",
+        "date": "2026-11-15"
+      }
+    },
+    {
+      "id": "orbital-northern-outcrop",
+      "title": "Survey the northern outcrop",
+      "category": "orbital-candidate",
+      "experiment": "Photograph outcrop texture and its margin",
+      "objectiveIds": [
+        "rock-textures"
+      ],
+      "evidenceIds": [
+        "orbital-northern-outcrop-image"
+      ],
+      "requiredEquipmentIds": [
+        "field-camera"
+      ],
+      "access": {
+        "evidenceId": "orbital-northern-outcrop-image",
+        "point": {
+          "x": -466.31320395216915,
+          "y": -276185.982394474
+        },
+        "selectionBasis": "reviewed-area-access",
+        "justification": "Project-reviewed imaging access point within the source ROI."
+      },
+      "rationale": "Use orbital image morphology to select a follow-up imaging area away from the original three photography stops.",
+      "limitations": [
+        "An orbital candidate is a project-reviewed imaging region, not a mineral detection or a claim that no rover visited it.",
+        "Camera equipment is a planning assumption. Imaging does not reproduce laboratory mineral identification.",
+        "Access geometry inherits the prototype terrain registration; no new positional accuracy is claimed."
+      ],
+      "durationMinutes": null,
+      "durationSource": null,
+      "review": {
+        "status": "reviewed",
+        "by": "Codex - source/content and image-feature review for Developer B",
+        "date": "2026-11-15"
+      }
+    },
+    {
+      "id": "orbital-southwestern-outcrop",
+      "title": "Survey the southwestern outcrop",
+      "category": "orbital-candidate",
+      "experiment": "Photograph surface textures and edges",
+      "objectiveIds": [
+        "rock-textures"
+      ],
+      "evidenceIds": [
+        "orbital-southwestern-outcrop-image"
+      ],
+      "requiredEquipmentIds": [
+        "field-camera"
+      ],
+      "access": {
+        "evidenceId": "orbital-southwestern-outcrop-image",
+        "point": {
+          "x": -931.4294830219367,
+          "y": -276721.87723775004
+        },
+        "selectionBasis": "reviewed-area-access",
+        "justification": "Project-reviewed imaging access point within the source ROI."
+      },
+      "rationale": "Use orbital image morphology to select a follow-up imaging area away from the original three photography stops.",
+      "limitations": [
+        "An orbital candidate is a project-reviewed imaging region, not a mineral detection or a claim that no rover visited it.",
+        "Camera equipment is a planning assumption. Imaging does not reproduce laboratory mineral identification.",
+        "Access geometry inherits the prototype terrain registration; no new positional accuracy is claimed."
+      ],
+      "durationMinutes": null,
+      "durationSource": null,
+      "review": {
+        "status": "reviewed",
+        "by": "Codex - source/content and image-feature review for Developer B",
+        "date": "2026-11-15"
+      }
+    }
+  ]
+}

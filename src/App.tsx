@@ -1,3 +1,7 @@
+import { ScienceEvidenceControls } from './features/scienceSuggestions/ScienceEvidenceControls'
+import { useScienceSuggestions } from './features/scienceSuggestions/useScienceSuggestions'
+import { ScienceSuggestionsPanel } from './features/scienceSuggestions/ScienceSuggestionsPanel'
+import { nextWaypointId } from './features/map/waypointPlacement'
 import { useCallback, useMemo, useState } from 'react'
 import { AppHeader } from './components/layout/AppHeader'
 import { regions } from './features/datasets/regions'
@@ -34,6 +38,7 @@ const NO_TARGETS: readonly PlacedTarget[] = []
 function App() {
   const [regionId, setRegionId] = useState(regions[0].id)
   const [viewMode, setViewMode] = useState<ViewMode>('2d')
+  const [showScienceMissions, setShowScienceMissions] = useState(false)
   const [showGrid, setShowGrid] = useState(false)
   const [expanded, setExpanded] = useState(false)
   const [addMode, setAddMode] = useState(false)
@@ -44,8 +49,21 @@ function App() {
   // Only a successfully loaded real package is named as the active terrain.
   const dataset = terrainState.status === 'ready' ? terrainState.dataset : null
   const waypoints = useWaypoints(terrain)
+  const suggestions = useScienceSuggestions(terrain, dataset, waypoints.waypoints, activity => {
+    if (!terrain) return null
+    const placement = placeWaypoint(terrain, activity.access.point)
+    if (!placement.ok) return null
+    const existing = waypointAtCell(waypoints.waypoints, placement.cell)
+    if (existing) return { id: existing.id, created: false }
+    const id = nextWaypointId(waypoints.waypoints)
+    waypoints.addAtCell(placement.cell, activity.title)
+    return { id, created: true }
+  }, waypoints.remove)
   const targets = useScienceTargets(terrain, dataset)
-  const displayLayers = useDisplayLayers(terrain, dataset)
+  const baseDisplayLayers = useDisplayLayers(terrain, dataset)
+  const displayLayers = { ...baseDisplayLayers, settings: { ...baseDisplayLayers.settings, minerals: showScienceMissions && viewMode === '2d' } }
+  const scienceMissionsAvailable = !!suggestions.collection?.activities.some(a => a.review.status === 'reviewed')
+    || (displayLayers.state.status === 'ready' && displayLayers.state.context.mineralFindings.length > 0)
   const surfaceImagery = useSurfaceImagery(terrain, dataset)
   const basemap = useBasemapStatus(surfaceImagery.mode === 'rgb' && surfaceImagery.state.status === 'ready'
     ? surfaceImagery.state.url : terrainState.status === 'ready' ? terrainState.basemapUrl : null)
@@ -94,6 +112,7 @@ function App() {
           dataset,
           waypoints: waypoints.waypoints,
           waypointOrigins: waypoints.origins,
+          sciencePlan: suggestions.snapshot,
           plan,
           eva,
           assumptions: { maxSlopeDegrees, slopePenalty, returnToStart, ...evaAssumptions },
@@ -120,15 +139,16 @@ function App() {
         tone: 'error',
         text: `"${pendingMission.name}" was not opened: the terrain for its region is not available.`,
       })
-    } else if (terrainState.status === 'ready' && targets.status !== 'loading') {
+    } else if (terrainState.status === 'ready' && targets.status !== 'loading' && (!pendingMission.sciencePlan || suggestions.status !== 'loading')) {
       const opened = terrainState.terrain
-      const result = checkCompatibility(pendingMission, opened, targets.status === 'ready' ? targets.collection : null)
+      const result = checkCompatibility(pendingMission, opened, targets.status === 'ready' ? targets.collection : null, suggestions.terrainHash ?? undefined)
       setPendingMission(null)
       if (!result.ok) {
         setMissionStatus({ tone: 'error', text: `"${pendingMission.name}" was not opened.`, details: result.reasons })
       } else {
         const { settings, selectedTargetId: savedTarget } = pendingMission
         waypoints.restore(opened.manifest.id, result.waypoints, result.origins)
+        suggestions.restore(result.sciencePlan ?? null, result.waypoints)
         setMaxSlopeDegrees(settings.maxSlopeDegrees)
         setSlopePenalty(settings.slopePenalty)
         setReturnToStart(settings.returnToStart)
@@ -170,6 +190,7 @@ function App() {
           scienceTargets: targets.status === 'ready' ? targets.collection : null,
           waypoints: waypoints.waypoints,
           origins: waypoints.origins,
+          sciencePlan: suggestions.snapshot,
           settings: { maxSlopeDegrees, slopePenalty, returnToStart, ...evaAssumptions },
           selectedTargetId,
         },
@@ -223,6 +244,8 @@ function App() {
           displayLayers={displayLayers}
           surfaceImagery={surfaceImagery}
           basemap={basemap}
+          scienceLayers={<ScienceEvidenceControls available={scienceMissionsAvailable} visible={showScienceMissions} disabled={viewMode !== '2d'} toggle={() => setShowScienceMissions(s => !s)} />}
+          scienceLayersActive={showScienceMissions && viewMode === '2d' && scienceMissionsAvailable}
           targetBrowser={
             <ScienceTargetBrowser
               state={targets}
@@ -234,6 +257,7 @@ function App() {
           }
         />
         <MapViewport
+          scienceOverlays={{ collection: suggestions.collection, visible: showScienceMissions, equipmentIds: suggestions.equipment, selectedActivityIds: suggestions.selected.map(s => s.activityId), onAdd: suggestions.add }}
           region={region}
           viewMode={viewMode}
           onGridChange={setShowGrid}
@@ -260,6 +284,7 @@ function App() {
           region={region}
           terrainState={terrainState}
           targetsState={targets}
+          scienceSuggestions={<ScienceSuggestionsPanel controller={suggestions} />}
           missionLibrary={
             <MissionLibrary
               missions={library.missions}
@@ -290,9 +315,9 @@ function App() {
               waypoints={waypoints.waypoints}
               addMode={addMode}
               onToggleAddMode={() => setAddMode(!addMode)}
-              onRemove={waypoints.remove}
+              onRemove={id => { suggestions.removeWaypoint(id); waypoints.remove(id) }}
               onReorder={waypoints.reorder}
-              onClear={waypoints.clear}
+              onClear={() => { suggestions.clear(); waypoints.clear() }}
               plan={plan}
               maxSlopeDegrees={maxSlopeDegrees}
               onMaxSlopeChange={setMaxSlopeDegrees}

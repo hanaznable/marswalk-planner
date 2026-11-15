@@ -1,0 +1,31 @@
+{
+  "kind": "science-activity-review",
+  "date": "2026-11-15",
+  "reviewer": "Codex - source/content review for Developer B",
+  "scope": "Primary-source content, named-target associations, source snapshot identity and finite terrain coverage; not independent positional or scientific certification",
+  "inputs": {
+    "terrainManifestSha256": "450ada2dc924b72e6188bedc476c6373f7776544d599c0c6402d8e3e6d05b5c5",
+    "contextSha256": "4cec443428b147b78a26755c3cc3734a0b2e128780bdd87b8eeeb5617c255dde",
+    "candidateInventorySha256": "ef0cdd73d493d40f623a44b9454d561f6325c159f35be81e1a692ec631de1594",
+    "apxsTableSha256": "6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c"
+  },
+  "primarySource": {
+    "url": "https://www.hou.usra.edu/meetings/lpsc2015/pdf/2855.pdf",
+    "attribution": "McBride et al. (2015), LPSC abstract 2855",
+    "provides": "MAHLI outcrop and named-target observations"
+  },
+  "sourceSections": [
+    "Shoemaker section, page 1",
+    "Book Cliffs section, page 2",
+    "Chinle section, page 2"
+  ],
+  "output_sha256": {
+    "activities.json": "f66264b040326eda43ec6b37ca8403a086aa85f50ef4cd4a1753b737b8edc5b7"
+  },
+  "excluded": [
+    "Garden City: specific feature association remains draft",
+    "Buckskin: separate sample-context follow-up remains draft",
+    "Orbital candidates: no reviewed individual feature yet"
+  ],
+  "processing": "No new source positions, chemical values, mineral claims or activity durations generated; source positions are preserved."
+}

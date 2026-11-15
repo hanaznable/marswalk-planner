@@ -957,7 +957,7 @@ dd {
 .route-legend {
   position: absolute;
   left: 19px;
-  bottom: 34px;
+  bottom: 64px;
   z-index: 2;
   display: flex;
   gap: 14px;

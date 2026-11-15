@@ -1,3 +1,4 @@
+import { scienceEvidenceLayer, type ScienceMapOverlay } from '../../scienceSuggestions/mapEvidence'
 import { useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import {
@@ -34,6 +35,7 @@ import type { BasemapStatus } from '../useBasemapStatus'
 import type { WaypointOrigin } from '../../datasets/waypointOrigin'
 
 interface MapCanvasProps {
+  scienceOverlays?: ScienceMapOverlay
   regionId: string
   showGrid: boolean
   terrain: TerrainPackage | null
@@ -64,6 +66,7 @@ interface MapCanvasProps {
  * corner; the source Mars CRS stays in the terrain manifest.
  */
 export function MapCanvas({
+  scienceOverlays,
   regionId,
   showGrid,
   terrain,
@@ -173,6 +176,25 @@ export function MapCanvas({
       }).addTo(map))
     return () => { for (const group of groups) group.remove() }
   }, [terrain, context, apxs, traverse, minerals])
+
+  const scienceRef = useRef(scienceOverlays)
+  useEffect(() => { scienceRef.current = scienceOverlays })
+  const scienceCollection = scienceOverlays?.collection ?? null
+  const scienceVisible = scienceOverlays?.visible ?? false
+  const scienceEquipment = JSON.stringify(scienceOverlays?.equipmentIds)
+  const scienceSelected = JSON.stringify(scienceOverlays?.selectedActivityIds)
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !terrain || !scienceCollection || !scienceVisible) return
+    const group = scienceEvidenceLayer(terrain, scienceCollection, {
+      canAdd: activity => {
+        const c = scienceRef.current
+        return !!c && !c.selectedActivityIds.includes(activity.id) && activity.requiredEquipmentIds.every(id => c.equipmentIds.includes(id))
+      },
+      add: activity => scienceRef.current?.onAdd(activity) ?? false,
+    }).addTo(map)
+    return () => { group.remove() }
+  }, [terrain, scienceCollection, scienceVisible, scienceEquipment, scienceSelected])
 
   // Science target markers (covered cells only; splitByCoverage drops the rest).
   useEffect(() => {

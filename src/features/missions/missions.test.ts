@@ -118,7 +118,7 @@ describe('parseMissionRecord', () => {
 
   it('rejects other files and future versions with a clear reason', () => {
     expect(() => parseMissionRecord({ format: 'marswalk-mission-report', version: 1 })).toThrow('not a POLARIS Module mission file')
-    expect(() => parseMissionRecord({ ...json(), version: 2 })).toThrow('newer version of the planner (format version 2)')
+    expect(() => parseMissionRecord({ ...json(), version: 3 })).toThrow('newer version of the planner (format version 3)')
   })
 
   it('lists every problem in a damaged file', () => {

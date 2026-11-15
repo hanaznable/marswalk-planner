@@ -4,6 +4,13 @@ Updated 2026-11-15. The planner loads the real Pahrump Hills prototype by defaul
 This guide covers integrated source groups; per-file hashes and processing
 evidence remain in their original manifests/provenance and linked reviews.
 
+Science objectives v2 add reviewed Garden City/CheMin references and two
+project-authored HiRISE imaging areas. See the [complete source-link catalog,
+position handling and reproducible provenance](terrain/science-objectives-v2.md).
+Rock-sampling proposals additionally use [NASA tool and sample-documentation
+sources](terrain/rock-sampling-v3.md); the method is a project-authored planning
+scenario. No CRISM mineral raster or thermal dataset has been integrated.
+
 ## Current runtime assets
 
 | Content | Runtime location under `public/data/` | Source and meaning |

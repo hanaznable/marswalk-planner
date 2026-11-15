@@ -1,0 +1,134 @@
+{
+  "kind": "science-activity-candidate-review",
+  "date": "2026-11-15",
+  "status": "draft-not-runtime-data",
+  "terrainPackageId": "pahrump-hills-v1",
+  "terrainManifestSha256": "450ada2dc924b72e6188bedc476c6373f7776544d599c0c6402d8e3e6d05b5c5",
+  "contextSha256": "4cec443428b147b78a26755c3cc3734a0b2e128780bdd87b8eeeb5617c255dde",
+  "apxsSource": {
+    "citation": "Berger, J. A. (2020), Overview of MSL APXS Targets from Sol 0 to 2301, doi:10.17189/1519050",
+    "table_url": "https://pds-geosciences.wustl.edu/msl/urn-nasa-pds-msl_apxs_supplement_sols_0_2301/data/ds01_2020je006536rr.csv",
+    "table_sha256": "6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c",
+    "label_url": "https://pds-geosciences.wustl.edu/msl/urn-nasa-pds-msl_apxs_supplement_sols_0_2301/data/ds01_2020je006536rr.xml",
+    "label_sha256": "c7b752b4bdb4041594ec7a1d6042b8efa11d47b5af989ede2c7ebf95bcea6ccd"
+  },
+  "candidates": [
+    {
+      "id": "shoemaker-imaging",
+      "category": "historical-follow-up",
+      "reviewStatus": "draft",
+      "targetName": "Pelona_DRT",
+      "measurementSol": 805,
+      "sourceLine": 161,
+      "recordId": "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-161",
+      "sourcePosition": {
+        "x": -741.8406219128293,
+        "y": -276377.7570047902,
+        "basis": "rover-position-proxy",
+        "uncertaintyMeters": null
+      },
+      "cell": {
+        "row": 94,
+        "col": 98
+      },
+      "coveredTerrain": true,
+      "sourceFlags": [],
+      "proposedExperiment": "Photograph rock textures",
+      "reviewScope": "Imaging at a historical APXS target"
+    },
+    {
+      "id": "book-cliffs-imaging",
+      "category": "historical-follow-up",
+      "reviewStatus": "draft",
+      "targetName": "Punchbowl_DRT_raster1",
+      "measurementSol": 813,
+      "sourceLine": 169,
+      "recordId": "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-169",
+      "sourcePosition": {
+        "x": -732.9434898137954,
+        "y": -276394.92200879776,
+        "basis": "rover-position-proxy",
+        "uncertaintyMeters": null
+      },
+      "cell": {
+        "row": 98,
+        "col": 100
+      },
+      "coveredTerrain": true,
+      "sourceFlags": [],
+      "proposedExperiment": "Photograph rock textures",
+      "reviewScope": "Imaging at a historical APXS target"
+    },
+    {
+      "id": "chinle-comparison",
+      "category": "historical-follow-up",
+      "reviewStatus": "draft",
+      "targetName": "Pickhandle_DRT",
+      "measurementSol": 828,
+      "sourceLine": 179,
+      "recordId": "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-179",
+      "sourcePosition": {
+        "x": -724.2004719292809,
+        "y": -276420.3829809213,
+        "basis": "rover-position-proxy",
+        "uncertaintyMeters": null
+      },
+      "cell": {
+        "row": 103,
+        "col": 102
+      },
+      "coveredTerrain": true,
+      "sourceFlags": [],
+      "proposedExperiment": "Compare surface textures",
+      "reviewScope": "Comparison at a historical APXS target"
+    },
+    {
+      "id": "garden-city-imaging",
+      "category": "historical-follow-up",
+      "reviewStatus": "draft",
+      "targetName": "Coalville",
+      "measurementSol": 930,
+      "sourceLine": 201,
+      "recordId": "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-201",
+      "sourcePosition": {
+        "x": -749.9790378831219,
+        "y": -276442.47098565695,
+        "basis": "rover-position-proxy",
+        "uncertaintyMeters": null
+      },
+      "cell": {
+        "row": 107,
+        "col": 96
+      },
+      "coveredTerrain": true,
+      "sourceFlags": [],
+      "proposedExperiment": "Photograph the outcrop",
+      "reviewScope": "Review the published vein investigation before linking particular features"
+    },
+    {
+      "id": "buckskin-sample-context",
+      "category": "historical-follow-up",
+      "reviewStatus": "draft",
+      "targetName": "Buckskin_DRT_raster1",
+      "measurementSol": 1057,
+      "sourceLine": 227,
+      "recordId": "apxs:6a6e4359a543b315783bc672b9a173e4930592ba62c071d5c93b9a7b85584f8c:row-227",
+      "sourcePosition": {
+        "x": -1167.794525784124,
+        "y": -276695.7729885158,
+        "basis": "rover-position-proxy",
+        "uncertaintyMeters": null
+      },
+      "cell": {
+        "row": 158,
+        "col": 13
+      },
+      "coveredTerrain": true,
+      "sourceFlags": [],
+      "proposedExperiment": "Document the sample setting",
+      "reviewScope": "Review the separate published CheMin mineral finding; do not infer minerals from APXS"
+    }
+  ],
+  "orbitalCandidates": [],
+  "orbitalStatus": "No individual orbital feature has passed source, geometry and interpretation review."
+}

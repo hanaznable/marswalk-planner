@@ -80,6 +80,8 @@ export function LayersPanel({
   showTargets,
   onShowTargetsChange,
   targetBrowser,
+  scienceLayers,
+  scienceLayersActive = false,
   displayLayers,
   surfaceImagery,
   basemap,
@@ -90,6 +92,8 @@ export function LayersPanel({
   onShowTargetsChange: (value: boolean) => void
   /** Target list and details, shown under the layer list. */
   targetBrowser: ReactNode
+  scienceLayers?: ReactNode
+  scienceLayersActive?: boolean
   displayLayers: DisplayLayersController
   surfaceImagery: SurfaceImageryController
   basemap: BasemapController
@@ -104,7 +108,8 @@ export function LayersPanel({
   )
   const activeCount = rows.filter((row) => row.loaded && (row.toggle?.on ?? true)).length
     + (terrainState.status === 'ready' && displayLayers.settings.raster ? 1 : 0)
-    + (displayLayers.state.status === 'ready' ? Number(displayLayers.settings.apxs) + Number(displayLayers.settings.traverse) + Number(displayLayers.settings.minerals) : 0)
+    + (displayLayers.state.status === 'ready' ? Number(displayLayers.settings.apxs) + Number(displayLayers.settings.traverse) : 0)
+    + Number(scienceLayersActive)
   const dataset = terrainState.status === 'none' ? null : terrainState.dataset
   const datasetLoaded = terrainState.status === 'ready' && dataset !== null
 
@@ -185,7 +190,8 @@ export function LayersPanel({
                 )}
               </div>
             ))}
-            <MapLayerControls terrain={terrainState.status === 'ready' ? terrainState.terrain : null} controller={displayLayers} />
+            <MapLayerControls terrain={terrainState.status === 'ready' ? terrainState.terrain : null} controller={displayLayers} hideMinerals />
+            {scienceLayers}
           </div>
 
         </>

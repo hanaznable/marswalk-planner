@@ -83,6 +83,11 @@ const paths = {
       <path d="M8 10V6a4 4 0 0 1 8 0v4m-4 5v2" />
     </>
   ),
+  flask: (
+    <>
+      <path d="M9 3h6M10 3v6L4 19a1.3 1.3 0 0 0 1.1 2h13.8a1.3 1.3 0 0 0 1.1-2L14 9V3M7 14h10" />
+    </>
+  ),
   check: <path d="m5 12 4 4L19 6" />,
   trash: (
     <>
