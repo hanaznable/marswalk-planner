@@ -9,6 +9,9 @@ Built for the *Interplanetary Survival Guide: Martian Map* challenge of the
 2026 NASA Space Apps Challenge. Prototype, not an operational navigation or
 safety tool.
 
+**[Try the live demo](https://hanaznable.github.io/polaris-module/)**: it runs
+in your browser, with nothing to install.
+
 ![POLARIS Module planning a three-waypoint traverse on HiRISE terrain of Pahrump Hills, with the shortest and slope-aware routes, the historical Curiosity traverse and a science target's sourced details](docs/images/polaris-2d-plan.png)
 
 ## The problem
@@ -39,6 +42,12 @@ coordinate systems. POLARIS Module brings them onto one map for one site.
 
 ## Try it
 
+**Live demo:** <https://hanaznable.github.io/polaris-module/>. It is published
+from `main` with GitHub Pages and needs nothing installed. The walkthrough below
+applies there too.
+
+To run it on your own computer:
+
 ```sh
 npm ci
 npm run dev
@@ -50,8 +59,10 @@ with script execution disabled, use `npm.cmd ci` and `npm.cmd run dev`.
 
 To serve the production build, the same files a web host would publish, run
 `npm run build` and then `npm run preview`. The build uses relative paths, so
-the `dist/` folder also works from any sub-folder of a static host. A manual
-GitHub Pages workflow is in [`.github/workflows/pages.yml`](.github/workflows/pages.yml).
+the `dist/` folder also works from any sub-folder of a static host. The live demo
+is published by the manual workflow in
+[`.github/workflows/pages.yml`](.github/workflows/pages.yml) (Actions tab, "Run
+workflow"); it is redeployed only when someone runs it.
 
 **Two-minute walkthrough**
 
