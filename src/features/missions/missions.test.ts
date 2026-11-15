@@ -16,7 +16,9 @@ import {
   checkCompatibility,
   createMissionRecord,
   MissionFormatError,
+  MAX_MISSION_FILE_BYTES,
   missionFileName,
+  missionFileSizeError,
   parseMissionRecord,
   type MissionRecord,
   type MissionSnapshot,
@@ -141,6 +143,23 @@ describe('parseMissionRecord', () => {
     const list = file.waypoints as { origin: Record<string, unknown> | null }[]
     list[1].origin = { ...list[1].origin, position: { x: 1, y: 2, basis: 'target-location', uncertaintyMeters: null } }
     expect(() => parseMissionRecord(file)).toThrow('waypoint 2 is invalid')
+  })
+
+  it('rejects waypoint source links that are not https', () => {
+    for (const url of ['javascript:alert(1)', 'data:text/html,hi', 'http://example.org/apxs', 'not a url']) {
+      const file = json()
+      const list = file.waypoints as { origin: Record<string, unknown> | null }[]
+      list[1].origin = { ...list[1].origin, sources: [{ url, attribution: 'Test', provides: 'measurement' }] }
+      expect(() => parseMissionRecord(file), url).toThrow('waypoint 2 is invalid')
+    }
+  })
+
+  it('refuses files above the import size limit', () => {
+    expect(missionFileSizeError('plan.json', 40_000)).toBeNull()
+    expect(missionFileSizeError('plan.json', MAX_MISSION_FILE_BYTES)).toBeNull()
+    expect(missionFileSizeError('huge.json', MAX_MISSION_FILE_BYTES + 1)).toBe(
+      'huge.json is too large to be a mission file (5.0 MB; the limit is 5 MB).',
+    )
   })
 
   it('normalises a hand-edited name', () => {
