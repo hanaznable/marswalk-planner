@@ -5,6 +5,8 @@ import type { GridCell, RouteResult } from '../routing'
  * no fatigue, suit, terrain-dependent speed, or life-support constraints.
  */
 export interface EvaAssumptions {
+  /** Usable primary oxygen at departure, per astronaut; legacy plans omit it. */
+  readonly oxygenCapacityKg?: number
   /** Average walking speed, km/h. */
   readonly walkingSpeedKmh: number
   /** Time spent at each waypoint after the start, minutes. */

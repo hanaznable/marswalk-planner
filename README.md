@@ -37,7 +37,7 @@ coordinate systems. POLARIS Module brings them onto one map for one site.
 | **Science suggestions** | Pick an objective (rock textures, past water activity or mineral diversity) and the equipment you carry. The Science tab suggests 14 sourced activities: photography and sample-context stops, two orbital imaging candidates and four proposed rock-chip samples. Each card explains why the stop matters and links its evidence; one click adds it to the route. |
 | **EVA estimate** | Distance, elevation gain and loss, an elevation profile and an estimated duration from your walking speed and time per stop. Optional return to start. |
 | **3D terrain view** | The same terrain, imagery, routes and markers in 3D, at true vertical scale by default. |
-| **Missions and reports** | Save named missions in the browser, export or import them as JSON, and export a printable or JSON mission report with sources, assumptions and limitations. Missions and reports keep the chosen science activities and their evidence. |
+| **Missions and reports** | Save named missions in the browser, export or import them as JSON, and export a printable or JSON mission report with sources, assumptions and limitations. Missions and reports keep the chosen science activities and their evidence. New missions use format v3, which also keeps the oxygen settings ([NASA-based oxygen model](docs/eva/oxygen-budget.md)); v1 and v2 files still open. |
 
 ![The Science tab with the objective "Investigate past water activity", the equipment checklist and the Garden City veins activity added to the route, its historical evidence open, and the science mission sites shown on the map](docs/images/polaris-science-suggestions.png)
 
@@ -172,7 +172,7 @@ POLARIS Module is a planning prototype. It says what it does not know.
   Activities use your time per stop; none has its own duration.
 - **No hazard, thermal or mineral-abundance model.** The enhanced RGB image uses
   synthetic blue and is not true colour or a mineral map. CRISM, THEMIS,
-  geological units and hazard maps are listed in the app as not yet available.
+  geological units and hazard maps have not been integrated.
 
 ## Project structure
 

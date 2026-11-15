@@ -133,8 +133,10 @@ assumptions. Do not invent findings, durations, safety guarantees or science sco
 
 ## 7. Later work and optional expansion
 
-- Mission-duration limits, oxygen/energy budgets, reserves and warnings need
-  documented models or explicit scenario inputs before implementation.
+- Oxygen-only budgeting now uses a documented NASA closed-loop Mars baseline,
+  primary-capacity scenario and planning reserve, with 2D route reach overlays.
+  [Model, sources and boundaries](docs/eva/oxygen-budget.md). Energy, other
+  life-support limits and workload-dependent physiology remain future work.
 - CRISM mineral indicators, THEMIS thermal context, geological units and surface
   hazards need independently reviewed data; they remain unavailable. Follow
   [pending-layer steps](docs/terrain/pending-layer-next-steps.md).

@@ -1,3 +1,5 @@
+import { RouteLegend } from '../map/components/RouteLegend'
+import type { OxygenAlternatives } from '../eva/oxygenBudget'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { PlacedTarget } from '../datasets/scienceTargets'
 import type { RasterGrid } from '../datasets/terrainContract'
@@ -10,6 +12,7 @@ import { TerrainRenderer, type Readout } from './terrainRenderer'
 import './terrain3d.css'
 
 export interface Terrain3DViewProps {
+  oxygen?: OxygenAlternatives | null
   terrain: TerrainPackage
   /** The image the 2D map shows (orthoimage or validated enhanced RGB); null for none. */
   imageUrl: string | null
@@ -100,14 +103,15 @@ export default function Terrain3DView(props: Terrain3DViewProps) {
     rendererRef.current?.setVerticalScale(verticalScale)
   }, [terrain, verticalScale])
 
-  const { waypoints, routes, targets, selectedTargetId, context, showApxs, showTraverse, showMinerals } = props
+  const { oxygen, waypoints, routes, targets, selectedTargetId, context, showApxs, showTraverse, showMinerals } = props
   useEffect(() => {
-    rendererRef.current?.setOverlays({ waypoints, routes, targets, selectedTargetId, context, showApxs, showTraverse, showMinerals })
-  }, [terrain, waypoints, routes, targets, selectedTargetId, context, showApxs, showTraverse, showMinerals])
+    rendererRef.current?.setOverlays({ oxygen, waypoints, routes, targets, selectedTargetId, context, showApxs, showTraverse, showMinerals })
+  }, [terrain, oxygen, waypoints, routes, targets, selectedTargetId, context, showApxs, showTraverse, showMinerals])
 
   return (
     <div className="terrain3d">
       <div className="terrain3d-stage" ref={containerRef} />
+      <RouteLegend routes={routes} oxygen={oxygen} />
       <div className="terrain3d-toolbar" role="group" aria-label="3D view controls">
         <button type="button" onClick={() => rendererRef.current?.resetView()}>
           Reset view

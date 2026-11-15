@@ -112,10 +112,17 @@ export function MissionReportDialog({ report, onClose, onDownloadJson }: Mission
               <dd>{assumptions.walkingSpeedKmh} km/h</dd>
               <dt>Time per stop</dt>
               <dd>{assumptions.stopMinutes} min</dd>
+              {report.oxygen && <><dt>Primary oxygen per astronaut</dt><dd>{report.oxygen.capacityKg.toFixed(2)} kg</dd><dt>Oxygen rate / planning reserve</dt><dd>{report.oxygen.rateKgPerHour} kg/h / {report.oxygen.reserveMinutes} min</dd></>}
               <dt>Return to start</dt>
               <dd>{assumptions.returnToStart ? 'Yes' : 'No'}</dd>
             </dl>
           </section>
+
+          {report.oxygen && <section><h2>Oxygen budget</h2>
+            <p>Constant-rate closed-loop Mars planning scenario, per astronaut. Not a safe-EVA endurance or guaranteed-return prediction.</p>
+            {([['Shortest', report.oxygen.shortest], ['Slope-aware', report.oxygen.slopeAware]] as const).map(([name, budget]) => <p key={name}>{name}: {budget ? `${budget.withinBudget ? 'within budget' : 'exceeds budget'} - ${Math.round(budget.reachableDistanceMeters)} / ${Math.round(budget.totalDistanceMeters)} m within budget; ${budget.requiredKg.toFixed(3)} kg required including reserve${budget.cutoffPhase === 'stop' ? '; reserve boundary during a stop' : ''}` : 'no complete route'}</p>)}
+            {report.oxygen.sources.map(source => <p key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.title}</a></p>)}
+          </section>}
 
           <section>
             <h2>Waypoints</h2>

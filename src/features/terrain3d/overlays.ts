@@ -124,6 +124,24 @@ export function drapeSegment(
   return pairs
 }
 
+/** Diagnostic connectors only; failed legs have no calculated walking path. */
+export function failedRouteConnections(terrain: TerrainPackage, frame: SceneFrame, route: RouteResult, waypoints: readonly Waypoint[]) {
+  const segments: number[] = []
+  const endpoints = new Map<string, MapPoint>()
+  for (const leg of route.legs) {
+    if (leg.status !== 'failed') continue
+    const from = waypoints.find(w => w.id === leg.fromId)
+    const to = waypoints.find(w => w.id === leg.toId)
+    if (!from || !to) continue
+    const a = cellCenterToMap(terrain.manifest.raster, from.cell)
+    const b = cellCenterToMap(terrain.manifest.raster, to.cell)
+    segments.push(...drapeSegment(terrain, frame, a, b))
+    endpoints.set(from.id, a)
+    endpoints.set(to.id, b)
+  }
+  return { segments, endpoints: [...endpoints.values()] }
+}
+
 export interface WaypointAnchor {
   readonly id: string
   readonly kind: 'start' | 'stop' | 'destination'

@@ -7,7 +7,7 @@ import {
 } from '../datasets/terrainContract'
 import { createTerrainPackage } from '../datasets/terrainPackage'
 import type { RouteResult, Waypoint } from '../routing'
-import { drapeSegment, overlayLift, routeLines, surfaceElevationAt, surfacePoint, waypointAnchors } from './overlays'
+import { drapeSegment, failedRouteConnections, overlayLift, routeLines, surfaceElevationAt, surfacePoint, waypointAnchors } from './overlays'
 import {
   createSceneFrame,
   elevationRange,
@@ -180,6 +180,23 @@ describe('overlay placement', () => {
     expect(lift).toBe(3)
     expect(Array.from(line.slice(0, 3))).toEqual([-15, 7 + lift, -10])
     expect(Array.from(line.slice(6, 9))).toEqual([5, -9 + lift, 10])
+  })
+
+  it('marks failed endpoints once and keeps failure connectors separate from route paths', () => {
+    const points: Waypoint[] = [
+      { id: 'a', label: 'Start', cell: { row: 0, col: 0 } },
+      { id: 'b', label: 'End', cell: { row: 0, col: 3 } },
+    ]
+    const failed: RouteResult = { profile: { kind: 'terrain', maxSlopeDegrees: 5, slopePenalty: 3, slopeLimitIsScenarioAssumption: true }, complete: false, totalDistanceMeters: null,
+      legs: [
+        { status: 'failed', kind: 'outbound', fromId: 'a', toId: 'b', reason: { code: 'NO_PATH', blockedBy: ['slope'] } },
+        { status: 'failed', kind: 'return', fromId: 'b', toId: 'a', reason: { code: 'NO_PATH', blockedBy: ['slope'] } },
+      ] }
+    const result = failedRouteConnections(pkg, frame, failed, points)
+    expect(result.endpoints).toHaveLength(2)
+    expect(result.segments.length).toBeGreaterThan(0)
+    expect(routeLines(pkg, frame, failed)).toHaveLength(0)
+    expect(failedRouteConnections(pkg, frame, { ...failed, legs: [] }, points).endpoints).toHaveLength(0)
   })
 
   it('drapes long context segments over the surface and leaves no-data stretches out', () => {

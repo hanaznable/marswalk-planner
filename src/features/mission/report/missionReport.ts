@@ -1,4 +1,5 @@
 import type { SciencePlanSnapshot } from '../../scienceSuggestions/model'
+import { oxygenReport } from '../../eva/oxygenBudget'
 import {
   cellCenterToMap,
   mapToCell,
@@ -27,6 +28,7 @@ import type { WaypointOrigin } from '../../datasets/waypointOrigin'
 
 /** Every user-set scenario input that shaped the plan. */
 export interface MissionAssumptions {
+  readonly oxygenCapacityKg?: number
   readonly maxSlopeDegrees: number
   readonly slopePenalty: number
   readonly returnToStart: boolean
@@ -96,6 +98,7 @@ export interface ReportRoute {
 }
 
 export interface MissionReport {
+  readonly oxygen?: ReturnType<typeof oxygenReport>
   readonly sciencePlan?: SciencePlanSnapshot
   /** Stable format identifier (kept from the earlier project name so existing exports stay readable). */
   readonly format: 'marswalk-mission-report'
@@ -179,6 +182,7 @@ export function buildMissionReport(input: MissionReportInput): MissionReport {
 
   return {
     ...(input.sciencePlan ? { sciencePlan: structuredClone(input.sciencePlan) } : {}),
+    ...(assumptions.oxygenCapacityKg !== undefined ? { oxygen: oxygenReport(plan?.alternatives ?? null, raster, assumptions) } : {}),
     format: 'marswalk-mission-report',
     version: 1,
     generatedAt: input.generatedAt.toISOString(),

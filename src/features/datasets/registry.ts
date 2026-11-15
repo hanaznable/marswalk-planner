@@ -13,6 +13,11 @@ export const datasetRegistry: readonly DatasetMetadata[] = [
     attribution: 'NASA/JPL-Caltech/UArizona',
     coordinateReferenceSystem: 'EQUIRECTANGULAR MARS',
     processedAssetUrl: 'data/gale/pahrump-hills-v1/manifest.json',
+    dataSourceNotes: [
+      'Absolute geolocation and image/DEM alignment are unverified.',
+      'Coordinates use the documented prototype origin convention.',
+      'Slope represents the maximum native-resolution slope within each 5 m cell.',
+    ],
     limitations: [
       'Prototype package: absolute geolocation and image/DEM registration accuracy are unverified.',
       'The origin follows a documented working convention chosen for consistency, not proven accuracy.',
