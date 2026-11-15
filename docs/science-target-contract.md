@@ -61,7 +61,7 @@ All values above are placeholders, not real data.
 | `terrainPackageId` | Must match the terrain manifest `id`; targets prepared for another package are refused. |
 | `terrainManifestSha256` | SHA-256 of that package's `manifest.json` (64 hex characters), recording the exact terrain version the positions were prepared against. |
 | `position.x`, `.y` | Metres in the terrain package's source CRS (conversion above). |
-| `position.basis` | Required. `rover-position-proxy` (where the rover was recorded around the activity) or `target-location` (the target itself). A `drill-site` with a proxy basis never implies an exact hole location; the UI always shows the proxy caveat (`describePosition`). |
+| `position.basis` | Required. `rover-position-proxy` (where the rover was recorded around the activity) or `target-location` (the target itself). A `drill-site` with a proxy basis never implies an exact hole location: the app words the caveat with `describePosition` and shows it where listed under *Where the caveats appear* below. |
 | `position.uncertaintyMeters` | Stated by a source, or `null`. Never estimated. |
 | `activitySol`, `positionSol` | Separate, non-negative integers or `null`. |
 | `description` | Only what the sources say. |
@@ -83,8 +83,24 @@ All values above are placeholders, not real data.
 `splitByCoverage` places each target on the routing grid. Targets on a covered
 cell are shown and can be added as waypoints. Targets outside the terrain or on a
 no-data cell are **not shown as part of the region**; they are listed separately
-as "outside this terrain". Next to every target the UI shows its position caveat,
-and that the terrain's absolute geolocation is unverified.
+as "outside this terrain".
+
+### Where the caveats appear
+
+Decision (Developer B): the full caveat on every target details card did not look
+good in the UI, so the card is kept short. The card shows the name, kind, mission,
+sols, the source description and the source names. The position caveat and the
+unverified terrain geolocation are shown here instead:
+
+| Caveat | Where it appears |
+|---|---|
+| Proxy position, not the exact location (`describePosition`) | The map marker's hover title, and the mission report (per target, with the source coordinates) |
+| Markers are associated rover positions, with unknown uncertainty | The "Drill proxies" layer description, and the terrain limitations under *Data sources* |
+| The terrain's absolute geolocation is unverified | The "Prototype data - position not verified" label in the map title bar, the *Info* tab note, and the terrain limitations under *Data sources* |
+
+A change that removes a caveat from all of these places needs the same
+agreement as a contract change. The source description in `targets.json` keeps
+its own proxy sentence; the card removes that one sentence from the text it shows.
 
 ## Delivering a collection
 
