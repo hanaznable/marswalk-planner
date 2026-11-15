@@ -313,7 +313,7 @@ describe('buildMissionReport', () => {
 describe('missionReportFileName', () => {
   it('names the file after the terrain and the UTC time', () => {
     expect(missionReportFileName(buildMissionReport(input()))).toBe(
-      'marswalk-mission-test-strip-20261114-1805Z.json',
+      'polaris-report-test-strip-20261114-1805Z.json',
     )
   })
 })

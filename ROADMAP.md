@@ -2,7 +2,7 @@
 
 ## 1. Project Overview
 
-We are developing a web application for the **NASA Space Apps Challenge 2026**, based on the *Interplanetary Survival Guide: Martian Map* challenge.
+We are developing a web application for the **2026 NASA Space Apps Challenge**, based on the *Interplanetary Survival Guide: Martian Map* challenge.
 
 The application will help users plan scientific exploration routes for human astronauts on Mars using real NASA mission datasets.
 

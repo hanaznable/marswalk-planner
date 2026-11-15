@@ -1,5 +1,7 @@
 /**
  * Saved mission record (format "marswalk-mission", version 1). Pure TypeScript.
+ * The format identifier keeps the earlier project name on purpose: it is
+ * written into saved and exported missions, which must stay readable.
  *
  * A mission stores the planner's inputs, not its outputs: waypoints as cells of
  * a specific terrain grid, the scenario settings and selections. Routes, totals
@@ -160,7 +162,7 @@ function validateOrigin(value: unknown): boolean {
 /** Validates untrusted JSON (an imported file or a stored library entry). */
 export function parseMissionRecord(input: unknown): MissionRecord {
   if (!isRecord(input) || input.format !== MISSION_FORMAT) {
-    throw new MissionFormatError(['this is not a Marswalk mission file'])
+    throw new MissionFormatError(['this is not a Polaris Module mission file'])
   }
   if (input.version !== MISSION_VERSION) {
     throw new MissionFormatError([
@@ -295,9 +297,9 @@ export function checkCompatibility(
   return { ok: true, waypoints, origins, warnings }
 }
 
-/** e.g. marswalk-mission-ridge-traverse-20261115-1805Z.json (UTC). */
+/** e.g. polaris-mission-ridge-traverse-20261115-1805Z.json (UTC). */
 export function missionFileName(record: MissionRecord): string {
   const slug = record.name.toLowerCase().normalize('NFKD').replace(/\p{M}+/gu, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'mission'
   const stamp = record.savedAt.replace(/[-:]/g, '').replace(/^(\d{8})T(\d{4}).*$/, '$1-$2Z')
-  return `marswalk-mission-${slug}-${stamp}.json`
+  return `polaris-mission-${slug}-${stamp}.json`
 }

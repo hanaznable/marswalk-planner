@@ -1,14 +1,15 @@
-# POLARIS Module
+# Polaris Module
 
 **A Mars EVA route planner built on real HiRISE terrain.**
 Plan a walking traverse across a 1 × 1 km patch of Gale Crater, compare a
 shortest route with a slope-aware one, connect stops to sourced Curiosity
 science, and export the plan as a mission report.
 
-NASA Space Apps Challenge 2026 project. Prototype, not an operational
-navigation or safety tool.
+Built for the *Interplanetary Survival Guide: Martian Map* challenge of the
+2026 NASA Space Apps Challenge. Prototype, not an operational navigation or
+safety tool.
 
-![POLARIS Module planning a three-waypoint traverse on HiRISE terrain of Pahrump Hills, with the shortest and slope-aware routes, the historical Curiosity traverse and a science target's sourced details](docs/images/polaris-2d-plan.png)
+![Polaris Module planning a three-waypoint traverse on HiRISE terrain of Pahrump Hills, with the shortest and slope-aware routes, the historical Curiosity traverse and a science target's sourced details](docs/images/polaris-2d-plan.png)
 
 ## The problem
 
@@ -21,7 +22,7 @@ what is worth studying. A planner has to answer three questions together:
 
 Mission data that answers these questions exists, but it is spread across
 orbital terrain models, rover archives and science papers, in different
-coordinate systems. POLARIS Module brings them onto one map for one site.
+coordinate systems. Polaris Module brings them onto one map for one site.
 
 ## What it does
 
@@ -113,7 +114,7 @@ URLs, file hashes and processing steps.
 
 ## Honest limits
 
-POLARIS Module is a planning prototype. It says what it does not know.
+Polaris Module is a planning prototype. It says what it does not know.
 
 - **Positions are not certified.** The terrain's absolute position on Mars is
   unverified. The image-to-terrain alignment follows a documented working
@@ -187,3 +188,12 @@ uses Python with NumPy and Pillow; see [terrain preparation](scripts/terrain/REA
 
 This project's scope and phased plan (in Turkish) are in [SCOPE.md](SCOPE.md);
 the development roadmap is in [ROADMAP.md](ROADMAP.md).
+
+## License
+
+The source code is released under the [MIT License](LICENSE).
+
+The NASA and mission data in [`public/data`](public/data) is not covered by
+that license. It comes from the sources listed under [Data sources](#data-sources),
+keeps their own terms, and must be credited as shown there
+(images and terrain: NASA/JPL-Caltech/UArizona).
