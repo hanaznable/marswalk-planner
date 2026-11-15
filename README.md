@@ -3,7 +3,8 @@
 **A Mars EVA route planner built on real HiRISE terrain.**
 Plan a walking traverse across a 1 × 1 km patch of Gale Crater, compare a
 shortest route with a slope-aware one, add science activities backed by
-Curiosity's findings, and export the plan as a mission report.
+Curiosity's findings, check how far an astronaut's oxygen lasts along each
+route, and export the plan as a mission report.
 
 Built for the *Interplanetary Survival Guide: Martian Map* challenge of the
 2026 NASA Space Apps Challenge. Prototype, not an operational navigation or
@@ -12,7 +13,7 @@ safety tool.
 **[Try the live demo](https://hanaznable.github.io/polaris-module/)**: it runs
 in your browser, with nothing to install.
 
-![POLARIS Module planning a three-waypoint traverse on HiRISE terrain of Pahrump Hills, with the shortest and slope-aware routes, the historical Curiosity traverse and a science target's sourced details](docs/images/polaris-2d-plan.png)
+![POLARIS Module planning a three-waypoint traverse on HiRISE terrain of Pahrump Hills, with the shortest and slope-aware routes, the historical Curiosity traverse, the Mars locator globe, and a small oxygen tank: O2 markers where each route's budget runs out, amber dashes beyond, and the oxygen reach estimate showing 342 of 541 m within budget](docs/images/polaris-2d-plan.png)
 
 ## The problem
 
@@ -36,12 +37,16 @@ coordinate systems. POLARIS Module brings them onto one map for one site.
 | **Science on the map** | Curiosity drill sites, APXS chemistry measurements, the historical rover traverse and a published mineral finding, each with its sources. Add them to the route as waypoints. |
 | **Science suggestions** | Pick an objective (rock textures, past water activity or mineral diversity) and the equipment you carry. The Science tab suggests 14 sourced activities: photography and sample-context stops, two orbital imaging candidates and four proposed rock-chip samples. Each card explains why the stop matters and links its evidence; one click adds it to the route. |
 | **EVA estimate** | Distance, elevation gain and loss, an elevation profile and an estimated duration from your walking speed and time per stop. Optional return to start. |
+| **Oxygen reach** | Set the usable oxygen each astronaut carries (default 0.54 kg, the EVA suit's primary supply). At NASA's Mars closed-loop rate of 0.076 kg per hour, with a 30-minute reserve held back, the planner shows how far each route gets before the budget runs out: an O2 marker at that point and amber dashes beyond it, in 2D and 3D. |
+| **Where on Mars** | A globe in the map corner shows where Gale Crater is on Mars. Click it to see where Pahrump Hills sits in Gale Crater, on two NASA context images. |
 | **3D terrain view** | The same terrain, imagery, routes and markers in 3D, at true vertical scale by default. |
-| **Missions and reports** | Save named missions in the browser, export or import them as JSON, and export a printable or JSON mission report with sources, assumptions and limitations. Missions and reports keep the chosen science activities and their evidence. New missions use format v3, which also keeps the oxygen settings ([NASA-based oxygen model](docs/eva/oxygen-budget.md)); v1 and v2 files still open. |
+| **Missions and reports** | Save named missions in the browser, export or import them as JSON, and export a printable or JSON mission report with sources, assumptions and limitations. Missions and reports keep the chosen science activities and their evidence, and the oxygen estimate. New missions use format v3, which also keeps the oxygen setting; v1 and v2 files still open. The **Info** tab shows a mission brief: the area, the plan, its objectives and the equipment it needs. |
 
 ![The Science tab with the objective "Investigate past water activity", the equipment checklist and the Garden City veins activity added to the route, its historical evidence open, and the science mission sites shown on the map](docs/images/polaris-science-suggestions.png)
 
-![The plan with the Garden City activity added, in the 3D terrain view, with heights exaggerated 2× for display](docs/images/polaris-3d-terrain.png)
+![The plan with the Garden City activity added, in the 3D terrain view with heights exaggerated 2× for display, showing the same O2 markers and beyond-budget sections](docs/images/polaris-3d-terrain.png)
+
+![The Mars locator opened: Pahrump Hills marked approximately on a NASA overview of Gale Crater, above NASA's labelled map of Pahrump Hills at the base of Mount Sharp](docs/images/polaris-mars-locator.png)
 
 ## Try it
 
@@ -71,7 +76,8 @@ workflow"); it is redeployed only when someone runs it.
 
 1. The app opens on **Gale Crater - Pahrump Hills**. The scale bar shows
    distance; the grid button in the map toolbar adds a metric grid with local
-   east/north labels.
+   east/north labels. Click the **Gale Crater** globe in the map corner to see
+   where the site is.
 2. In the left panel, open **Drill sites** under **Drill proxies**, select
    **Confidence Hills** and choose **Add as waypoint**. Its card shows the drill
    sols and sources.
@@ -79,6 +85,9 @@ workflow"); it is redeployed only when someone runs it.
 4. Compare **Shortest** (dashed) and **Slope-aware** (solid). Move the
    **Max slope** slider and watch the slope-aware route change, or fail with
    a reason. The planner notes that only the slope-aware route applies the limit.
+   Then lower the **Oxygen tank** slider until an **O2** marker appears: the
+   route turns to amber dashes where the oxygen budget runs out, and the
+   **Oxygen reach estimate** says how many metres are within budget.
 5. Open the **Science** tab. Choose the objective **Investigate past water
    activity**, tick the equipment you carry, open **Why this stop?** on a card
    and choose **Add to route**. A card that needs equipment you have not ticked
@@ -103,7 +112,7 @@ flowchart LR
   G --> I["2D map (Leaflet)<br/>3D view (Three.js)"]
   G --> K["Science suggestions<br/>objective + equipment"]
   K --> H
-  H --> J["EVA estimate, profile,<br/>mission report"]
+  H --> J["EVA estimate, profile,<br/>oxygen reach, mission report"]
 ```
 
 - **Data preparation (Python).** The HiRISE terrain model is cropped to a
@@ -124,6 +133,12 @@ flowchart LR
   place share one route stop, so the time per stop is counted once. Removing an
   activity removes its stop only if nothing else uses it. Routing costs and the
   EVA arithmetic do not change.
+- **Oxygen reach.** A constant-rate mass balance per astronaut: oxygen
+  needed = 0.076 kg/h × (walking time + stop time + 30 min reserve). The
+  planner walks each route in order at your walking speed, uses up time at
+  each stop, and marks the point where the budget runs out. Return to start
+  includes the return leg. The tank setting never changes the route itself.
+  Method and sources: [oxygen budget](docs/eva/oxygen-budget.md).
 - **Display.** Leaflet shows the 2D map in local metres. Three.js shows the
   terrain in 3D and loads only when that view is opened.
 - **No backend.** Everything runs in the browser from static files. Missions
@@ -142,6 +157,10 @@ flowchart LR
 | Mineral finding | [NASA/JPL: tridymite found at Buckskin](https://www.jpl.nasa.gov/news/nasa-scientists-discover-unexpected-mineral-on-mars/) | Buckskin sample marker |
 | Rock textures | McBride et al. (2015), [LPSC abstract 2855](https://www.hou.usra.edu/meetings/lpsc2015/pdf/2855.pdf) | Photography activities at Pelona, Punchbowl and Pickhandle |
 | Past water and mineralogy | [NASA/JPL: Garden City veins](https://www.jpl.nasa.gov/news/upgrade-helps-nasa-study-mineral-veins-on-mars/); Rampe et al. (2015), [NASA NTRS 20150019443](https://ntrs.nasa.gov/api/citations/20150019443/downloads/20150019443.pdf); [JPL PIA21146](https://www.jpl.nasa.gov/images/pia21146-mudstone-mineralogy-from-curiositys-chemin-2013-to-2016/) | Water and mineral-diversity activities |
+| Oxygen rate | [NASA Life Support Baseline Values and Assumptions (BVAD) Rev2, 2022](https://ntrs.nasa.gov/api/citations/20210024855/downloads/BVAD_2.15.22-final.pdf#page=148), section 4.6.2 | 0.076 kg/h Mars closed-loop oxygen use |
+| Oxygen supply and reserve | [NASA *Suited for Spacewalking*, 1994](https://ntrs.nasa.gov/api/citations/19950007475/downloads/19950007475.pdf#page=26), p. 17; [NASA EVA Hardware & Operations Overview, 2012](https://ntrs.nasa.gov/api/citations/20120011735/downloads/20120011735.pdf#page=10), slide 10 | 0.54 kg default supply; 30-minute planning reserve |
+| Mars globe | [NASA/JPL Solar System Simulator Mars map](https://space.jpl.nasa.gov/tmaps/mars.html) (Viking imagery, Caltech/JPL/USGS) | Locator globe |
+| Gale and Pahrump context | [PIA16058, Curiosity Cradled by Gale Crater](https://science.nasa.gov/photojournal/curiosity-cradled-by-gale-crater/); [PIA18474, Slopes of Mount Sharp](https://www.jpl.nasa.gov/images/pia18474-slopes-of-mount-sharp/) | Location context images |
 | Sampling methods | [NASA Spacewalking Tools](https://www.nasa.gov/suits-and-rovers/spacewalking-tools/); Naids et al. (2021), [NASA NTRS 20210000242](https://ntrs.nasa.gov/api/citations/20210000242/downloads/Developing%20Geology%20Sampling%20Tools_Lunar%20Surface%20Science%20Workshop_FINAL_2021.pdf); Apollo sample-bag records | Rock-chip sampling plans and equipment |
 
 Image and terrain credit: NASA/JPL-Caltech/UArizona. Each package in
@@ -170,6 +189,14 @@ POLARIS Module is a planning prototype. It says what it does not know.
   availability and task duration are not established. The two orbital
   candidates are imaging regions chosen by the project, not mineral detections.
   Activities use your time per stop; none has its own duration.
+- **Oxygen reach is an oxygen-only estimate.** It uses one constant rate. It
+  does not model fitness, workload, slope effort, suit leaks, CO2, water,
+  power or temperature. The O2 marker is where the planning reserve begins,
+  not where oxygen runs out, and it is not a safe or certified EVA limit. Only
+  the 0.54 kg default is a cited suit value; other tank sizes are what-ifs.
+- **The locator is approximate.** The globe marks the Gale region, not the
+  exact 1 km area, and the highlight on the Gale overview is a hand-placed
+  guide, not a georeferenced position.
 - **No hazard, thermal or mineral-abundance model.** The enhanced RGB image uses
   synthetic blue and is not true colour or a mineral map. CRISM, THEMIS,
   geological units and hazard maps have not been integrated.
@@ -180,8 +207,8 @@ POLARIS Module is a planning prototype. It says what it does not know.
 src/features/
   datasets/      Terrain and science contracts, loaders, region registry
   routing/       A* pathfinding and route planning (pure TypeScript)
-  eva/           Duration estimate and elevation profile
-  map/           2D map, waypoints, layer panel
+  eva/           Duration estimate, elevation profile and oxygen budget
+  map/           2D map, waypoints, layer panel, Mars locator
   mapLayers/     Elevation/slope overlays, context layers, RGB imagery
   science/       Science target list and details
   scienceSuggestions/  Objective and equipment choice, activity cards, map evidence
@@ -189,7 +216,7 @@ src/features/
   mission/       Planner panel and mission report
   missions/      Saved missions: browser library, JSON import/export
 scripts/terrain/ Python preprocessing, activity exporters and source checks
-public/data/     Processed terrain, imagery, science, activity and context packages
+public/data/     Processed terrain, imagery, science, activity, context and locator packages
 docs/            Data contracts, terrain reviews and validation records
 ```
 
@@ -200,6 +227,8 @@ Key documents:
 - [Terrain data contract](docs/terrain-data-contract.md)
 - [Science target contract](docs/science-target-contract.md) and
   [display context contract](docs/display-context-contract.md)
+- [Oxygen budget: sources, equation and limits](docs/eva/oxygen-budget.md)
+- [Mars locator images and sources](public/data/locator/README.md)
 - [3D coordinate conventions](src/features/terrain3d/README.md)
 - [Georeferencing review](docs/terrain/georeferencing-review.md) and
   [terrain validation records](docs/terrain/README.md)
@@ -212,7 +241,7 @@ Key documents:
 ## Development
 
 ```sh
-npm test         # Unit tests: routing, contracts, coordinates, missions, science activities, 3D geometry
+npm test         # Unit tests: routing, contracts, coordinates, missions, science activities, oxygen, 3D geometry
 npm run lint     # ESLint
 npm run build    # Type-check and production build
 npm run preview  # Serve the production build
