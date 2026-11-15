@@ -3,8 +3,11 @@ import { defineConfig } from 'vite'
 import { fileURLToPath } from 'node:url'
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [react()],
+  // Relative asset paths in the production build, so the same files work at the
+  // root of a domain, under a GitHub Pages sub-path, or from any static host.
+  base: command === 'build' ? './' : '/',
   build: {
     rollupOptions: {
       input: {
@@ -13,4 +16,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))
